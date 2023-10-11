@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.crystal2033.qrextractor.ui.theme.QRExtractorTheme
 
 data class BottomNavigationItem(
@@ -38,8 +40,11 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
+
             QRExtractorTheme {
+                val navController = rememberNavController()
                 val bottomItems = listOf(
                     BottomNavigationItem(
                         title = "Last scanned",
@@ -50,6 +55,11 @@ class MainActivity : ComponentActivity() {
                         title = "Add data",
                         selectedIcon = ImageVector.vectorResource(R.drawable.filled_add_to_photos_35),
                         unselectedIcon = ImageVector.vectorResource(R.drawable.outline_add_to_photos_35)
+                    ),
+                    BottomNavigationItem(
+                        title = "Home",
+                        selectedIcon = ImageVector.vectorResource(R.drawable.filled_home_35),
+                        unselectedIcon = ImageVector.vectorResource(R.drawable.outline_home_35)
                     ),
                     BottomNavigationItem(
                         title = "Scanner",
@@ -64,6 +74,10 @@ class MainActivity : ComponentActivity() {
                 )
                 var selectedItemIndex by rememberSaveable {
                     mutableIntStateOf(0)
+                }
+                NavHost(navController = navController,
+                    startDestination = ""){
+
                 }
 
                 Scaffold(
