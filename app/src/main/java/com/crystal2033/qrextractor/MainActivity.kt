@@ -5,11 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -22,7 +20,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.sp
@@ -30,19 +27,50 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import com.crystal2033.qrextractor.ui.theme.QRExtractorTheme
 
 data class BottomNavigationItem(
     val title: String,
-    val routeValue: String,
+    val mainRouteInGraph: String,
     val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
+    val unselectedIcon: ImageVector,
 )
-
-//object MyAppIcons {
-//    val historyQRCodesIcon = R.drawable.filled_work_history_24
-//    val addQRCodeIcon =
-//}
+@Composable
+fun initBottomItems(context: Context): List<BottomNavigationItem> {
+    return listOf(
+        BottomNavigationItem(
+            title = "History",
+            mainRouteInGraph = context.resources.getString(R.string.history_head_graph_route),
+            selectedIcon = ImageVector.vectorResource(R.drawable.filled_work_history_35),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.outline_work_history_35)
+        ),
+        BottomNavigationItem(
+            title = "Add data",
+            mainRouteInGraph = context.resources.getString(R.string.add_data_head_graph_route),
+            selectedIcon = ImageVector.vectorResource(R.drawable.filled_add_to_photos_35),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.outline_add_to_photos_35)
+        ),
+        BottomNavigationItem(
+            title = "Home",
+            mainRouteInGraph = context.resources.getString(R.string.home_head_graph_route),
+            selectedIcon = ImageVector.vectorResource(R.drawable.filled_home_35),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.outline_home_35)
+        ),
+        BottomNavigationItem(
+            title = "Scanner",
+            mainRouteInGraph = context.resources.getString(R.string.scanner_head_graph_route),
+            selectedIcon = ImageVector.vectorResource(R.drawable.filled_qr_code_35),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.outline_qr_code_35)
+        ),
+        BottomNavigationItem(
+            title = "Documents",
+            mainRouteInGraph = context.resources.getString(R.string.documents_head_graph_route),
+            selectedIcon = ImageVector.vectorResource(R.drawable.filled_description_35),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.outline_description_35)
+        )
+    )
+}
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -50,49 +78,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-
             QRExtractorTheme {
                 val navController = rememberNavController()
-                val bottomItems = listOf(
-                    BottomNavigationItem(
-                        title = "History",
-                        routeValue = resources.getString(R.string.history_route),
-                        selectedIcon = ImageVector.vectorResource(R.drawable.filled_work_history_35),
-                        unselectedIcon = ImageVector.vectorResource(R.drawable.outline_work_history_35)
-                    ),
-                    BottomNavigationItem(
-                        title = "Add data",
-                        routeValue = resources.getString(R.string.add_data_route),
-                        selectedIcon = ImageVector.vectorResource(R.drawable.filled_add_to_photos_35),
-                        unselectedIcon = ImageVector.vectorResource(R.drawable.outline_add_to_photos_35)
-                    ),
-                    BottomNavigationItem(
-                        title = "Home",
-                        routeValue = resources.getString(R.string.home_route),
-                        selectedIcon = ImageVector.vectorResource(R.drawable.filled_home_35),
-                        unselectedIcon = ImageVector.vectorResource(R.drawable.outline_home_35)
-                    ),
-                    BottomNavigationItem(
-                        title = "Scanner",
-                        routeValue = resources.getString(R.string.scanner_route),
-                        selectedIcon = ImageVector.vectorResource(R.drawable.filled_qr_code_35),
-                        unselectedIcon = ImageVector.vectorResource(R.drawable.outline_qr_code_35)
-                    ),
-                    BottomNavigationItem(
-                        title = "Documents",
-                        routeValue = resources.getString(R.string.documents_route),
-                        selectedIcon = ImageVector.vectorResource(R.drawable.filled_description_35),
-                        unselectedIcon = ImageVector.vectorResource(R.drawable.outline_description_35)
-                    )
-                )
+                val bottomItems = initBottomItems(applicationContext)
+
+
                 var selectedItemIndex by rememberSaveable {
-                    mutableIntStateOf(0)
+                    val homeItem: BottomNavigationItem? = bottomItems.find { bottomItem ->
+                        bottomItem.mainRouteInGraph.lowercase() ==
+                                resources.getString(R.string.home_head_graph_route).lowercase()
+                    }
+                    mutableIntStateOf(bottomItems.indexOf(homeItem))
                 }
 
-
-
                 Scaffold(
-                    containerColor = Color.Gray,
                     bottomBar = {
                         NavigationBar {
                             bottomItems.forEachIndexed { index, bottomItem ->
@@ -101,7 +100,7 @@ class MainActivity : ComponentActivity() {
                                     onClick = {
                                         selectedItemIndex = index
                                         print(bottomItem.title)
-                                        navController.navigate(bottomItem.routeValue)
+                                        navController.navigate(bottomItem.mainRouteInGraph)
                                     },
                                     label = {
                                         Text(text = bottomItem.title)
@@ -114,8 +113,6 @@ class MainActivity : ComponentActivity() {
                                             contentDescription = bottomItem.title
                                         )
                                     })
-
-
                             }
                         }
 
@@ -139,22 +136,50 @@ fun MyNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "home"
+        startDestination = context.resources.getString(R.string.home_head_graph_route)
     ) {
-        composable(context.resources.getString(R.string.home_route)) {
-            TextWindow("Home")
+        navigation(
+            startDestination = context.resources.getString(R.string.home_route),
+            route = context.resources.getString(R.string.home_head_graph_route)
+        ) {
+            composable(context.resources.getString(R.string.home_route)) {
+                TextWindow("Home")
+            }
         }
-        composable(context.resources.getString(R.string.add_data_route)) {
-            TextWindow("Add data")
+        navigation(
+            startDestination = context.resources.getString(R.string.add_data_route),
+            route = context.resources.getString(R.string.add_data_head_graph_route)
+        ) {
+            composable(context.resources.getString(R.string.add_data_route)) {
+                TextWindow("Add data")
+            }
         }
-        composable(context.resources.getString(R.string.scanner_route)) {
-            TextWindow("Scanner")
+
+        navigation(
+            startDestination = context.resources.getString(R.string.scanner_route),
+            route = context.resources.getString(R.string.scanner_head_graph_route)
+        ) {
+            composable(context.resources.getString(R.string.scanner_route)) {
+                TextWindow("Scanner")
+            }
         }
-        composable(context.resources.getString(R.string.history_route)) {
-            TextWindow("History")
+
+        navigation(
+            startDestination = context.resources.getString(R.string.history_route),
+            route = context.resources.getString(R.string.history_head_graph_route)
+        ) {
+            composable(context.resources.getString(R.string.history_route)) {
+                TextWindow("History")
+            }
         }
-        composable(context.resources.getString(R.string.documents_route)) {
-            TextWindow("Documents")
+
+        navigation(
+            startDestination = context.resources.getString(R.string.documents_route),
+            route = context.resources.getString(R.string.documents_head_graph_route)
+        ) {
+            composable(context.resources.getString(R.string.documents_route)) {
+                TextWindow("Documents")
+            }
         }
     }
 }

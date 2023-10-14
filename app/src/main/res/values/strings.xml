@@ -5,4 +5,10 @@
     <string name="scanner_route">scanner</string>
     <string name="documents_route">documents</string>
     <string name="add_data_route">add_data</string>
+
+    <string name="home_head_graph_route">home_graph</string>
+    <string name="history_head_graph_route">history_graph</string>
+    <string name="scanner_head_graph_route">scanner_graph</string>
+    <string name="documents_head_graph_route">documents_graph</string>
+    <string name="add_data_head_graph_route">add_data_graph</string>
 </resources>
