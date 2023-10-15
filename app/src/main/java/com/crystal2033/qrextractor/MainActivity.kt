@@ -171,7 +171,8 @@ fun MyNavGraph(
             composable(context.resources.getString(R.string.scanner_route)) {
 //                TextWindow("Scanner")
                 val viewModel = it.sharedViewModel<PersonViewModel>(navController)
-                QRCodeView(viewModel = viewModel)
+                QRCodeView(viewModel = viewModel,
+                    modifier = Modifier.fillMaxSize())
             }
         }
 

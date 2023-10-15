@@ -6,11 +6,9 @@ import retrofit2.http.Path
 
 interface PersonApi {
     @GET("api/persons/{id}")
-    suspend fun getPerson(
-        @Path(value = "id") id: Int
-    ) : PersonDto?
+    suspend fun getPerson(@Path(value = "id") id: Int) : PersonDto?
 
     companion object {
-        const val BASE_URL = "localhost:8080/"
+        const val BASE_URL = "http://10.0.2.2:8080/"
     }
 }

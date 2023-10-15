@@ -21,7 +21,7 @@ import com.crystal2033.qrextractor.scanner_feature.domain.model.WorkSpace
 
 @Composable
 fun PersonInfo(
-    person: Person,
+    person: Person?,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -33,12 +33,12 @@ fun PersonInfo(
         Column(verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = person.firstName,
+                text = "First name: ${person?.firstName ?: "Unknown first name"}",
                 color = Color.White
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = person.secondName,
+                text = "Second name: ${person?.secondName ?: "Unknown second name"}",
                 color = Color.White
             )
         }

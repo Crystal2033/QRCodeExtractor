@@ -48,13 +48,10 @@ class QRCodeAnalyzer(
                         )
                     )
                 }.decode(binaryBitMap)
-                Log.i("MyTag", "Found QR " + result.text)
                 onQrCodeScanned(result.text)
             }
             catch (e: Exception){
-                Log.i("MyTag", "No QR code")
                 onQrCodeScanned("")
-                e.printStackTrace()
             }
             finally {
                 image.close()
