@@ -16,6 +16,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -123,6 +124,7 @@ fun QRCodeView(viewModel: PersonViewModel,
             ) {
                 if (hasCameraPermission) {
                     AndroidView(
+                        //modifier = Modifier.size(200.dp, 200.dp),
                         factory = { context ->
                             val previewView = PreviewView(context)
                             val preview = Preview.Builder().build()
@@ -165,6 +167,11 @@ fun QRCodeView(viewModel: PersonViewModel,
                     PersonInfo(person = personState.personInfo)
                 }
 
+            }
+            Button(modifier = Modifier.offset(20.dp, 20.dp), onClick = {
+
+            }) {
+                Text(text = "Hello world", color = Color.White)
             }
             if (personState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
