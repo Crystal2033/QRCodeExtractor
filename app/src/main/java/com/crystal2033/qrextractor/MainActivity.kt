@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -23,12 +24,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import com.crystal2033.qrextractor.scanner_feature.presentation.QRCodeView
+import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.PersonViewModel
 import com.crystal2033.qrextractor.ui.theme.QRExtractorTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 data class BottomNavigationItem(
     val title: String,
@@ -72,6 +80,7 @@ fun initBottomItems(context: Context): List<BottomNavigationItem> {
     )
 }
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -160,7 +169,9 @@ fun MyNavGraph(
             route = context.resources.getString(R.string.scanner_head_graph_route)
         ) {
             composable(context.resources.getString(R.string.scanner_route)) {
-                TextWindow("Scanner")
+//                TextWindow("Scanner")
+                val viewModel = it.sharedViewModel<PersonViewModel>(navController)
+                QRCodeView(viewModel = viewModel)
             }
         }
 
@@ -198,6 +209,15 @@ fun TextWindow(string: String) {
             fontSize = 35.sp
         )
     }
-
 }
+
+@Composable
+inline fun <reified T: ViewModel> NavBackStackEntry.sharedViewModel(navController: NavController) : T{
+    val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
+    val parentEntry = remember(this) {
+        navController.getBackStackEntry(navGraphRoute)
+    }
+    return hiltViewModel(parentEntry)
+}
+
 
