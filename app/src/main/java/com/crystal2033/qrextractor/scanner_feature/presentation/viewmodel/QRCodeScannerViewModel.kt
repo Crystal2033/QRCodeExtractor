@@ -34,8 +34,10 @@ class QRCodeScannerViewModel @Inject constructor(
 
     private lateinit var getDataFromQRCodeUseCase: GetDataFromQRCodeUseCase
 
+
     private val _previewDataFromQRState = mutableStateOf(PersonState())
     val previewDataFromQRState: State<PersonState> = _previewDataFromQRState
+
 
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -66,14 +68,14 @@ class QRCodeScannerViewModel @Inject constructor(
                         when (result) {
                             is Resource.Loading -> {
                                 _previewDataFromQRState.value = previewDataFromQRState.value.copy(
-                                    personInfo = result.data,
+                                    scannedDataInfo = result.data,
                                     isLoading = true
                                 )
                             }
 
                             is Resource.Error -> {
                                 _previewDataFromQRState.value = previewDataFromQRState.value.copy(
-                                    personInfo = result.data,
+                                    scannedDataInfo = result.data,
                                     isLoading = false
                                 )
                                 _eventFlow.emit(
@@ -85,7 +87,7 @@ class QRCodeScannerViewModel @Inject constructor(
 
                             is Resource.Success -> {
                                 _previewDataFromQRState.value = previewDataFromQRState.value.copy(
-                                    personInfo = result.data,
+                                    scannedDataInfo = result.data,
                                     isLoading = false
                                 )
 
@@ -99,8 +101,5 @@ class QRCodeScannerViewModel @Inject constructor(
                     }.launchIn(this)
             } ?: Log.e("QR_TAG", "Error with scannedObject convertion. No id there")
         }
-
-
-
     }
 }

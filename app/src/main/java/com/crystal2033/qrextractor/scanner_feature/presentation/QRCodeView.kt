@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 fun QRCodeView(viewModel: QRCodeScannerViewModel,
                modifier: Modifier = Modifier) {
 
-    val personState = viewModel.previewDataFromQRState.value
+    val dataState = viewModel.previewDataFromQRState.value
     val snackbarHostState = remember { SnackbarHostState() }
 
     var code by remember {
@@ -96,7 +96,7 @@ fun QRCodeView(viewModel: QRCodeScannerViewModel,
                 }
             }
         }
-        //launcher.launch(Manifest.permission.CAMERA)
+        launcher.launch(Manifest.permission.CAMERA)
     }
 
     Scaffold(
@@ -163,7 +163,7 @@ fun QRCodeView(viewModel: QRCodeScannerViewModel,
                             previewView
                         },
                     )
-                    PersonInfo(person = personState.personInfo)
+                    PersonInfo(person = dataState.scannedDataInfo)
                 }
 
             }
@@ -172,7 +172,7 @@ fun QRCodeView(viewModel: QRCodeScannerViewModel,
             }) {
                 Text(text = "Hello world", color = Color.White)
             }
-            if (personState.isLoading) {
+            if (dataState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
         }
