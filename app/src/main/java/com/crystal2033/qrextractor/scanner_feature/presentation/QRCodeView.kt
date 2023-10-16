@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
@@ -46,17 +45,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.crystal2033.qrextractor.scanner_feature.presentation.util.UIEvent
-import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.PersonViewModel
+import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.QRCodeScannerViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun QRCodeView(viewModel: PersonViewModel,
+fun QRCodeView(viewModel: QRCodeScannerViewModel,
                modifier: Modifier = Modifier) {
 
-    val personState = viewModel.previewPersonState.value
+    val personState = viewModel.previewDataFromQRState.value
     val snackbarHostState = remember { SnackbarHostState() }
 
     var code by remember {

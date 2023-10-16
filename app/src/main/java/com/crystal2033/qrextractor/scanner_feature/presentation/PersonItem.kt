@@ -26,7 +26,7 @@ fun PersonInfo(
 ) {
     Box(
         modifier = Modifier
-//            .fillMaxSize()
+            .fillMaxSize()
             .background(Color.Gray),
         contentAlignment = Alignment.Center
     ) {

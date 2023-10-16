@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
-import com.crystal2033.qrextractor.scanner_feature.domain.use_case.GetPerson
+import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.GetDataFromQRCodeUseCase
+import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCaseGetQRCodeFactory
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.PersonState
 import com.crystal2033.qrextractor.scanner_feature.presentation.util.UIEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,13 +24,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PersonViewModel @Inject constructor(
-    //private val jsonParser: GsonParser,
+class QRCodeScannerViewModel @Inject constructor(
     private val converter: Converters,
-    private val getPerson: GetPerson //TODO: make with any object
+    private val useCaseGetQRCodeFactory: UseCaseGetQRCodeFactory
 ) : ViewModel() {
-    private val _previewPersonState = mutableStateOf(PersonState())
-    val previewPersonState: State<PersonState> = _previewPersonState
+    companion object{
+        const val timeForDuplicateQRCodesResistInMs = 10000L
+    }
+
+    private lateinit var getDataFromQRCodeUseCase: GetDataFromQRCodeUseCase
+
+    private val _previewDataFromQRState = mutableStateOf(PersonState())
+    val previewDataFromQRState: State<PersonState> = _previewDataFromQRState
 
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -44,7 +50,7 @@ class PersonViewModel @Inject constructor(
         }
         prevScanString = scanResult
         CoroutineScope(Dispatchers.Default).launch {
-            delay(10000L)
+            delay(timeForDuplicateQRCodesResistInMs)
             prevScanString = ""
         }
 
@@ -53,18 +59,20 @@ class PersonViewModel @Inject constructor(
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
             scannedObject?.let { scannedObj ->
-                getPerson(scannedObj.id)
+                //getPerson(scannedObj.id)
+                getDataFromQRCodeUseCase = useCaseGetQRCodeFactory.createUseCase(scannedObj.tableName)
+                getDataFromQRCodeUseCase(scannedObj.id)
                     .onEach { result ->
                         when (result) {
                             is Resource.Loading -> {
-                                _previewPersonState.value = previewPersonState.value.copy(
+                                _previewDataFromQRState.value = previewDataFromQRState.value.copy(
                                     personInfo = result.data,
                                     isLoading = true
                                 )
                             }
 
                             is Resource.Error -> {
-                                _previewPersonState.value = previewPersonState.value.copy(
+                                _previewDataFromQRState.value = previewDataFromQRState.value.copy(
                                     personInfo = result.data,
                                     isLoading = false
                                 )
@@ -76,7 +84,7 @@ class PersonViewModel @Inject constructor(
                             }
 
                             is Resource.Success -> {
-                                _previewPersonState.value = previewPersonState.value.copy(
+                                _previewDataFromQRState.value = previewDataFromQRState.value.copy(
                                     personInfo = result.data,
                                     isLoading = false
                                 )

@@ -5,7 +5,9 @@ import com.crystal2033.qrextractor.scanner_feature.data.remote.api.PersonApi
 import com.crystal2033.qrextractor.scanner_feature.data.repository.PersonRepositoryImpl
 import com.crystal2033.qrextractor.scanner_feature.data.util.GsonParser
 import com.crystal2033.qrextractor.scanner_feature.domain.repository.PersonRepository
-import com.crystal2033.qrextractor.scanner_feature.domain.use_case.GetPerson
+import com.crystal2033.qrextractor.scanner_feature.domain.use_case.GetPersonFromQRCodeUseCase
+import com.crystal2033.qrextractor.scanner_feature.domain.use_case.QRCodeScannerUseCases
+import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCaseGetQRCodeFactory
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -21,8 +23,30 @@ object PersonModule {
 
     @Provides
     @Singleton
-    fun provideGetPersonUseCase(repository: PersonRepository): GetPerson{
-        return GetPerson(repository)
+    fun provideQRCodeScannerUseCasesFactory(qrCodeScannerUseCases: QRCodeScannerUseCases) : UseCaseGetQRCodeFactory {
+        return UseCaseGetQRCodeFactory(qrCodeScannerUseCases)
+    }
+
+    @Provides
+    @Singleton
+    fun provideQRCodeScannerUseCases(
+        getPersonFromQRCodeUseCase: GetPersonFromQRCodeUseCase,
+        ):QRCodeScannerUseCases{
+        return QRCodeScannerUseCases(
+            getPersonFromQRCodeUseCase,
+            )
+    }
+
+//    @Provides
+//    @Singleton
+//    fun provideGetDataFromQRCodeUseCase(): GetDataFromQRCodeUseCase{
+//        return GetDataFromQRCodeUseCase
+//    }
+
+    @Provides
+    @Singleton
+    fun provideGetPersonUseCase(repository: PersonRepository): GetPersonFromQRCodeUseCase{
+        return GetPersonFromQRCodeUseCase(repository)
     }
 
     @Provides
@@ -34,17 +58,23 @@ object PersonModule {
     @Provides
     @Singleton
     fun providePersonApi() : PersonApi{
-        return  Retrofit.Builder()
+        return Retrofit.Builder()
             .baseUrl(PersonApi.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(PersonApi::class.java)
-
     }
+
+
+
+
+
 
     @Provides
     @Singleton
     fun provideConverter(): Converters {
         return Converters(GsonParser(Gson()))
     }
+
+
 }

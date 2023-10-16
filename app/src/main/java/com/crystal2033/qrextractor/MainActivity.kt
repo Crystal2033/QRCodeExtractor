@@ -34,7 +34,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.scanner_feature.presentation.QRCodeView
-import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.PersonViewModel
+import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.QRCodeScannerViewModel
 import com.crystal2033.qrextractor.ui.theme.QRExtractorTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -170,7 +170,7 @@ fun MyNavGraph(
         ) {
             composable(context.resources.getString(R.string.scanner_route)) {
 //                TextWindow("Scanner")
-                val viewModel = it.sharedViewModel<PersonViewModel>(navController)
+                val viewModel = it.sharedViewModel<QRCodeScannerViewModel>(navController)
                 QRCodeView(viewModel = viewModel,
                     modifier = Modifier.fillMaxSize())
             }
