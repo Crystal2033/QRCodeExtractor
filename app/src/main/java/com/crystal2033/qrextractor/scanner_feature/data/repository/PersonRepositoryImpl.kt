@@ -1,5 +1,6 @@
 package com.crystal2033.qrextractor.scanner_feature.data.repository
 
+import android.content.Context
 import android.util.Log
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.remote.api.PersonApi

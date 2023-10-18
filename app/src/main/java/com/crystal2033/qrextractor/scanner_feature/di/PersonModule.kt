@@ -55,7 +55,8 @@ object PersonModule {
 
     @Provides
     @Singleton
-    fun providePersonRepository(personApi: PersonApi): PersonRepository {
+    fun providePersonRepository(personApi: PersonApi
+                                ): PersonRepository {
         return PersonRepositoryImpl(personApi)
     }
 
