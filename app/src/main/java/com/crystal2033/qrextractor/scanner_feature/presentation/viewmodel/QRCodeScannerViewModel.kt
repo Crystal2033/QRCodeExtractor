@@ -9,7 +9,8 @@ import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.GetDataFromQRCodeUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCaseGetQRCodeFactory
-import com.crystal2033.qrextractor.scanner_feature.presentation.state.PersonState
+//import com.crystal2033.qrextractor.scanner_feature.presentation.state.PersonState
+import com.crystal2033.qrextractor.scanner_feature.presentation.state.ScannedDataState
 import com.crystal2033.qrextractor.scanner_feature.presentation.util.UIEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -35,8 +36,8 @@ class QRCodeScannerViewModel @Inject constructor(
     private lateinit var getDataFromQRCodeUseCase: GetDataFromQRCodeUseCase
 
 
-    private val _previewDataFromQRState = mutableStateOf(PersonState())
-    val previewDataFromQRState: State<PersonState> = _previewDataFromQRState
+    private val _previewDataFromQRState = mutableStateOf(ScannedDataState())
+    val previewDataFromQRState: State<ScannedDataState> = _previewDataFromQRState
 
 
     private val _eventFlow = MutableSharedFlow<UIEvent>()
@@ -56,7 +57,7 @@ class QRCodeScannerViewModel @Inject constructor(
             prevScanString = ""
         }
 
-        val scannedObject = converter.fromScannedObjectsJson(scanResult)
+        val scannedObject = converter.fromJsonToScannedTableNameAndId(scanResult)
 
         scanJob?.cancel()
         scanJob = viewModelScope.launch {
@@ -93,7 +94,7 @@ class QRCodeScannerViewModel @Inject constructor(
 
                                 _eventFlow.emit(
                                     UIEvent.ShowSnackBar(
-                                        message = result.data?.firstName ?: " nope"
+                                        message = result.data.toString()
                                     )
                                 )
                             }

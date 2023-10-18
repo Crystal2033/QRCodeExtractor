@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.scanner_feature.presentation
+package com.crystal2033.qrextractor.scanner_feature.presentation.uiItems
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
