@@ -44,8 +44,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import com.crystal2033.qrextractor.scanner_feature.presentation.uiItems.PersonInfo
-import com.crystal2033.qrextractor.scanner_feature.presentation.uiItems.ShowDataItemByType
+import com.crystal2033.qrextractor.scanner_feature.presentation.uiItems.preview.ShowDataItemByType
 import com.crystal2033.qrextractor.scanner_feature.presentation.util.UIEvent
 import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.QRCodeScannerViewModel
 import kotlinx.coroutines.flow.collectLatest

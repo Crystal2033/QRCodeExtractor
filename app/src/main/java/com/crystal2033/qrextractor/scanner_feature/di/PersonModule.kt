@@ -1,5 +1,6 @@
 package com.crystal2033.qrextractor.scanner_feature.di
 
+import android.content.Context
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.data.remote.api.PersonApi
 import com.crystal2033.qrextractor.scanner_feature.data.repository.PersonRepositoryImpl
@@ -12,6 +13,7 @@ import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,8 +25,10 @@ object PersonModule {
 
     @Provides
     @Singleton
-    fun provideQRCodeScannerUseCasesFactory(qrCodeScannerUseCases: QRCodeScannerUseCases) : UseCaseGetQRCodeFactory {
-        return UseCaseGetQRCodeFactory(qrCodeScannerUseCases)
+    fun provideQRCodeScannerUseCasesFactory(qrCodeScannerUseCases: QRCodeScannerUseCases,
+                                            @ApplicationContext appContext : Context
+    ) : UseCaseGetQRCodeFactory {
+        return UseCaseGetQRCodeFactory(qrCodeScannerUseCases, appContext)
     }
 
     @Provides

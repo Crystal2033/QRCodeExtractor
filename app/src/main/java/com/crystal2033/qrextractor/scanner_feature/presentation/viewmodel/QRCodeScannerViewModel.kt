@@ -5,8 +5,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.crystal2033.qrextractor.core.scan_model.ScannedTableNameAndId
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
+import com.crystal2033.qrextractor.scanner_feature.domain.model.QRScannableData
+import com.crystal2033.qrextractor.scanner_feature.domain.model.Unknown
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.GetDataFromQRCodeUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCaseGetQRCodeFactory
 //import com.crystal2033.qrextractor.scanner_feature.presentation.state.PersonState
@@ -29,7 +32,7 @@ class QRCodeScannerViewModel @Inject constructor(
     private val converter: Converters,
     private val useCaseGetQRCodeFactory: UseCaseGetQRCodeFactory
 ) : ViewModel() {
-    companion object{
+    companion object {
         const val timeForDuplicateQRCodesResistInMs = 10000L
     }
 
@@ -51,56 +54,75 @@ class QRCodeScannerViewModel @Inject constructor(
         if (scanResult.isBlank() || prevScanString == scanResult) {
             return
         }
+        setDeduplicateStringAndDelayForClear(scanResult)
+
+        val scannedObject = converter.fromJsonToScannedTableNameAndId(scanResult)
+
+        scanJob?.cancel()
+        insertScannedDataInStateIfPossible(scannedObject)
+    }
+
+    private fun setDeduplicateStringAndDelayForClear(scanResult: String) {
         prevScanString = scanResult
         CoroutineScope(Dispatchers.Default).launch {
             delay(timeForDuplicateQRCodesResistInMs)
             prevScanString = ""
         }
+    }
 
-        val scannedObject = converter.fromJsonToScannedTableNameAndId(scanResult)
-
-        scanJob?.cancel()
+    private fun insertScannedDataInStateIfPossible(scannedObject: ScannedTableNameAndId?) {
         scanJob = viewModelScope.launch {
             scannedObject?.let { scannedObj ->
-                //getPerson(scannedObj.id)
-                getDataFromQRCodeUseCase = useCaseGetQRCodeFactory.createUseCase(scannedObj.tableName)
+                try {
+                    getDataFromQRCodeUseCase =
+                        useCaseGetQRCodeFactory.createUseCase(scannedObj.tableName)
+                } catch (error: ClassNotFoundException) {
+                    Log.e("QR_ERROR", error.message ?: "Unknown error")
+                    setErrorStatus(
+                        Resource.Error(message = error.message ?: "Unknown error", Unknown()),
+                        error.message ?: "Unknown error")
+                    return@launch
+                }
                 getDataFromQRCodeUseCase(scannedObj.id)
                     .onEach { result ->
-                        when (result) {
-                            is Resource.Loading -> {
-                                _previewDataFromQRState.value = previewDataFromQRState.value.copy(
-                                    scannedDataInfo = result.data,
-                                    isLoading = true
-                                )
-                            }
-
-                            is Resource.Error -> {
-                                _previewDataFromQRState.value = previewDataFromQRState.value.copy(
-                                    scannedDataInfo = result.data,
-                                    isLoading = false
-                                )
-                                _eventFlow.emit(
-                                    UIEvent.ShowSnackBar(
-                                        message = result.message ?: "Unknown error"
-                                    )
-                                )
-                            }
-
-                            is Resource.Success -> {
-                                _previewDataFromQRState.value = previewDataFromQRState.value.copy(
-                                    scannedDataInfo = result.data,
-                                    isLoading = false
-                                )
-
-                                _eventFlow.emit(
-                                    UIEvent.ShowSnackBar(
-                                        message = result.data.toString()
-                                    )
-                                )
-                            }
-                        }
+                        setStateInfo(result)
                     }.launchIn(this)
-            } ?: Log.e("QR_TAG", "Error with scannedObject convertion. No id there")
+            } ?: Log.e("QR_ERROR", "Error with scannedObject convertion. No id there")
         }
+    }
+
+    private suspend fun setStateInfo(data: Resource<QRScannableData>) {
+        when (data) {
+            is Resource.Loading -> {
+                sendDataWithStatus(data, true)
+            }
+
+            is Resource.Error -> {
+                setErrorStatus(data, data.message)
+            }
+
+            is Resource.Success -> {
+                sendDataWithStatus(data, false)
+            }
+        }
+    }
+
+    private fun sendDataWithStatus(result: Resource<QRScannableData>, isLoading: Boolean) {
+        _previewDataFromQRState.value = previewDataFromQRState.value.copy(
+            scannedDataInfo = result.data,
+            isLoading = isLoading
+        )
+    }
+
+    private suspend fun setErrorStatus(result: Resource<QRScannableData>?, errorMessage: String?) {
+        _previewDataFromQRState.value = previewDataFromQRState.value.copy(
+            scannedDataInfo = result?.data,
+            isLoading = false
+        )
+        _eventFlow.emit(
+            UIEvent.ShowSnackBar(
+                message = errorMessage ?: "Unknown error"
+            )
+        )
     }
 }

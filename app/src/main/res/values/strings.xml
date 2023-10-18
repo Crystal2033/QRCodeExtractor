@@ -1,14 +1,31 @@
 <resources>
     <string name="app_name">QRExtractor</string>
+
+
+    <!--  Nodes in navigation subgraph  -->
     <string name="home_route">home</string>
+
     <string name="history_route">history</string>
+
     <string name="scanner_route">scanner</string>
+
     <string name="documents_route">documents</string>
+
     <string name="add_data_route">add_data</string>
 
+
+    <!--  Heads of navigation subgraph-->
     <string name="home_head_graph_route">home_graph</string>
     <string name="history_head_graph_route">history_graph</string>
     <string name="scanner_head_graph_route">scanner_graph</string>
     <string name="documents_head_graph_route">documents_graph</string>
     <string name="add_data_head_graph_route">add_data_graph</string>
+    <!--  Heads of navigation subgraph-->
+
+    <!--  Database table names  -->
+    <string name="person_table_name">person</string>
+    <string name="keyboard_table_name">keyboard</string>
+    <string name="monitor_table_name">monitor</string>
+    <string name="unknown_table_name">unknown</string>
+    <!--  Database table names  -->
 </resources>
