@@ -78,15 +78,13 @@ class QRCodeScannerViewModel @Inject constructor(
                         useCaseGetQRCodeFactory.createUseCase(scannedObj.tableName)
                 } catch (error: ClassNotFoundException) {
                     Log.e("QR_ERROR", error.message ?: "Unknown error")
-                    setErrorStatus(
-                        Resource.Error(message = error.message ?: "Unknown error", Unknown()),
-                        error.message ?: "Unknown error")
+                    val errorMsg = error.message ?: "Unknown error"
+                    setStateInfo(Resource.Error(message = errorMsg, Unknown(errorMsg)))
                     return@launch
                 }
-                getDataFromQRCodeUseCase(scannedObj.id)
-                    .onEach { result ->
-                        setStateInfo(result)
-                    }.launchIn(this)
+                getDataFromQRCodeUseCase(scannedObj.id).onEach { result ->
+                    setStateInfo(result)
+                }.launchIn(this)
             } ?: Log.e("QR_ERROR", "Error with scannedObject convertion. No id there")
         }
     }
@@ -121,7 +119,7 @@ class QRCodeScannerViewModel @Inject constructor(
         )
         _eventFlow.emit(
             UIEvent.ShowSnackBar(
-                message = errorMessage ?: "Unknown error"
+                message = result?.message ?: "Unknown error"
             )
         )
     }

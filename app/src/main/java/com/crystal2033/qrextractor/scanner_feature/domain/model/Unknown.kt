@@ -1,6 +1,6 @@
 package com.crystal2033.qrextractor.scanner_feature.domain.model
 
-class Unknown : QRScannableData {
+class Unknown(val message: String) : QRScannableData {
     override fun getDatabaseTableName(): DatabaseObjectTypes {
         return DatabaseObjectTypes.UNKNOWN
     }

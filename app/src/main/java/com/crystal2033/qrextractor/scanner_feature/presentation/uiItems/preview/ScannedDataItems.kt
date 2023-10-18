@@ -9,10 +9,10 @@ import com.crystal2033.qrextractor.scanner_feature.domain.model.Unknown
 fun ShowDataItemByType(qrScannable: QRScannableData?) {
     when (qrScannable){
         is Person ->{
-            PersonInfo(qrScannable)
+            PersonInfo(person = qrScannable)
         }
         is Unknown ->{
-            UnknownItem()
+            UnknownItem(unknownDataInfo = qrScannable)
         }
         else -> {
 

@@ -13,9 +13,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.crystal2033.qrextractor.scanner_feature.domain.model.Unknown
 
 @Composable
-fun UnknownItem() {
+fun UnknownItem(unknownDataInfo: Unknown) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -25,7 +26,7 @@ fun UnknownItem() {
         Column(verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = "Unknown object",
+                text = unknownDataInfo.message,
                 color = Color.White
             )
         }
