@@ -28,4 +28,8 @@
     <string name="monitor_table_name">monitor</string>
     <string name="unknown_table_name">unknown</string>
     <!--  Database table names  -->
+
+    <!--  Exception messages  -->
+    <string name="server_connection_error">There is a problem with connection to remote server.</string>
+    <string name="response_request_error">There is a problem with http request/response.</string>
 </resources>

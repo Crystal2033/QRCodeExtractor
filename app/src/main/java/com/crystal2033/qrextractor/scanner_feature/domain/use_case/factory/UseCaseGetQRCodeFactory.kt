@@ -16,9 +16,9 @@ class UseCaseGetQRCodeFactory(
             applicationContext.getString(R.string.person_table_name) -> {
                 qrCodeScannerUseCases.getPersonFromQRCodeUseCase
             }
-//            "keyboard" ->  {
-//
-//            }
+            applicationContext.getString(R.string.keyboard_table_name) ->  {
+                qrCodeScannerUseCases.getKeyboardFromQRCodeUseCase
+            }
 //            "monitor" -> {
 //
 //            }
