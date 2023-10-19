@@ -168,11 +168,11 @@ fun QRCodeView(viewModel: QRCodeScannerViewModel,
                 }
 
             }
-            Button(modifier = Modifier.offset(20.dp, 20.dp), onClick = {
-
-            }) {
-                Text(text = "Hello world", color = Color.White)
-            }
+//            Button(modifier = Modifier.offset(20.dp, 20.dp), onClick = {
+//
+//            }) {
+//                Text(text = "Hello world", color = Color.White)
+//            }
             if (dataState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }

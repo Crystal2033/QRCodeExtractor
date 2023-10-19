@@ -1,13 +1,15 @@
 package com.crystal2033.qrextractor.scanner_feature.di
 
 import android.content.Context
+import com.crystal2033.qrextractor.core.ApiInfo
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.data.remote.api.PersonApi
 import com.crystal2033.qrextractor.scanner_feature.data.repository.PersonRepositoryImpl
 import com.crystal2033.qrextractor.scanner_feature.data.util.GsonParser
 import com.crystal2033.qrextractor.scanner_feature.domain.repository.PersonRepository
-import com.crystal2033.qrextractor.scanner_feature.domain.use_case.GetPersonFromQRCodeUseCase
+import com.crystal2033.qrextractor.scanner_feature.domain.use_case.concrete_use_case.GetPersonFromQRCodeUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.QRCodeScannerUseCases
+import com.crystal2033.qrextractor.scanner_feature.domain.use_case.concrete_use_case.GetKeyboardFromQRCodeUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCaseGetQRCodeFactory
 import com.google.gson.Gson
 import dagger.Module
@@ -25,50 +27,27 @@ object PersonModule {
 
     @Provides
     @Singleton
-    fun provideQRCodeScannerUseCasesFactory(qrCodeScannerUseCases: QRCodeScannerUseCases,
-                                            @ApplicationContext appContext : Context
-    ) : UseCaseGetQRCodeFactory {
-        return UseCaseGetQRCodeFactory(qrCodeScannerUseCases, appContext)
-    }
-
-    @Provides
-    @Singleton
-    fun provideQRCodeScannerUseCases(
-        getPersonFromQRCodeUseCase: GetPersonFromQRCodeUseCase,
-        ):QRCodeScannerUseCases{
-        return QRCodeScannerUseCases(
-            getPersonFromQRCodeUseCase,
-            )
-    }
-
-//    @Provides
-//    @Singleton
-//    fun provideGetDataFromQRCodeUseCase(): GetDataFromQRCodeUseCase{
-//        return GetDataFromQRCodeUseCase
-//    }
-
-    @Provides
-    @Singleton
-    fun provideGetPersonUseCase(repository: PersonRepository): GetPersonFromQRCodeUseCase{
+    fun provideGetPersonUseCase(repository: PersonRepository): GetPersonFromQRCodeUseCase {
         return GetPersonFromQRCodeUseCase(repository)
     }
 
     @Provides
     @Singleton
-    fun providePersonRepository(personApi: PersonApi
-                                ): PersonRepository {
-        return PersonRepositoryImpl(personApi)
+    fun providePersonRepository(personApi: PersonApi, @ApplicationContext context: Context): PersonRepository {
+        return PersonRepositoryImpl(personApi, context)
     }
 
     @Provides
     @Singleton
     fun providePersonApi() : PersonApi{
         return Retrofit.Builder()
-            .baseUrl(PersonApi.BASE_URL)
+            .baseUrl(ApiInfo.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(PersonApi::class.java)
     }
+
+
 
 
     @Provides
