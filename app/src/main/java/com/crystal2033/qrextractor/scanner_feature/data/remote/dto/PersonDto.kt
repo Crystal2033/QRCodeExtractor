@@ -15,6 +15,7 @@ data class PersonDto(
     val title: TitleDto,
     val workSpace: WorkSpaceDto
 
+
 ) {
     fun toPerson(): Person {
         return Person(
