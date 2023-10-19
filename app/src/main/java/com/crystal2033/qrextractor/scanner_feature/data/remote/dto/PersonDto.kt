@@ -14,7 +14,7 @@ data class PersonDto(
     val secondName: String,
     val title: TitleDto,
     val workSpace: WorkSpaceDto
-    
+
 ) {
     fun toPerson(): Person {
         return Person(
