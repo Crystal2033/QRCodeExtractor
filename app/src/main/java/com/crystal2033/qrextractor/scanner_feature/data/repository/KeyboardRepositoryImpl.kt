@@ -61,9 +61,7 @@ class KeyboardRepositoryImpl(
     ): String {
         val stringErrorFromRemoteApi = e.response()?.errorBody()?.string()
         val jObjError = stringErrorFromRemoteApi?.let { JSONObject(it) }
-
-        //e.message?.let { Log.e("ERROR", it + "The is a problem with http request/response.") }
         return "HTTP ${jObjError?.getString(Constants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
-                " ${jObjError?.getString(Constants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}."
+                " ${jObjError?.getString(Constants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
     }
 }
