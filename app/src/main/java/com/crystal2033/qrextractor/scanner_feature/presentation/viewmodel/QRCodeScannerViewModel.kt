@@ -1,6 +1,8 @@
 package com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -15,6 +17,7 @@ import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCa
 //import com.crystal2033.qrextractor.scanner_feature.presentation.state.PersonState
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.ScannedDataState
 import com.crystal2033.qrextractor.scanner_feature.presentation.util.UIEvent
+import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +29,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.reflect.typeOf
 
 @HiltViewModel
 class QRCodeScannerViewModel @Inject constructor(
@@ -56,12 +60,24 @@ class QRCodeScannerViewModel @Inject constructor(
         }
         setDeduplicateStringAndDelayForClear(scanResult)
 
-        val scannedObject = converter.fromJsonToScannedTableNameAndId(scanResult)
+        try{
+            val scannedObject = converter.fromJsonToScannedTableNameAndId(scanResult)
+            scanJob?.cancel()
+            insertScannedDataInStateIfPossible(scannedObject)
+        }
+        catch (e: JsonSyntaxException){
+            showQRCodeFormatError(e)
+        }
 
-        scanJob?.cancel()
-        insertScannedDataInStateIfPossible(scannedObject)
     }
 
+
+    private fun showQRCodeFormatError(e: JsonSyntaxException){
+        Log.e("Convert error", e.message ?: "Unknown")
+        scanJob = viewModelScope.launch {
+            setStateInfo(Resource.Error(message = "QR-code`s content is not compatible with this application."))
+        }
+    }
     private fun setDeduplicateStringAndDelayForClear(scanResult: String) {
         prevScanString = scanResult
         CoroutineScope(Dispatchers.Default).launch {
