@@ -3,8 +3,10 @@ package com.crystal2033.qrextractor.scanner_feature.presentation
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -15,20 +17,17 @@ import androidx.camera.view.PreviewView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,8 +37,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -48,16 +47,17 @@ import com.crystal2033.qrextractor.scanner_feature.presentation.uiItems.preview.
 import com.crystal2033.qrextractor.scanner_feature.presentation.util.UIEvent
 import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.QRCodeScannerViewModel
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun QRCodeView(viewModel: QRCodeScannerViewModel,
-               modifier: Modifier = Modifier) {
+fun QRCodeView(
+    viewModel: QRCodeScannerViewModel,
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState
+) {
 
     val dataState = viewModel.previewDataFromQRState.value
-    val snackbarHostState = remember { SnackbarHostState() }
 
     var code by remember {
         mutableStateOf("")
@@ -68,6 +68,7 @@ fun QRCodeView(viewModel: QRCodeScannerViewModel,
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(context)
     }
+
 
     var hasCameraPermission by remember {
         mutableStateOf(
@@ -100,31 +101,25 @@ fun QRCodeView(viewModel: QRCodeScannerViewModel,
         launcher.launch(Manifest.permission.CAMERA)
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-//        modifier = Modifier
-//            .background(Color.Red)
-//            .fillMaxSize(),
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                text = { Text("Show snackbar") },
-                icon = { Icon(Icons.Filled.Check, contentDescription = "") },
-                onClick = {
-                    scope.launch {
-                        snackbarHostState.showSnackbar("Snackbar")
-                    }
-                }
-            )
-        }
-
-    ) {
-        Box(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
+    Scaffold {
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+        ) {
             Column(
-                modifier = Modifier.fillMaxSize()
-            ) {
+                modifier = Modifier
+                    .offset(0.dp, 55.dp)
+                    .padding(15.dp)
+                    .fillMaxSize()
+            )
+
+            {
+                Spacer(Modifier.size(16.dp))
                 if (hasCameraPermission) {
                     AndroidView(
-                        //modifier = Modifier.size(200.dp, 200.dp),
+                        modifier = Modifier
+                            .size(400.dp)
+                            .align(Alignment.CenterHorizontally),
                         factory = { context ->
                             val previewView = PreviewView(context)
                             val preview = Preview.Builder().build()
@@ -164,15 +159,15 @@ fun QRCodeView(viewModel: QRCodeScannerViewModel,
                             previewView
                         },
                     )
-                    dataState.scannedDataInfo?.let { scannedData -> ShowDataItemByType(qrScannable = scannedData) }
+                    Spacer(Modifier.size(30.dp))
+                    dataState.scannedDataInfo?.let { scannedData ->
+                        ShowDataItemByType(
+                            qrScannable = scannedData
+                        )
+                    }
                 }
-
             }
-//            Button(modifier = Modifier.offset(20.dp, 20.dp), onClick = {
-//
-//            }) {
-//                Text(text = "Hello world", color = Color.White)
-//            }
+
             if (dataState.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
@@ -181,3 +176,4 @@ fun QRCodeView(viewModel: QRCodeScannerViewModel,
 
 
 }
+
