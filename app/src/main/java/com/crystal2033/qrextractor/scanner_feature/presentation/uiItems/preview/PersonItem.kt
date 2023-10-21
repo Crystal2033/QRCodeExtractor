@@ -1,17 +1,17 @@
 package com.crystal2033.qrextractor.scanner_feature.presentation.uiItems.preview
 
 import android.graphics.BitmapFactory
-import android.widget.ImageView
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,9 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Department
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Person
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Title
@@ -36,36 +42,94 @@ fun PersonInfo(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.background
+        color = Color(0xff1c1b1f)
 //        contentAlignment = Alignment.Center
     ) {
-        Column(verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 text = "PERSON",
-                //color = Color.White
+                color = Color.DarkGray,
+                fontWeight = FontWeight.Bold
             )
-            Text(
-                text = "First name: ${person?.firstName ?: "Unknown first name"}",
-                //color = Color.White
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Second name: ${person?.secondName ?: "Unknown second name"}",
-                //color = Color.White
-            )
-            person?.image?.let { imageBitmap ->
-                Image(bitmap = imageBitmap,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape))
-            }
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column {
+                    person?.image?.let { imageBitmap ->
+                        Image(
+                            bitmap = imageBitmap,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(CircleShape)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ShowId(
+                        person?.id ?: 0,
+                        modifier = Modifier.align(Alignment.CenterHorizontally)
+                    )
+                }
 
+                Spacer(modifier = Modifier.width(20.dp))
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+
+                    FieldNameAndValue(
+                        "Name",
+                        "${person?.firstName} ${person?.secondName}",
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    FieldNameAndValue(
+                        "Work company",
+                        person?.department?.name ?: "No work place"
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+                    FieldNameAndValue(
+                        "Title",
+                        person?.title?.name ?: "No title"
+                    )
+                }
+
+            }
         }
+
+
     }
 
+}
+
+@Composable
+fun ShowId(id: Int, modifier: Modifier = Modifier) {
+    Row(modifier = modifier) {
+        Icon(
+            imageVector = ImageVector.vectorResource(R.drawable.database),
+            contentDescription = "database",
+            tint = Color.LightGray,
+            modifier = Modifier.size(18.dp)
+        )
+        Spacer(modifier = Modifier.width(10.dp))
+        Text(text = "id: ", color = Color.LightGray)
+        Text(text = id.toString(), color = Color.LightGray)
+    }
+}
+
+@Composable
+fun FieldNameAndValue(fieldName: String, fieldValue: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = fieldName, color = Color.Gray, fontSize = 14.sp,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(3.dp))
+        Text(text = fieldValue, color = Color.White, fontSize = 20.sp)
+    }
 }
 
 @Composable
