@@ -103,8 +103,7 @@ fun QRCodeView(
 
     Scaffold {
         Box(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
+
         ) {
             Column(
                 modifier = Modifier

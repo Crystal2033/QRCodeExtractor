@@ -42,7 +42,7 @@ fun PersonInfo(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        color = MaterialTheme.colorScheme.onBackground
+        color = Color(0xff1c1b1f)
 //        contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
