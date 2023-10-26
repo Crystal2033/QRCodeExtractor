@@ -60,22 +60,4 @@ class KeyboardRepositoryImpl(
         }
 
     }
-
-//    private fun getErrorMessageFromException(
-//        e: HttpException
-//    ): String {
-//        val stringErrorFromRemoteApi = e.response()?.errorBody()?.string()
-//        val jObjError = stringErrorFromRemoteApi?.let { JSONObject(it) }
-//        return "HTTP ${jObjError?.getString(Constants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
-//                " ${jObjError?.getString(Constants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
-//    }
-//
-//    private fun <T> getErrorMessageFromResponse(
-//        response: Response<T>
-//    ): String {
-//        val stringErrorFromRemoteApi = response.errorBody()?.string()
-//        val jObjError = stringErrorFromRemoteApi?.let { JSONObject(it) }
-//        return "HTTP ${jObjError?.getString(Constants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
-//                " ${jObjError?.getString(Constants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
-//    }
 }
