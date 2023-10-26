@@ -37,7 +37,7 @@ class QRCodeScannerViewModel @Inject constructor(
     private val useCaseGetQRCodeFactory: UseCaseGetQRCodeFactory
 ) : ViewModel() {
     companion object {
-        const val timeForDuplicateQRCodesResistInMs = 10000L
+        const val timeForDuplicateQRCodesResistInMs = 12000L
     }
 
     private lateinit var getDataFromQRCodeUseCase: GetDataFromQRCodeUseCase
@@ -51,6 +51,8 @@ class QRCodeScannerViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     private var scanJob: Job? = null
+
+    private var deleteDuplicateQRCodeStringJob: Job? = null
 
     private var prevScanString: String? = null
 
@@ -80,7 +82,8 @@ class QRCodeScannerViewModel @Inject constructor(
     }
     private fun setDeduplicateStringAndDelayForClear(scanResult: String) {
         prevScanString = scanResult
-        CoroutineScope(Dispatchers.Default).launch {
+        deleteDuplicateQRCodeStringJob?.cancel()
+        deleteDuplicateQRCodeStringJob = CoroutineScope(Dispatchers.Default).launch {
             delay(timeForDuplicateQRCodesResistInMs)
             prevScanString = ""
         }

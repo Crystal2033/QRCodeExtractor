@@ -10,11 +10,13 @@ import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.remote.api.KeyboardApi
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Keyboard
 import com.crystal2033.qrextractor.scanner_feature.domain.repository.KeyboardRepository
+import com.crystal2033.qrextractor.scanner_feature.exceptions.ExceptionAndErrorParsers
 import com.crystal2033.qrextractor.scanner_feature.exceptions.RemoteServerRequestException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import org.json.JSONObject
 import retrofit2.HttpException
+import retrofit2.Response
 import java.io.IOException
 
 
@@ -40,14 +42,17 @@ class KeyboardRepositoryImpl(
         id: Int,
         context: Context
     ): Keyboard {
-        var message = "Unknown message"
+        val message: String
         try {
-            val keyboard = keyboardApi.getKeyboard(id)?.toKeyboard()
+            val response = keyboardApi.getKeyboard(id)
+            val keyboard = response.body()?.toKeyboard()
             keyboard?.let {
                 return keyboard
-            } ?: throw RemoteServerRequestException(message)
+            } ?: throw RemoteServerRequestException(
+                ExceptionAndErrorParsers.getErrorMessageFromResponse(response)
+            )
         } catch (e: HttpException) {
-            message = getErrorMessageFromException(e)
+            message = ExceptionAndErrorParsers.getErrorMessageFromException(e)
             throw RemoteServerRequestException(message)
         } catch (e: IOException) {
             message = context.getString(R.string.server_connection_error)
@@ -56,12 +61,21 @@ class KeyboardRepositoryImpl(
 
     }
 
-    private fun getErrorMessageFromException(
-        e: HttpException
-    ): String {
-        val stringErrorFromRemoteApi = e.response()?.errorBody()?.string()
-        val jObjError = stringErrorFromRemoteApi?.let { JSONObject(it) }
-        return "HTTP ${jObjError?.getString(Constants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
-                " ${jObjError?.getString(Constants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
-    }
+//    private fun getErrorMessageFromException(
+//        e: HttpException
+//    ): String {
+//        val stringErrorFromRemoteApi = e.response()?.errorBody()?.string()
+//        val jObjError = stringErrorFromRemoteApi?.let { JSONObject(it) }
+//        return "HTTP ${jObjError?.getString(Constants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
+//                " ${jObjError?.getString(Constants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
+//    }
+//
+//    private fun <T> getErrorMessageFromResponse(
+//        response: Response<T>
+//    ): String {
+//        val stringErrorFromRemoteApi = response.errorBody()?.string()
+//        val jObjError = stringErrorFromRemoteApi?.let { JSONObject(it) }
+//        return "HTTP ${jObjError?.getString(Constants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
+//                " ${jObjError?.getString(Constants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
+//    }
 }
