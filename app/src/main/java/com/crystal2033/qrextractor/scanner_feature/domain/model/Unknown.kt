@@ -6,6 +6,6 @@ class Unknown(val message: String) : QRScannableData {
     }
 
     override fun getDatabaseID(): Int {
-        return -1;
+        return 0
     }
 }

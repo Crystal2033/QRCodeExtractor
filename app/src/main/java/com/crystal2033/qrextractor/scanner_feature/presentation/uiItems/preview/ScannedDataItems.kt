@@ -2,10 +2,15 @@ package com.crystal2033.qrextractor.scanner_feature.presentation.uiItems.preview
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Keyboard
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Person
 import com.crystal2033.qrextractor.scanner_feature.domain.model.QRScannableData
@@ -32,6 +37,7 @@ import com.crystal2033.qrextractor.scanner_feature.domain.model.Unknown
 fun ShowDataItemByType(
     qrScannable: QRScannableData?,
     modifier: Modifier = Modifier,
+    onAddObjectIntoListClicked: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -43,36 +49,28 @@ fun ShowDataItemByType(
                     )
                 )
             )
-    ){
+    ) {
         when (qrScannable) {
-            is Person -> {
-                PersonInfo(person = qrScannable)
-            }
-
             is Unknown -> {
                 UnknownItem(unknownDataInfo = qrScannable)
+            }
+
+            is Person -> {
+                PersonInfo(person = qrScannable)
             }
 
             is Keyboard -> {
                 KeyboardItem(keyboard = qrScannable)
             }
-
-            else -> {
-
+        }
+        qrScannable?.let {
+            Button(
+                modifier = Modifier.align(Alignment.TopEnd), onClick = onAddObjectIntoListClicked
+            ) {
+                Text(text = "Add in list", fontWeight = FontWeight.Bold, fontSize = 10.sp)
             }
         }
+
     }
 
 }
-
-
-//@Composable
-//fun ShowTableName(tableName: String, modifier: Modifier) {
-//    Text(
-//        text = tableName,
-//        fontSize = 20.sp,
-//        color = Color.Gray,
-//        fontWeight = FontWeight.Bold,
-//        modifier = modifier
-//    )
-//}
