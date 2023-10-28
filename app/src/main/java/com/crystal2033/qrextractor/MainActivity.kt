@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -214,9 +215,20 @@ fun MyNavGraph(
                 val viewModel = it.sharedViewModel<QRCodeScannerViewModel>(navController)
                 QRCodeView(
                     viewModel = viewModel,
-                    modifier = Modifier.fillMaxSize(),
+                    onNavigate = {navigationEvent ->
+                        navController.navigate(navigationEvent.route)
+                    },
                     snackbarHostState = snackbarHostState
                 )
+            }
+
+            composable(context.resources.getString(R.string.list_of_scanned_objects_route)){
+                val viewModel = it.sharedViewModel<QRCodeScannerViewModel>(navController)
+                TextWindowWithButton(
+                    string = "Size of objects: ${viewModel.listOfAddedScannables.size}",
+                    onPopBackStack = {
+                        navController.popBackStack()
+                    })
             }
         }
 
@@ -253,6 +265,27 @@ fun TextWindow(string: String) {
             text = string,
             fontSize = 35.sp
         )
+    }
+}
+
+@Composable
+fun TextWindowWithButton(
+    string: String,
+    onPopBackStack: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+
+    ) {
+        Text(
+            text = string,
+            fontSize = 35.sp
+        )
+        Button(onClick = { onPopBackStack() }) {
+            Text(text = "Go back dude")
+        }
     }
 }
 

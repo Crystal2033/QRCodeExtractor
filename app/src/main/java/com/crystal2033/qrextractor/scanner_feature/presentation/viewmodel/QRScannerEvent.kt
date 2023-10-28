@@ -7,4 +7,6 @@ sealed class QRScannerEvent {
         val scannableObject: QRScannableData,
         val addEvenIfDuplicate: Boolean
     ) : QRScannerEvent()
+
+    object OnGoToScannedList : QRScannerEvent()
 }

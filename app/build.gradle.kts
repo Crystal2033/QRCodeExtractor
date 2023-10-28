@@ -88,7 +88,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
     // CameraX core library using the camera2 implementation
-    val camerax_version = "1.4.0-alpha01"
+    val camerax_version = "1.4.0-alpha02"
     implementation("androidx.camera:camera-camera2:${camerax_version}")
     // If you want to additionally use the CameraX Lifecycle library
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")

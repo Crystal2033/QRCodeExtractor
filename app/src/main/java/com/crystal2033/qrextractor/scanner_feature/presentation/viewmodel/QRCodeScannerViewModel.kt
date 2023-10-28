@@ -1,5 +1,6 @@
 package com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
@@ -9,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.scan_model.ScannedTableNameAndId
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
@@ -20,13 +22,12 @@ import com.crystal2033.qrextractor.scanner_feature.presentation.state.ScannedDat
 import com.crystal2033.qrextractor.scanner_feature.presentation.util.UIEvent
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -36,7 +37,8 @@ import javax.inject.Inject
 @HiltViewModel
 class QRCodeScannerViewModel @Inject constructor(
     private val converter: Converters,
-    private val useCaseGetQRCodeFactory: UseCaseGetQRCodeFactory
+    private val useCaseGetQRCodeFactory: UseCaseGetQRCodeFactory,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     companion object {
         const val timeForDuplicateQRCodesResistInMs = 12000L
@@ -75,34 +77,41 @@ class QRCodeScannerViewModel @Inject constructor(
 
     }
 
-    fun onEvent(event: QRScannerEvent){
-        when(event){
+    fun onEvent(event: QRScannerEvent) {
+        when (event) {
             is QRScannerEvent.OnAddObjectInList -> {
                 onAddScannableIntoListClicked(event.scannableObject, event.addEvenIfDuplicate)
+            }
+            is QRScannerEvent.OnGoToScannedList -> {
+                sendUiEvent(UIEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
             }
         }
     }
 
-    private fun onAddScannableIntoListClicked(scannableObject: QRScannableData, isAddEvenDuplicate: Boolean){
-        if (isAddEvenDuplicate){
+    private fun onAddScannableIntoListClicked(
+        scannableObject: QRScannableData,
+        isAddEvenDuplicate: Boolean
+    ) {
+        if (isAddEvenDuplicate) {
             _listOfAddedScannables.add(scannableObject)
             return
         }
 
-        if (_listOfAddedScannables.find { it == scannableObject} != null){
+        if (_listOfAddedScannables.find { it == scannableObject } != null) {
             viewModelScope.launch {
-                _eventFlow.send(UIEvent.ShowDialogWindow(
-                    message = "This object already exists in list. Do you really want to append another one?",
-                    onDeclineAction = {},
-                    onAcceptAction = {
-                        onAddScannableIntoListClicked(scannableObject, true)
-                    },
-                    dialogTitle = "Duplicate object",
-                    icon = Icons.Default.Warning
-                ))
+                sendUiEvent(
+                    UIEvent.ShowDialogWindow(
+                        message = "This object already exists in list. Do you really want to append another one?",
+                        onDeclineAction = {},
+                        onAcceptAction = {
+                            onAddScannableIntoListClicked(scannableObject, true)
+                        },
+                        dialogTitle = "Duplicate object",
+                        icon = Icons.Default.Warning
+                    )
+                )
             }
-        }
-        else{
+        } else {
             _listOfAddedScannables.add(scannableObject)
         }
     }
@@ -142,14 +151,14 @@ class QRCodeScannerViewModel @Inject constructor(
         }
     }
 
-    private suspend fun setStateInfo(data: Resource<QRScannableData>) {
+    private fun setStateInfo(data: Resource<QRScannableData>) {
         when (data) {
             is Resource.Loading -> {
                 sendDataWithStatus(data, true)
             }
 
             is Resource.Error -> {
-                setErrorStatus(null, data.message)
+                setErrorStatus(data.message)
             }
 
             is Resource.Success -> {
@@ -165,15 +174,22 @@ class QRCodeScannerViewModel @Inject constructor(
         )
     }
 
-    private suspend fun setErrorStatus(result: Resource<QRScannableData>?, errorMessage: String?) {
+    private fun setErrorStatus(errorMessage: String?) {
         _previewDataFromQRState.value = previewDataFromQRState.value.copy(
-            scannedDataInfo = result?.data,
+            scannedDataInfo = null,
             isLoading = false
         )
-        _eventFlow.send(
+
+        sendUiEvent(
             UIEvent.ShowSnackBar(
                 message = errorMessage ?: "Unknown error"
             )
         )
+    }
+
+    private fun sendUiEvent(event: UIEvent) {
+        viewModelScope.launch {
+            _eventFlow.send(event)
+        }
     }
 }
