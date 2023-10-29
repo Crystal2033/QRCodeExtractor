@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.scanner_feature.presentation.util
+package com.crystal2033.qrextractor.scanner_feature.vm_view_communication
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

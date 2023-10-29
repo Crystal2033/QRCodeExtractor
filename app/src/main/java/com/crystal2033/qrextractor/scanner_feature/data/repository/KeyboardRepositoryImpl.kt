@@ -5,7 +5,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.core.Constants
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.remote.api.KeyboardApi
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Keyboard
@@ -14,9 +13,7 @@ import com.crystal2033.qrextractor.scanner_feature.exceptions.ExceptionAndErrorP
 import com.crystal2033.qrextractor.scanner_feature.exceptions.RemoteServerRequestException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.json.JSONObject
 import retrofit2.HttpException
-import retrofit2.Response
 import java.io.IOException
 
 

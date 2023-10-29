@@ -1,7 +1,6 @@
-package com.crystal2033.qrextractor.scanner_feature.presentation
+package com.crystal2033.qrextractor.scanner_feature.presentation.util
 
 import android.graphics.ImageFormat
-import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.zxing.BarcodeFormat

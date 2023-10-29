@@ -16,23 +16,6 @@ import com.crystal2033.qrextractor.scanner_feature.domain.model.Person
 import com.crystal2033.qrextractor.scanner_feature.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Unknown
 
-//@Language("AGSL")
-//val CUSTOM_SHADER = """
-//    uniform float2 resolution;
-//    layout(color) uniform half4 color;
-//    layout(color) uniform half4 color2;
-//
-//    half4 main(in float2 fragCoord) {
-//        float2 uv = fragCoord/resolution.xy;
-//
-//        float mixValue = distance(uv, vec2(0, 1));
-//        return mix(color, color2, mixValue);
-//    }
-//""".trimIndent()
-//
-//val BoxGreen = Color(0xFF31443E)
-//val BoxDarkBlue = Color(0xFF484E64)
-
 @Composable
 fun ShowDataItemByType(
     qrScannable: QRScannableData?,

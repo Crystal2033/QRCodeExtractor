@@ -11,6 +11,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.scan_model.ScannedTableNameAndId
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
@@ -19,7 +20,8 @@ import com.crystal2033.qrextractor.scanner_feature.domain.model.Unknown
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.GetDataFromQRCodeUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCaseGetQRCodeFactory
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.ScannedDataState
-import com.crystal2033.qrextractor.scanner_feature.presentation.util.UIEvent
+import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIEvent
+import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.QRScannerEvent
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -61,7 +63,21 @@ class QRCodeScannerViewModel @Inject constructor(
 
     private var prevScanString: String? = null
 
-    fun onScanQRCode(scanResult: String) {
+    fun onEvent(event: QRScannerEvent) {
+        when (event) {
+            is QRScannerEvent.OnAddObjectInList -> {
+                onAddScannableIntoListClicked(event.scannableObject, event.addEvenIfDuplicate)
+            }
+            is QRScannerEvent.OnGoToScannedList -> {
+                sendUiEvent(UIEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
+            }
+            is QRScannerEvent.OnScanQRCode -> {
+                onScanQRCode(event.scannedData)
+            }
+        }
+    }
+
+    private fun onScanQRCode(scanResult: String) {
         if (scanResult.isBlank() || prevScanString == scanResult) {
             return
         }
@@ -75,17 +91,6 @@ class QRCodeScannerViewModel @Inject constructor(
             showQRCodeFormatError(e)
         }
 
-    }
-
-    fun onEvent(event: QRScannerEvent) {
-        when (event) {
-            is QRScannerEvent.OnAddObjectInList -> {
-                onAddScannableIntoListClicked(event.scannableObject, event.addEvenIfDuplicate)
-            }
-            is QRScannerEvent.OnGoToScannedList -> {
-                sendUiEvent(UIEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
-            }
-        }
     }
 
     private fun onAddScannableIntoListClicked(
@@ -117,7 +122,7 @@ class QRCodeScannerViewModel @Inject constructor(
     }
 
     private fun showQRCodeFormatError(e: JsonSyntaxException) {
-        Log.e("Convert error", e.message ?: "Unknown")
+        Log.e(LOG_TAG_NAMES.ERROR_TAG, e.message ?: "Unknown")
         scanJob = viewModelScope.launch {
             setStateInfo(Resource.Error(message = "QR-code`s content is not compatible with this application."))
         }
@@ -139,7 +144,7 @@ class QRCodeScannerViewModel @Inject constructor(
                     getDataFromQRCodeUseCase =
                         useCaseGetQRCodeFactory.createUseCase(scannedObj.tableName)
                 } catch (error: ClassNotFoundException) {
-                    Log.e("QR_ERROR", error.message ?: "Unknown error")
+                    Log.e(LOG_TAG_NAMES.ERROR_TAG, error.message ?: "Unknown error")
                     val errorMsg = error.message ?: "Unknown error"
                     setStateInfo(Resource.Error(message = errorMsg, Unknown(errorMsg)))
                     return@launch
@@ -147,7 +152,7 @@ class QRCodeScannerViewModel @Inject constructor(
                 getDataFromQRCodeUseCase(scannedObj.id).onEach { result ->
                     setStateInfo(result)
                 }.launchIn(this)
-            } ?: Log.e("QR_ERROR", "Error with scannedObject convertion. No id there")
+            } ?: Log.e(LOG_TAG_NAMES.ERROR_TAG, "Error with scannedObject convertion. No id there")
         }
     }
 

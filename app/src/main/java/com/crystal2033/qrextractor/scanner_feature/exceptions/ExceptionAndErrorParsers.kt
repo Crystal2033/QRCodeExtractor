@@ -1,6 +1,6 @@
 package com.crystal2033.qrextractor.scanner_feature.exceptions
 
-import com.crystal2033.qrextractor.core.Constants
+import com.crystal2033.qrextractor.core.ResponseErrorConstants
 import org.json.JSONObject
 import retrofit2.HttpException
 import retrofit2.Response
@@ -12,8 +12,8 @@ class ExceptionAndErrorParsers {
         ): String {
             val stringErrorFromRemoteApi = e.response()?.errorBody()?.string()
             val jObjError = stringErrorFromRemoteApi?.let { JSONObject(it) }
-            return "HTTP ${jObjError?.getString(Constants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
-                    " ${jObjError?.getString(Constants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
+            return "HTTP ${jObjError?.getString(ResponseErrorConstants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
+                    " ${jObjError?.getString(ResponseErrorConstants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
         }
 
         fun <T> getErrorMessageFromResponse(
@@ -21,8 +21,8 @@ class ExceptionAndErrorParsers {
         ): String {
             val stringErrorFromRemoteApi = response.errorBody()?.string()
             val jObjError = stringErrorFromRemoteApi?.let { JSONObject(it) }
-            return "HTTP ${jObjError?.getString(Constants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
-                    " ${jObjError?.getString(Constants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
+            return "HTTP ${jObjError?.getString(ResponseErrorConstants.ERROR_STATUS_CODE_FIELD) ?: "Unknown code"}," +
+                    " ${jObjError?.getString(ResponseErrorConstants.ERROR_MESSAGE_FIELD) ?: "Unknown error from server"}"
         }
     }
 }

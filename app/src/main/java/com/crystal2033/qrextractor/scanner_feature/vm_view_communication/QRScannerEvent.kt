@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel
+package com.crystal2033.qrextractor.scanner_feature.vm_view_communication
 
 import com.crystal2033.qrextractor.scanner_feature.domain.model.QRScannableData
 
@@ -8,5 +8,6 @@ sealed class QRScannerEvent {
         val addEvenIfDuplicate: Boolean
     ) : QRScannerEvent()
 
+    data class OnScanQRCode(val scannedData: String) : QRScannerEvent()
     object OnGoToScannedList : QRScannerEvent()
 }
