@@ -17,6 +17,7 @@ import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Unknown
+import com.crystal2033.qrextractor.scanner_feature.domain.use_case.concrete_use_case.GetScannedGroupsWithObjectsUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.GetDataFromQRCodeUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCaseGetQRCodeFactory
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.ScannedDataState
@@ -40,6 +41,7 @@ import javax.inject.Inject
 class QRCodeScannerViewModel @Inject constructor(
     private val converter: Converters,
     private val useCaseGetQRCodeFactory: UseCaseGetQRCodeFactory,
+    private val useCaseGetScannedGroupWithObjects: GetScannedGroupsWithObjectsUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
     companion object {
@@ -149,6 +151,10 @@ class QRCodeScannerViewModel @Inject constructor(
                     setStateInfo(Resource.Error(message = errorMsg, Unknown(errorMsg)))
                     return@launch
                 }
+                useCaseGetScannedGroupWithObjects(1).onEach {
+                    Log.i(LOG_TAG_NAMES.INFO_TAG, "Set observer")
+                }.launchIn(this)
+
                 getDataFromQRCodeUseCase(scannedObj.id).onEach { result ->
                     setStateInfo(result)
                 }.launchIn(this)

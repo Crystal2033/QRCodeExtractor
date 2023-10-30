@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.flow
 
 class GetKeyboardFromQRCodeUseCase(
     private val repository: KeyboardRepository
-):GetDataFromQRCodeUseCase {
-    override fun invoke(id: Int): Flow<Resource<QRScannableData>> {
+) : GetDataFromQRCodeUseCase {
+    override operator fun invoke(id: Int): Flow<Resource<QRScannableData>> {
         if (id < 1) {
             return flow { }
         }

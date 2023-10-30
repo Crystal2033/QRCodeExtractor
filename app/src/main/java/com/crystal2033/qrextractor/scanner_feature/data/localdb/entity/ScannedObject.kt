@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.scanner_feature.data.local.entity
+package com.crystal2033.qrextractor.scanner_feature.data.localdb.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,5 +9,5 @@ data class ScannedObject(
     val tableIdInRemoteDb: Long,
 
     @PrimaryKey(autoGenerate = true)
-    val scannedObjectId: Long
+    var scannedObjectId: Long= 0
 )
