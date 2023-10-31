@@ -32,6 +32,7 @@ fun NavGraphBuilder.scannerGraph(navController: NavController,
 
         composable(context.resources.getString(R.string.list_of_scanned_objects_route)) {
             val viewModel = it.sharedViewModel<QRCodeScannerViewModel>(navController)
+            //TODO: probably here we need new viewmodel for list work with 
             ScannedListView(
                 viewModel = viewModel,
                 onNavigate = { navigationEvent ->

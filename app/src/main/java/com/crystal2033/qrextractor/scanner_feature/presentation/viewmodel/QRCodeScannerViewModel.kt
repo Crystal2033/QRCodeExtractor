@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
-import com.crystal2033.qrextractor.core.scan_model.ScannedTableNameAndId
+import com.crystal2033.qrextractor.scanner_feature.data.util.ScannedTableNameAndId
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.domain.model.QRScannableData
@@ -50,11 +50,13 @@ class QRCodeScannerViewModel @Inject constructor(
 
     private lateinit var getDataFromQRCodeUseCase: GetDataFromQRCodeUseCase
 
+    ///States
     private val _previewDataFromQRState = mutableStateOf(ScannedDataState())
     val previewDataFromQRState: State<ScannedDataState> = _previewDataFromQRState
 
     private val _listOfAddedScannables = mutableStateListOf<QRScannableData>()
     val listOfAddedScannables: SnapshotStateList<QRScannableData> = _listOfAddedScannables
+    ///States
 
     private val _eventFlow = Channel<UIEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
@@ -151,9 +153,6 @@ class QRCodeScannerViewModel @Inject constructor(
                     setStateInfo(Resource.Error(message = errorMsg, Unknown(errorMsg)))
                     return@launch
                 }
-                useCaseGetScannedGroupWithObjects(1).onEach {
-                    Log.i(LOG_TAG_NAMES.INFO_TAG, "Set observer")
-                }.launchIn(this)
 
                 getDataFromQRCodeUseCase(scannedObj.id).onEach { result ->
                     setStateInfo(result)

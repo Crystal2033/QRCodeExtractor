@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.crystal2033.qrextractor.core.localdb.AppDatabase
 import com.crystal2033.qrextractor.core.localdb.repository.ScannedObjectsListRepository
-import com.crystal2033.qrextractor.core.localdb.repository.ScannedObjectsListRepositoryImpl
+import com.crystal2033.qrextractor.core.localdb.repository.impl.ScannedObjectsListRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -3,6 +3,7 @@ package com.crystal2033.qrextractor.scanner_feature.presentation
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -33,6 +34,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -44,6 +46,7 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.scanner_feature.StaticConverters
 import com.crystal2033.qrextractor.scanner_feature.presentation.floating_views.DialogQuestion
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.DialogWindowInfoState
@@ -63,8 +66,13 @@ fun QRCodeView(
     snackbarHostState: SnackbarHostState
 ) {
 
-    val dataState = viewModel.previewDataFromQRState.value
-    val chosenListOfScannedObjects = viewModel.listOfAddedScannables
+    val scannedObject by remember {
+        mutableStateOf(viewModel.previewDataFromQRState)
+    } // or just  val scannedObject = viewModel.previewDataFromQRState.value??
+
+    val chosenListOfScannedObjects = remember {
+        viewModel.listOfAddedScannables
+    }
 
     val isNeedToShowDialog = remember {
         mutableStateOf(false)
@@ -187,8 +195,7 @@ fun QRCodeView(
                         },
                     )
                     Spacer(modifier = Modifier.size(60.dp))
-
-                    dataState.scannedDataInfo?.let { scannedData ->
+                    scannedObject.value.scannedDataInfo?.let { scannedData ->
                         ShowDataItemByType(
                             qrScannable = scannedData,
                             onAddObjectIntoListClicked = {
@@ -204,7 +211,7 @@ fun QRCodeView(
                 }
             }
 
-            if (dataState.isLoading) {
+            if (scannedObject.value.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
 

@@ -1,6 +1,6 @@
 package com.crystal2033.qrextractor.scanner_feature.data
 
-import com.crystal2033.qrextractor.core.scan_model.ScannedTableNameAndId
+import com.crystal2033.qrextractor.scanner_feature.data.util.ScannedTableNameAndId
 import com.crystal2033.qrextractor.scanner_feature.data.util.JsonParser
 import com.google.gson.reflect.TypeToken
 
