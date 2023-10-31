@@ -5,5 +5,5 @@ import com.crystal2033.qrextractor.scanner_feature.domain.model.Keyboard
 import kotlinx.coroutines.flow.Flow
 
 interface KeyboardRepository {
-    fun getKeyboard(id: Int): Flow<Resource<Keyboard>>
+    fun getKeyboard(id: Long): Flow<Resource<Keyboard>>
 }

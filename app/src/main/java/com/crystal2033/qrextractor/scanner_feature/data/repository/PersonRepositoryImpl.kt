@@ -19,7 +19,7 @@ class PersonRepositoryImpl(
     private val personApi: PersonApi,
     private val context: Context
 ) : PersonRepository {
-    override fun getPerson(id: Int): Flow<Resource<Person>> = flow {
+    override fun getPerson(id: Long): Flow<Resource<Person>> = flow {
         emit(Resource.Loading())
         try {
             val person = tryToGetPerson(id, context)
@@ -32,7 +32,7 @@ class PersonRepositoryImpl(
     }
 
     private suspend fun tryToGetPerson(
-        id: Int,
+        id: Long,
         context: Context
     ): Person {
         val message: String

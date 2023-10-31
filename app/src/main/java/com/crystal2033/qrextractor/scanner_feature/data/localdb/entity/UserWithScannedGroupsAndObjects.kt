@@ -4,9 +4,9 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class UserWithScannedGroupsAndObjects(
-    @Embedded val user: User,
+    @Embedded val user: UserEntity,
     @Relation(
-        entity = ScannedGroup::class,
+        entity = ScannedGroupEntity::class,
         parentColumn = "userId",
         entityColumn = "userCreatorId"
     )

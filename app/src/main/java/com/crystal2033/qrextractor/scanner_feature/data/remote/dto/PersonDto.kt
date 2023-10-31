@@ -8,7 +8,7 @@ import com.crystal2033.qrextractor.scanner_feature.domain.model.Person
 data class PersonDto(
     val department: DepartmentDto,
     val firstName: String,
-    val id: Int,
+    val id: Long,
     val image: String,
     val jsondataForQR: String,
     val secondName: String,

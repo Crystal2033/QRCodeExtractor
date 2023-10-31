@@ -5,7 +5,7 @@ import com.crystal2033.qrextractor.scanner_feature.data.remote.dto.WorkSpaceDto
 import java.time.LocalDate
 
 data class Keyboard(
-    val id: Int,
+    val id: Long,
     val image: ImageBitmap,
     val model: String,
     val startUseDate: LocalDate,
@@ -15,7 +15,7 @@ data class Keyboard(
         return DatabaseObjectTypes.KEYBOARD
     }
 
-    override fun getDatabaseID(): Int {
-        return id;
+    override fun getDatabaseID(): Long {
+        return id
     }
 }

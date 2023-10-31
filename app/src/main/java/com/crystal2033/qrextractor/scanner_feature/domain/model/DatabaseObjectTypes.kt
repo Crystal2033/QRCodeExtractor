@@ -8,7 +8,7 @@ import com.crystal2033.qrextractor.R
 значение с именем объекта, которое будет использовано для определения объекта
 в Composable функции ScannedDataItems.
  */
-enum class DatabaseObjectTypes(val dataTableStringID: Int) {
+enum class DatabaseObjectTypes(private val dataTableStringID: Int) {
     PERSON(R.string.person_table_name),
     KEYBOARD(R.string.keyboard_table_name),
     MONITOR(R.string.monitor_table_name),

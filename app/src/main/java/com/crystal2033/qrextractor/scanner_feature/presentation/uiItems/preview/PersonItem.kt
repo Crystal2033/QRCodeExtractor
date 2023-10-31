@@ -103,7 +103,7 @@ fun PersonInfo(
 }
 
 @Composable
-fun ShowId(id: Int, modifier: Modifier = Modifier) {
+fun ShowId(id: Long, modifier: Modifier = Modifier) {
     Row(modifier = modifier) {
         Icon(
             imageVector = ImageVector.vectorResource(R.drawable.database),

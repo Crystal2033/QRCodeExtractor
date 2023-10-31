@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import com.crystal2033.qrextractor.scanner_feature.data.remote.dto.WorkSpaceDto
 
 data class Person (
-    val id: Int,
+    val id: Long,
     val department: Department,
     val firstName: String,
     val image: ImageBitmap,
@@ -17,8 +17,8 @@ data class Person (
         return DatabaseObjectTypes.PERSON
     }
 
-    override fun getDatabaseID(): Int {
-        return id;
+    override fun getDatabaseID(): Long {
+        return id
     }
 
 }

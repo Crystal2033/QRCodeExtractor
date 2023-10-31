@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 class GetPersonFromQRCodeUseCase(
     private val repository: PersonRepository
 ) : GetDataFromQRCodeUseCase {
-    override operator fun invoke(id: Int): Flow<Resource<QRScannableData>> {
+    override operator fun invoke(id: Long): Flow<Resource<QRScannableData>> {
         if (id < 1) {
             return flow { }
         }

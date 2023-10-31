@@ -7,7 +7,7 @@ import com.crystal2033.qrextractor.scanner_feature.domain.model.Keyboard
 import java.time.LocalDate
 
 data class KeyboardDto(
-    val id: Int,
+    val id: Long,
     val image: String,
     val jsondataForQR: String,
     val model: String,

@@ -4,11 +4,11 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class UserWithScannedGroup(
-    @Embedded val user: User,
+    @Embedded val user: UserEntity,
     @Relation(
         parentColumn = "userId",
         entityColumn = "userCreatorId"
     )
 
-    val scannedGroups: List<ScannedGroup>
+    val scannedGroups: List<ScannedGroupEntity>
 )

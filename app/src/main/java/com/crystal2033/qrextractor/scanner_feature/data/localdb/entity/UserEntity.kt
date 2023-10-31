@@ -3,8 +3,8 @@ package com.crystal2033.qrextractor.scanner_feature.data.localdb.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
-data class User(
+@Entity(tableName = "User")
+data class UserEntity(
     val username: String,
     val password: String,
 

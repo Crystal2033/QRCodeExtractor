@@ -7,5 +7,5 @@ import retrofit2.http.Path
 
 interface PersonApi {
     @GET("api/persons/{id}")
-    suspend fun getPerson(@Path(value = "id") id: Int) : Response<PersonDto?>
+    suspend fun getPerson(@Path(value = "id") id: Long) : Response<PersonDto?>
 }

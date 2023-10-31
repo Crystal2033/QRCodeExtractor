@@ -23,7 +23,7 @@ class KeyboardRepositoryImpl(
 ) : KeyboardRepository {
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun getKeyboard(id: Int): Flow<Resource<Keyboard>> = flow {
+    override fun getKeyboard(id: Long): Flow<Resource<Keyboard>> = flow {
         emit(Resource.Loading())
         try {
             val keyboard = tryToGetKeyboard(id, context)
@@ -36,7 +36,7 @@ class KeyboardRepositoryImpl(
 
     @RequiresApi(Build.VERSION_CODES.O)
     suspend fun tryToGetKeyboard(
-        id: Int,
+        id: Long,
         context: Context
     ): Keyboard {
         val message: String

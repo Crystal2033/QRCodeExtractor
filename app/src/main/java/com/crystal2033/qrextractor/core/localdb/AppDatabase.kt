@@ -2,20 +2,22 @@ package com.crystal2033.qrextractor.core.localdb
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroup
+import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroupEntity
 import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroupObjectCrossRef
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedObject
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.User
+import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedObjectEntity
+import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.UserEntity
 
 @Database(
     entities = [
-        User::class,
-        ScannedGroup::class,
+        UserEntity::class,
+        ScannedGroupEntity::class,
         ScannedGroupObjectCrossRef::class,
-        ScannedObject::class
+        ScannedObjectEntity::class
     ],
-    version = 3
+    version = 4
 )
 abstract class AppDatabase : RoomDatabase() {
+    abstract val scannedObjectDao: ScannedObjectDao
+    abstract val scannedGroupDao: ScannedGroupDao
     abstract val userDao: UserDao
 }

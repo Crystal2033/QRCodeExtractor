@@ -5,7 +5,7 @@ class Unknown(val message: String) : QRScannableData {
         return DatabaseObjectTypes.UNKNOWN
     }
 
-    override fun getDatabaseID(): Int {
+    override fun getDatabaseID(): Long {
         return 0
     }
 }

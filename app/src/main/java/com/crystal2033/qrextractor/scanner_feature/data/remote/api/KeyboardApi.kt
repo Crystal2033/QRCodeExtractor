@@ -8,5 +8,5 @@ import retrofit2.http.Path
 interface KeyboardApi {
 
     @GET(value = "api/keyboards/{id}")
-    suspend fun getKeyboard(@Path(value = "id") id: Int) : Response<KeyboardDto?>
+    suspend fun getKeyboard(@Path(value = "id") id: Long) : Response<KeyboardDto?>
 }

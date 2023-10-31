@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 interface GetDataFromQRCodeUseCase {
-    operator fun invoke(id: Int): Flow<Resource<QRScannableData>>
+    operator fun invoke(id: Long): Flow<Resource<QRScannableData>>
 }
