@@ -9,6 +9,7 @@ import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroupEntity
 import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroupObjectCrossRef
 import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedObjectEntity
+import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.UserEntity
 import com.crystal2033.qrextractor.scanner_feature.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.domain.repository.ScannedGroupRepository
 import kotlinx.coroutines.flow.Flow
@@ -27,6 +28,8 @@ class ScannedGroupRepositoryImpl(
         groupName: String
     ): Flow<Resource<Unit>> = flow {
         emit(Resource.Loading())
+
+        //val testUserId = userDao.saveUser(UserEntity(username = user.name, password = "12345"))
 
         val userEntity = userDao.getUserById(user.id)
         val scannedGroupEntity = ScannedGroupEntity(groupName, userEntity.userId)

@@ -11,17 +11,18 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
-import com.crystal2033.qrextractor.scanner_feature.data.util.ScannedTableNameAndId
+import com.crystal2033.qrextractor.core.User
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
+import com.crystal2033.qrextractor.scanner_feature.data.util.ScannedTableNameAndId
 import com.crystal2033.qrextractor.scanner_feature.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Unknown
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.GetDataFromQRCodeUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCaseGetQRCodeFactory
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.ScannedDataState
-import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIScannerEvent
 import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.QRScannerEvent
+import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIScannerEvent
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -71,22 +72,34 @@ class QRCodeScannerViewModel @Inject constructor(
             is QRScannerEvent.OnAddObjectInList -> {
                 onAddScannableIntoListClicked(event.scannableObject, event.addEvenIfDuplicate)
             }
-            is QRScannerEvent.OnAddScannedGroup -> {
 
+            is QRScannerEvent.OnAddScannedGroup -> {
+                sendUiEvent(UIScannerEvent.ShowScannedGroupNameDialogWindow)
                 //sendUiEvent(UIScannerEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
             }
+
             is QRScannerEvent.OnScanQRCode -> {
                 onScanQRCode(event.scannedData)
             }
 
             is QRScannerEvent.OnAddNameForScannedGroup -> {
-
+                onAddScannedGroupClicked(event.groupName)
             }
         }
     }
 
-    private fun onAddScannedGroupClicked(){
+    private fun onAddScannedGroupClicked(groupName: String) {
+        Log.i(LOG_TAG_NAMES.INFO_TAG, "Group name: $groupName")
+        val TEST_USER = User("empty", 1)
+        viewModelScope.launch {
+            insertScannedGroupInDBUseCase(
+                qrScannableDataList = listOfAddedScannables.toList(),
+                user = TEST_USER,
+                groupName = groupName
+            ).onEach { result ->
 
+            }.launchIn(this)
+        }
     }
 
     private fun onScanQRCode(scanResult: String) {
@@ -136,7 +149,7 @@ class QRCodeScannerViewModel @Inject constructor(
     private fun showQRCodeFormatError(e: JsonSyntaxException) {
         Log.e(LOG_TAG_NAMES.ERROR_TAG, e.message ?: "Unknown")
         scanJob = viewModelScope.launch {
-            setStateInfo(Resource.Error(message = "QR-code`s content is not compatible with this application."))
+            setPreviewObjectStateInfo(Resource.Error(message = "QR-code`s content is not compatible with this application."))
         }
     }
 
@@ -158,18 +171,18 @@ class QRCodeScannerViewModel @Inject constructor(
                 } catch (error: ClassNotFoundException) {
                     Log.e(LOG_TAG_NAMES.ERROR_TAG, error.message ?: "Unknown error")
                     val errorMsg = error.message ?: "Unknown error"
-                    setStateInfo(Resource.Error(message = errorMsg, Unknown(errorMsg)))
+                    setPreviewObjectStateInfo(Resource.Error(message = errorMsg, Unknown(errorMsg)))
                     return@launch
                 }
 
                 getDataFromQRCodeUseCase(scannedObj.id).onEach { result ->
-                    setStateInfo(result)
+                    setPreviewObjectStateInfo(result)
                 }.launchIn(this)
             } ?: Log.e(LOG_TAG_NAMES.ERROR_TAG, "Error with scannedObject convertion. No id there")
         }
     }
 
-    private fun setStateInfo(data: Resource<QRScannableData>) {
+    private fun setPreviewObjectStateInfo(data: Resource<QRScannableData>) {
         when (data) {
             is Resource.Loading -> {
                 sendDataWithStatus(data, true)
@@ -181,6 +194,20 @@ class QRCodeScannerViewModel @Inject constructor(
 
             is Resource.Success -> {
                 sendDataWithStatus(data, false)
+            }
+        }
+    }
+
+    private fun setUIEventAfterAddedScannedGroup(data: Resource<Unit>){
+        when (data) {
+            is Resource.Loading -> {
+
+            }
+
+            is Resource.Error -> {
+            }
+
+            is Resource.Success -> {
             }
         }
     }
