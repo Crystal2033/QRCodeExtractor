@@ -5,7 +5,7 @@ import android.util.Base64
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.DialogWindowInfoState
-import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIEvent
+import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIScannerEvent
 
 
 object StaticConverters {
@@ -15,7 +15,7 @@ object StaticConverters {
     }
 
     fun fromEventDialogWindowIntoDialogInfoState(
-        event: UIEvent.ShowDialogWindow,
+        event: UIScannerEvent.ShowMessagedDialogWindow,
         dialogWindowState: DialogWindowInfoState
     ) {
         dialogWindowState.isNeedToShow = true

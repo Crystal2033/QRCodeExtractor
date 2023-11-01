@@ -15,7 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.QRCodeScannerViewModel
-import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIEvent
+import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIScannerEvent
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun ScannedListView(
     viewModel: QRCodeScannerViewModel,
-    onNavigate: (UIEvent.Navigate) -> Unit,
+    onNavigate: (UIScannerEvent.Navigate) -> Unit,
     onPopBackStack: () -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
@@ -32,7 +32,7 @@ fun ScannedListView(
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is UIEvent.ShowSnackBar -> {
+                is UIScannerEvent.ShowSnackBar -> {
                     snackbarHostState.showSnackbar(
                         message = event.message,
                         actionLabel = "Okay",
@@ -40,7 +40,7 @@ fun ScannedListView(
                     )
                 }
 
-                is UIEvent.Navigate -> {
+                is UIScannerEvent.Navigate -> {
                     onNavigate(event)
                 }
 

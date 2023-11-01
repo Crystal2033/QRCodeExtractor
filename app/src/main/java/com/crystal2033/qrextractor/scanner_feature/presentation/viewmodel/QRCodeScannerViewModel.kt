@@ -10,19 +10,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.scanner_feature.data.util.ScannedTableNameAndId
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.domain.model.Unknown
-import com.crystal2033.qrextractor.scanner_feature.domain.use_case.concrete_use_case.GetScannedGroupsWithObjectsUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.GetDataFromQRCodeUseCase
 import com.crystal2033.qrextractor.scanner_feature.domain.use_case.factory.UseCaseGetQRCodeFactory
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.ScannedDataState
-import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIEvent
+import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIScannerEvent
 import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.QRScannerEvent
 import com.google.gson.JsonSyntaxException
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,7 +57,7 @@ class QRCodeScannerViewModel @Inject constructor(
     val listOfAddedScannables: SnapshotStateList<QRScannableData> = _listOfAddedScannables
     ///States
 
-    private val _eventFlow = Channel<UIEvent>()
+    private val _eventFlow = Channel<UIScannerEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
 
     private var scanJob: Job? = null
@@ -73,13 +71,22 @@ class QRCodeScannerViewModel @Inject constructor(
             is QRScannerEvent.OnAddObjectInList -> {
                 onAddScannableIntoListClicked(event.scannableObject, event.addEvenIfDuplicate)
             }
-            is QRScannerEvent.OnGoToScannedList -> {
-                sendUiEvent(UIEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
+            is QRScannerEvent.OnAddScannedGroup -> {
+
+                //sendUiEvent(UIScannerEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
             }
             is QRScannerEvent.OnScanQRCode -> {
                 onScanQRCode(event.scannedData)
             }
+
+            is QRScannerEvent.OnAddNameForScannedGroup -> {
+
+            }
         }
+    }
+
+    private fun onAddScannedGroupClicked(){
+
     }
 
     private fun onScanQRCode(scanResult: String) {
@@ -110,7 +117,7 @@ class QRCodeScannerViewModel @Inject constructor(
         if (_listOfAddedScannables.find { it == scannableObject } != null) {
             viewModelScope.launch {
                 sendUiEvent(
-                    UIEvent.ShowDialogWindow(
+                    UIScannerEvent.ShowMessagedDialogWindow(
                         message = "This object already exists in list. Do you really want to append another one?",
                         onDeclineAction = {},
                         onAcceptAction = {
@@ -192,13 +199,13 @@ class QRCodeScannerViewModel @Inject constructor(
         )
 
         sendUiEvent(
-            UIEvent.ShowSnackBar(
+            UIScannerEvent.ShowSnackBar(
                 message = errorMessage ?: "Unknown error"
             )
         )
     }
 
-    private fun sendUiEvent(event: UIEvent) {
+    private fun sendUiEvent(event: UIScannerEvent) {
         viewModelScope.launch {
             _eventFlow.send(event)
         }

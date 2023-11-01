@@ -45,13 +45,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.crystal2033.qrextractor.scanner_feature.StaticConverters
-import com.crystal2033.qrextractor.scanner_feature.presentation.floating_views.DialogQuestion
+import com.crystal2033.qrextractor.scanner_feature.presentation.dialog_window.DialogMessage
+import com.crystal2033.qrextractor.scanner_feature.presentation.dialog_window.DialogScannedGroupName
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.DialogWindowInfoState
 import com.crystal2033.qrextractor.scanner_feature.presentation.uiItems.preview.ShowDataItemByType
 import com.crystal2033.qrextractor.scanner_feature.presentation.util.QRCodeAnalyzer
 import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.QRCodeScannerViewModel
 import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.QRScannerEvent
-import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIEvent
+import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIScannerEvent
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -59,23 +60,27 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun QRCodeView(
     viewModel: QRCodeScannerViewModel,
-    onNavigate: (UIEvent.Navigate) -> Unit,
+    onNavigate: (UIScannerEvent.Navigate) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
 
     val scannedObject by remember {
         mutableStateOf(viewModel.previewDataFromQRState)
-    } // or just  val scannedObject = viewModel.previewDataFromQRState.value??
+    } // or just  val scannedObject = viewModel.previewDataFromQRState.value??3
 
     val chosenListOfScannedObjects = remember {
         viewModel.listOfAddedScannables
     }
 
-    val isNeedToShowDialog = remember {
+    val isNeedToShowMessageDialog = remember {
         mutableStateOf(false)
     }
-    val dialogWindowInfoState by remember { mutableStateOf(DialogWindowInfoState()) }
+    val dialogWindowInfo by remember { mutableStateOf(DialogWindowInfoState()) }
 
+
+    val isNeedToShowGroupNameInsertDialog = remember {
+        mutableStateOf(false)
+    }
 
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -98,12 +103,11 @@ fun QRCodeView(
             hasCameraPermission = granted
         })
 
-    //val scope = rememberCoroutineScope()
     LaunchedEffect(key1 = true) {
         launcher.launch(Manifest.permission.CAMERA) //TODO: make RequestPermission
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
-                is UIEvent.ShowSnackBar -> {
+                is UIScannerEvent.ShowSnackBar -> {
                     snackbarHostState.showSnackbar(
                         message = event.message,
                         actionLabel = "Okay",
@@ -111,16 +115,20 @@ fun QRCodeView(
                     )
                 }
 
-                is UIEvent.ShowDialogWindow -> {
+                is UIScannerEvent.ShowMessagedDialogWindow -> {
                     StaticConverters.fromEventDialogWindowIntoDialogInfoState(
                         event,
-                        dialogWindowInfoState
+                        dialogWindowInfo
                     )
-                    isNeedToShowDialog.value = true
+                    isNeedToShowMessageDialog.value = true
                 }
 
-                is UIEvent.Navigate -> {
+                is UIScannerEvent.Navigate -> {
                     onNavigate(event)
+                }
+
+                is UIScannerEvent.ShowScannedGroupNameDialogWindow -> {
+                    isNeedToShowGroupNameInsertDialog.value = true
                 }
 
                 else -> Unit
@@ -131,10 +139,19 @@ fun QRCodeView(
 
     Scaffold {
         Box {
-            if (isNeedToShowDialog.value) {
-                DialogQuestion(
-                    dialogWindowInfoState = dialogWindowInfoState,
-                    isNeedToShowDialog = isNeedToShowDialog
+            if (isNeedToShowMessageDialog.value) {
+                DialogMessage(
+                    dialogWindowInfoState = dialogWindowInfo,
+                    isNeedToShowDialog = isNeedToShowMessageDialog
+                )
+            }
+
+            if (isNeedToShowGroupNameInsertDialog.value) {
+                DialogScannedGroupName(
+                    isNeedToShowDialog = isNeedToShowGroupNameInsertDialog,
+                    onConfirmButtonClicked = { groupName ->
+                        viewModel.onEvent(QRScannerEvent.OnAddNameForScannedGroup(groupName))
+                    }
                 )
             }
 
@@ -218,7 +235,7 @@ fun QRCodeView(
                     .align(Alignment.TopCenter)
                     .offset(0.dp, 5.dp),
                 onClick = {
-                    viewModel.onEvent(QRScannerEvent.OnGoToScannedList)
+                    viewModel.onEvent(QRScannerEvent.OnAddScannedGroup)
                     cameraProviderFuture.get().unbindAll()
                 }
             ) {

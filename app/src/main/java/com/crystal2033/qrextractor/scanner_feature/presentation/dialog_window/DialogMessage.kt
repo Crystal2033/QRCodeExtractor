@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.scanner_feature.presentation.floating_views
+package com.crystal2033.qrextractor.scanner_feature.presentation.dialog_window
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -9,7 +9,7 @@ import androidx.compose.runtime.MutableState
 import com.crystal2033.qrextractor.scanner_feature.presentation.state.DialogWindowInfoState
 
 @Composable
-fun DialogQuestion(
+fun DialogMessage(
     isNeedToShowDialog: MutableState<Boolean>,
     dialogWindowInfoState: DialogWindowInfoState,
 ) {
