@@ -3,8 +3,8 @@ package com.crystal2033.qrextractor.core.localdb
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroupEntity
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroupObjectCrossRef
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedGroupEntity
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedGroupObjectCrossRef
 
 @Dao
 interface ScannedGroupDao {

@@ -2,9 +2,9 @@ package com.crystal2033.qrextractor.core.localdb
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroupEntity
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroupObjectCrossRef
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedObjectEntity
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedGroupEntity
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedGroupObjectCrossRef
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedObjectEntity
 import com.crystal2033.qrextractor.core.localdb.entity.UserEntity
 
 @Database(

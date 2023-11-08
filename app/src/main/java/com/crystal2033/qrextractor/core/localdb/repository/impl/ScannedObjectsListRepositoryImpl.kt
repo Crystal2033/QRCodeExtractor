@@ -1,12 +1,9 @@
 package com.crystal2033.qrextractor.core.localdb.repository.impl
 
-import android.util.Log
-import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.localdb.UserDao
 import com.crystal2033.qrextractor.core.localdb.repository.ScannedObjectsListRepository
 import com.crystal2033.qrextractor.core.util.Resource
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.ScannedGroupWithScannedObjects
-import com.crystal2033.qrextractor.core.localdb.entity.UserEntity
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedGroupWithScannedObjects
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

@@ -4,11 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.crystal2033.qrextractor.core.localdb.AppDatabase
-import com.crystal2033.qrextractor.core.localdb.ScannedGroupDao
-import com.crystal2033.qrextractor.core.localdb.ScannedObjectDao
-import com.crystal2033.qrextractor.core.localdb.UserDao
-import com.crystal2033.qrextractor.scanner_feature.data.repository.ScannedGroupRepositoryImpl
-import com.crystal2033.qrextractor.scanner_feature.domain.repository.ScannedGroupRepository
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.repository.ScannedGroupRepositoryImpl
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.ScannedGroupRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

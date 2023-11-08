@@ -7,9 +7,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.scanner_feature.presentation.QRCodeView
-import com.crystal2033.qrextractor.scanner_feature.presentation.scanned_list.ScannedListView
-import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.QRCodeScannerViewModel
+import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.QRCodeView
+import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentation.ScannedListView
+import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel.QRCodeScannerViewModel
 import com.crystal2033.qrextractor.sharedViewModel
 
 fun NavGraphBuilder.scannerGraph(navController: NavController,
