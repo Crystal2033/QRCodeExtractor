@@ -3,6 +3,7 @@ package com.crystal2033.qrextractor.scanner_feature.presentation
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -44,6 +46,8 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.crystal2033.qrextractor.scanner_feature.StaticConverters
 import com.crystal2033.qrextractor.scanner_feature.presentation.dialog_window.DialogMessage
 import com.crystal2033.qrextractor.scanner_feature.presentation.dialog_window.DialogScannedGroupName
@@ -53,7 +57,11 @@ import com.crystal2033.qrextractor.scanner_feature.presentation.util.QRCodeAnaly
 import com.crystal2033.qrextractor.scanner_feature.presentation.viewmodel.QRCodeScannerViewModel
 import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.QRScannerEvent
 import com.crystal2033.qrextractor.scanner_feature.vm_view_communication.UIScannerEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.withContext
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -103,39 +111,36 @@ fun QRCodeView(
             hasCameraPermission = granted
         })
 
-    LaunchedEffect(key1 = true) {
-        launcher.launch(Manifest.permission.CAMERA) //TODO: make RequestPermission
-        viewModel.eventFlow.collectLatest { event ->
-            when (event) {
-                is UIScannerEvent.ShowSnackBar -> {
-                    snackbarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = "Okay",
-                        duration = SnackbarDuration.Long
-                    )
-                }
-
-                is UIScannerEvent.ShowMessagedDialogWindow -> {
-                    StaticConverters.fromEventDialogWindowIntoDialogInfoState(
-                        event,
-                        dialogWindowInfo
-                    )
-                    isNeedToShowMessageDialog.value = true
-                }
-
-                is UIScannerEvent.Navigate -> {
-                    onNavigate(event)
-                }
-
-                is UIScannerEvent.ShowScannedGroupNameDialogWindow -> {
-                    isNeedToShowGroupNameInsertDialog.value = true
-                }
-
-                else -> Unit
+    ObserveAsEvents(flow = viewModel.eventFlow, launcher){ event ->
+        when (event) {
+            is UIScannerEvent.ShowSnackBar -> {
+                 snackbarHostState.showSnackbar(
+                    message = event.message,
+                    actionLabel = "Okay",
+                    duration = SnackbarDuration.Long
+                )
             }
-        }
 
+            is UIScannerEvent.ShowMessagedDialogWindow -> {
+                StaticConverters.fromEventDialogWindowIntoDialogInfoState(
+                    event,
+                    dialogWindowInfo
+                )
+                isNeedToShowMessageDialog.value = true
+            }
+
+            is UIScannerEvent.Navigate -> {
+                onNavigate(event)
+            }
+
+            is UIScannerEvent.ShowScannedGroupNameDialogWindow -> {
+                isNeedToShowGroupNameInsertDialog.value = true
+            }
+
+            else -> Unit
+        }
     }
+
 
     Scaffold {
         Box {
@@ -234,6 +239,7 @@ fun QRCodeView(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .offset(0.dp, 5.dp),
+                enabled = chosenListOfScannedObjects.isNotEmpty(),
                 onClick = {
                     viewModel.onEvent(QRScannerEvent.OnAddScannedGroup)
                     cameraProviderFuture.get().unbindAll()
@@ -251,7 +257,7 @@ fun QRCodeView(
                     })
                 {
                     Icon(
-                        Icons.Filled.List,
+                        Icons.Filled.Add,
                         contentDescription = "List"
                     )
                 }
@@ -265,3 +271,18 @@ fun QRCodeView(
 
 }
 
+@Composable
+private fun <T> ObserveAsEvents(flow : Flow<T>,
+                                cameraLauncher: ManagedActivityResultLauncher<String, Boolean>,
+                                onEvent: suspend (T) -> Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(flow, lifecycleOwner.lifecycle){
+        cameraLauncher.launch(Manifest.permission.CAMERA)
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+            withContext(Dispatchers.Main.immediate){
+                flow.collectLatest(onEvent)
+            }
+        }
+    }
+}

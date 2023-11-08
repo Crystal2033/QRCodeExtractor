@@ -62,15 +62,15 @@ dependencies {
     val hilt_version = "2.48.1"
     implementation("com.google.dagger:hilt-android:$hilt_version")
     kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
+    kapt("androidx.hilt:hilt-compiler:1.1.0")
 
     // https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     //Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
-    val nav_version = "2.7.4"
+    val nav_version = "2.7.5"
     // Jetpack Compose Integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
 

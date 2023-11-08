@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.User
 import com.crystal2033.qrextractor.core.util.Resource
@@ -75,7 +76,7 @@ class QRCodeScannerViewModel @Inject constructor(
 
             is QRScannerEvent.OnAddScannedGroup -> {
                 sendUiEvent(UIScannerEvent.ShowScannedGroupNameDialogWindow)
-                //sendUiEvent(UIScannerEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
+
             }
 
             is QRScannerEvent.OnScanQRCode -> {
@@ -84,9 +85,12 @@ class QRCodeScannerViewModel @Inject constructor(
 
             is QRScannerEvent.OnAddNameForScannedGroup -> {
                 onAddScannedGroupClicked(event.groupName)
+                _listOfAddedScannables.clear()
+                sendUiEvent(UIScannerEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
             }
         }
     }
+
 
     private fun onAddScannedGroupClicked(groupName: String) {
         Log.i(LOG_TAG_NAMES.INFO_TAG, "Group name: $groupName")
@@ -198,7 +202,7 @@ class QRCodeScannerViewModel @Inject constructor(
         }
     }
 
-    private fun setUIEventAfterAddedScannedGroup(data: Resource<Unit>){
+    private fun setUIEventAfterAddedScannedGroup(data: Resource<Unit>) {
         when (data) {
             is Resource.Loading -> {
 
