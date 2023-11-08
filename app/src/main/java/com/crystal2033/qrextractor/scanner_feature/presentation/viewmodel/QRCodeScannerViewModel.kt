@@ -76,7 +76,6 @@ class QRCodeScannerViewModel @Inject constructor(
 
             is QRScannerEvent.OnAddScannedGroup -> {
                 sendUiEvent(UIScannerEvent.ShowScannedGroupNameDialogWindow)
-
             }
 
             is QRScannerEvent.OnScanQRCode -> {
@@ -85,8 +84,11 @@ class QRCodeScannerViewModel @Inject constructor(
 
             is QRScannerEvent.OnAddNameForScannedGroup -> {
                 onAddScannedGroupClicked(event.groupName)
-                _listOfAddedScannables.clear()
                 sendUiEvent(UIScannerEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
+            }
+
+            is QRScannerEvent.ClearListOfScannedObjects -> {
+                _listOfAddedScannables.clear()
             }
         }
     }

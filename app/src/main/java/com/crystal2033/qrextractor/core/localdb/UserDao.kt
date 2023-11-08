@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.UserEntity
+import com.crystal2033.qrextractor.core.localdb.entity.UserEntity
 import com.crystal2033.qrextractor.scanner_feature.data.localdb.entity.UserWithScannedGroupsAndObjects
 
 @Dao

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -41,13 +42,16 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.scanner_feature.StaticConverters
 import com.crystal2033.qrextractor.scanner_feature.presentation.dialog_window.DialogMessage
 import com.crystal2033.qrextractor.scanner_feature.presentation.dialog_window.DialogScannedGroupName
@@ -257,11 +261,28 @@ fun QRCodeView(
                     })
                 {
                     Icon(
-                        Icons.Filled.Add,
+                        //ImageVector.vectorResource(R.drawable.broom_35),
+                        Icons.Filled.List,
                         contentDescription = "List"
                     )
                 }
 
+            }
+
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .offset((-25).dp, 18.dp)
+                    .size(20.dp),
+                enabled = chosenListOfScannedObjects.isNotEmpty(),
+                onClick = {
+                    viewModel.onEvent(QRScannerEvent.ClearListOfScannedObjects)
+                }
+            ) {
+                Icon(
+                    ImageVector.vectorResource(R.drawable.broom_35),
+                    contentDescription = "Broom"
+                )
             }
 
 

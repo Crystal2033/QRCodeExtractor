@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.scanner_feature.data.localdb.entity
+package com.crystal2033.qrextractor.core.localdb.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
