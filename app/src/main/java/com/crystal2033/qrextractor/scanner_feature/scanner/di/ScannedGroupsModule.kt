@@ -1,6 +1,6 @@
 package com.crystal2033.qrextractor.scanner_feature.scanner.di
 
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.ScannedGroupRepository
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.ScannedGroupCreatorRepository
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
 import dagger.Module
 import dagger.Provides
@@ -19,7 +19,7 @@ object ScannedGroupsModule {
 
     @Provides
     @Singleton
-    fun provideInsertScannedGroupUseCase(repository: ScannedGroupRepository): InsertScannedGroupInDBUseCase {
+    fun provideInsertScannedGroupUseCase(repository: ScannedGroupCreatorRepository): InsertScannedGroupInDBUseCase {
         return InsertScannedGroupInDBUseCase(repository)
     }
 }
