@@ -26,5 +26,5 @@ interface UserDao {
 
     @Transaction
     @Query("SELECT * FROM USER WHERE userId = :id")
-    fun getUserWithScannedGroupsAndObjects(id: Long): UserWithScannedGroupsAndObjectsRel
+    suspend fun getUserWithScannedGroupsAndObjects(id: Long): UserWithScannedGroupsAndObjectsRel
 }

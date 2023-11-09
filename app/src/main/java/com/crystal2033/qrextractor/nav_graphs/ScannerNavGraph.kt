@@ -39,7 +39,7 @@ fun NavGraphBuilder.scannerGraph(
             //val viewModel = it.sharedViewModel<QRCodeScannerViewModel>(navController)
             val viewModel = it.sharedViewModel<ScannedDataGroupsViewModel>(navController)
             viewModel.user = userViewModel
-            viewModel.refresh()
+            //viewModel.refresh()
             ScannedListView(
                 viewModel = viewModel,
                 onNavigate = { navigationEvent ->
