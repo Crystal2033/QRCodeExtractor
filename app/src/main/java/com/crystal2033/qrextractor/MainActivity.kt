@@ -1,8 +1,10 @@
 package com.crystal2033.qrextractor
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -16,23 +18,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.User
 import com.crystal2033.qrextractor.nav_graphs.addQRCodeGraph
 import com.crystal2033.qrextractor.nav_graphs.documentsGraph
 import com.crystal2033.qrextractor.nav_graphs.historyGraph
 import com.crystal2033.qrextractor.nav_graphs.homeGraph
 import com.crystal2033.qrextractor.nav_graphs.scannerGraph
+import com.crystal2033.qrextractor.scanner_feature.general.di.ScannedDataViewModelFactoryProvider
+import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentation.viewmodel.ScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.ui.NavBottomBar
 import com.crystal2033.qrextractor.ui.theme.QRExtractorTheme
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 
 
 @AndroidEntryPoint
@@ -110,6 +118,16 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navControll
         navController.getBackStackEntry(navGraphRoute)
     }
     return hiltViewModel(parentEntry)
+}
+
+@Composable
+fun scannedDataGroupsViewModel(user: User?): ScannedDataGroupsViewModel {
+    val factory = EntryPointAccessors.fromActivity(
+        LocalContext.current as Activity,
+        ScannedDataViewModelFactoryProvider::class.java
+    ).scannedDataGroupsViewModelFactory()
+
+    return viewModel(factory = ScannedDataGroupsViewModel.provideFactory(factory, user))
 }
 
 

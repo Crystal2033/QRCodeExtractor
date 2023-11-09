@@ -243,7 +243,6 @@ fun QRCodeView(
                 enabled = chosenListOfScannedObjects.isNotEmpty(),
                 onClick = {
                     viewModel.onEvent(QRScannerEvent.OnAddScannedGroup)
-                    cameraProviderFuture.get().unbindAll()
                 }
             ) {
                 BadgedBox(
@@ -288,6 +287,7 @@ fun QRCodeView(
                     .size(20.dp),
                 onClick = {
                     viewModel.onEvent(QRScannerEvent.OnGoToScannedGroupsWindow)
+                    cameraProviderFuture.get().unbindAll()
                 }
             ) {
                 Icon(

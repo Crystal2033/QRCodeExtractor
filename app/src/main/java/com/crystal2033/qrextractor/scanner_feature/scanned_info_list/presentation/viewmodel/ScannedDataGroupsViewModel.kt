@@ -1,10 +1,13 @@
 package com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.User
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.domain.model.UserWithScannedGroups
@@ -13,6 +16,7 @@ import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentatio
 import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.vm_view_communication.ScannedDataListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.vm_view_communication.UIScannedDataListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
+import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel.QRCodeScannerViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.UIScannerEvent
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -25,17 +29,45 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class ScannedDataGroupsViewModel @Inject constructor(
-    private val getListOfUserScannedGroupsUseCase: GetListOfUserScannedGroupsUseCase
+//@HiltViewModel
+class ScannedDataGroupsViewModel @AssistedInject constructor(
+    private val getListOfUserScannedGroupsUseCase: GetListOfUserScannedGroupsUseCase,
+    @Assisted private val user: User?
 ) : ViewModel() {
-
-    var user: User? = null
 
     //states
     private val _scannedGroupsForUser = mutableStateOf(UserScannedGroupsState())
     val scannedGroupsForUser : State<UserScannedGroupsState> = _scannedGroupsForUser
     //states
+
+    init {
+        Log.i(LOG_TAG_NAMES.INFO_TAG, "RESRESH")
+        refresh()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.i(LOG_TAG_NAMES.INFO_TAG, "CLEARED")
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(user: User?): ScannedDataGroupsViewModel
+    }
+
+    companion object {
+        @Suppress("UNCHECKED_CAST")
+        fun provideFactory(
+            assistedFactory: Factory,
+            user: User?
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(user) as T
+            }
+        }
+    }
+
+
 
 
     private val _eventFlow = Channel<UIScannedDataListEvent>()
@@ -47,7 +79,8 @@ class ScannedDataGroupsViewModel @Inject constructor(
 //        }
     }
 
-    fun refresh(){
+    private fun refresh(){
+        Log.i(LOG_TAG_NAMES.INFO_TAG, "REFRESHED with user: ${user?.name}")
         user?.let {
             existingUser ->
             viewModelScope.launch {

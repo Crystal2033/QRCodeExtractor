@@ -1,13 +1,16 @@
 package com.crystal2033.qrextractor.nav_graphs
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.User
+import com.crystal2033.qrextractor.scannedDataGroupsViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentation.ScannedListView
 import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentation.viewmodel.ScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.QRCodeView
@@ -26,6 +29,7 @@ fun NavGraphBuilder.scannerGraph(
     ) {
         composable(context.resources.getString(R.string.scanner_route)) {
             val viewModel = it.sharedViewModel<QRCodeScannerViewModel>(navController)
+
             QRCodeView(
                 viewModel = viewModel,
                 onNavigate = { navigationEvent ->
@@ -36,10 +40,8 @@ fun NavGraphBuilder.scannerGraph(
         }
 
         composable(context.resources.getString(R.string.list_of_scanned_objects_route)) {
-            //val viewModel = it.sharedViewModel<QRCodeScannerViewModel>(navController)
-            val viewModel = it.sharedViewModel<ScannedDataGroupsViewModel>(navController)
-            viewModel.user = userViewModel
-            //viewModel.refresh()
+            val viewModel = scannedDataGroupsViewModel(user = userViewModel)
+            Log.i(LOG_TAG_NAMES.INFO_TAG, "GOT VIEWMODEL")
             ScannedListView(
                 viewModel = viewModel,
                 onNavigate = { navigationEvent ->

@@ -33,7 +33,6 @@ fun ScannedListView(
 //    val groupedByClassesScannedObjects =
 //        viewModel.listOfAddedScannables.groupBy { it.javaClass.kotlin }
     LaunchedEffect(key1 = true) {
-        viewModel.refresh()
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UIScannedDataListEvent.ShowSnackBar -> {
