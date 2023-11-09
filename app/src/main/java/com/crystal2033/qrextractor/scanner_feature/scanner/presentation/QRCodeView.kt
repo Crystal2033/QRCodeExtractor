@@ -281,6 +281,21 @@ fun QRCodeView(
                 )
             }
 
+            IconButton(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .offset(25.dp, 18.dp)
+                    .size(20.dp),
+                onClick = {
+                    viewModel.onEvent(QRScannerEvent.OnGoToScannedGroupsWindow)
+                }
+            ) {
+                Icon(
+                    ImageVector.vectorResource(R.drawable.folder_35),
+                    contentDescription = "Folder"
+                )
+            }
+
 
         }
     }

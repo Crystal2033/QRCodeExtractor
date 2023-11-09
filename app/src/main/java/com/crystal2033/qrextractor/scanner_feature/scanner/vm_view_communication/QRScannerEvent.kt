@@ -13,4 +13,6 @@ sealed class QRScannerEvent {
     data class OnAddNameForScannedGroup(val groupName: String) : QRScannerEvent()
 
     data object ClearListOfScannedObjects : QRScannerEvent()
+
+    data object OnGoToScannedGroupsWindow : QRScannerEvent()
 }

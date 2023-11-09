@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.crystal2033.qrextractor.core.User
 import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentation.viewmodel.ScannedDataGroupsViewModel
+import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.vm_view_communication.UIScannedDataListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel.QRCodeScannerViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.UIScannerEvent
 import kotlinx.coroutines.flow.collectLatest
@@ -33,21 +34,16 @@ fun ScannedListView(
 //        viewModel.listOfAddedScannables.groupBy { it.javaClass.kotlin }
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
-//            when (event) {
-//                is UIScannerEvent.ShowSnackBar -> {
-//                    snackbarHostState.showSnackbar(
-//                        message = event.message,
-//                        actionLabel = "Okay",
-//                        duration = SnackbarDuration.Long
-//                    )
-//                }
-//
-//                is UIScannerEvent.Navigate -> {
-//                    onNavigate(event)
-//                }
-//
-//                else -> Unit
-//            }
+            when (event) {
+                is UIScannedDataListEvent.ShowSnackBar -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = "Okay",
+                        duration = SnackbarDuration.Long
+                    )
+                }
+                else -> Unit
+            }
         }
     }
 

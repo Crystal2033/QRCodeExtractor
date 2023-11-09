@@ -38,14 +38,6 @@ class ScannedDataGroupsViewModel @Inject constructor(
     //states
 
 
-    init {
-//        viewModelScope.launch {
-//            getListOfUserScannedGroupsUseCase(user.id).onEach { result ->
-//
-//            }.launchIn(this)
-//        }
-    }
-
     private val _eventFlow = Channel<UIScannedDataListEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
 
