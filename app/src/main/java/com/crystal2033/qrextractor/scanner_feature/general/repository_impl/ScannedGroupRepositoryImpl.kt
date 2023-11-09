@@ -6,16 +6,19 @@ import com.crystal2033.qrextractor.core.localdb.ScannedGroupDao
 import com.crystal2033.qrextractor.core.localdb.ScannedObjectDao
 import com.crystal2033.qrextractor.core.localdb.UserDao
 import com.crystal2033.qrextractor.core.util.Resource
+import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.domain.model.UserWithScannedGroups
 import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.domain.repository.UserWithScannedGroupsRepository
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedGroupEntity
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedGroupObjectCrossRef
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedObjectEntity
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.ScannedGroupCreatorRepository
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.UserWithScannedGroupsAndObjects
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.UserWithScannedGroupsAndObjectsRel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Singleton
 
+@Singleton
 class ScannedGroupRepositoryImpl(
     private val scannedObjectDao: ScannedObjectDao,
     private val scannedGroupDao: ScannedGroupDao,
@@ -55,12 +58,11 @@ class ScannedGroupRepositoryImpl(
     }
 
 
-    override fun getScannedGroupsForUserFromDb(userId: Long): Flow<Resource<UserWithScannedGroupsAndObjects>> = flow {
+    override fun getScannedGroupsForUserFromDb(userId: Long): Flow<Resource<UserWithScannedGroups>> = flow {
         emit(Resource.Loading())
-        //val testUserId = userDao.saveUser(UserEntity(username = user.name, password = "12345"))
         val usersScannedGroups = userDao.getUserWithScannedGroupsAndObjects(userId)
-//        val userEntity = userDao.getUserById(user.id)
-        emit(Resource.Success(usersScannedGroups))
+        val convertedValue = usersScannedGroups.toUserWithScannedGroups()
+        emit(Resource.Success(convertedValue))
     }
 
 

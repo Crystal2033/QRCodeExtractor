@@ -2,6 +2,7 @@ package com.crystal2033.qrextractor.core.localdb.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.crystal2033.qrextractor.core.User
 
 @Entity(tableName = "User")
 data class UserEntity(
@@ -10,4 +11,11 @@ data class UserEntity(
 
     @PrimaryKey(autoGenerate = true)
     var userId: Long = 0
-)
+){
+    fun toUser(): User {
+        return User(
+            name = username,
+            id = userId
+        )
+    }
+}

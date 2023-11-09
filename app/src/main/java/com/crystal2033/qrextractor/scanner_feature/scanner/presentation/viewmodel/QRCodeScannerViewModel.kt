@@ -191,41 +191,41 @@ class QRCodeScannerViewModel @Inject constructor(
     private fun setPreviewObjectStateInfo(data: Resource<QRScannableData>) {
         when (data) {
             is Resource.Loading -> {
-                sendDataWithStatus(data, true)
+                setDataWithStatus(data, true)
             }
 
             is Resource.Error -> {
-                setErrorStatus(data.message)
+                setErrorStatusAndSendSnackbarEvent(data.message)
             }
 
             is Resource.Success -> {
-                sendDataWithStatus(data, false)
+                setDataWithStatus(data, false)
             }
         }
     }
 
-    private fun setUIEventAfterAddedScannedGroup(data: Resource<Unit>) {
-        when (data) {
-            is Resource.Loading -> {
+//    private fun setUIEventAfterAddedScannedGroup(data: Resource<Unit>) {
+//        when (data) {
+//            is Resource.Loading -> {
+//
+//            }
+//
+//            is Resource.Error -> {
+//            }
+//
+//            is Resource.Success -> {
+//            }
+//        }
+//    }
 
-            }
-
-            is Resource.Error -> {
-            }
-
-            is Resource.Success -> {
-            }
-        }
-    }
-
-    private fun sendDataWithStatus(result: Resource<QRScannableData>, isLoading: Boolean) {
+    private fun setDataWithStatus(result: Resource<QRScannableData>, isLoading: Boolean) {
         _previewDataFromQRState.value = previewDataFromQRState.value.copy(
             scannedDataInfo = result.data,
             isLoading = isLoading
         )
     }
 
-    private fun setErrorStatus(errorMessage: String?) {
+    private fun setErrorStatusAndSendSnackbarEvent(errorMessage: String?) {
         _previewDataFromQRState.value = previewDataFromQRState.value.copy(
             scannedDataInfo = null,
             isLoading = false

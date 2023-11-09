@@ -14,6 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.crystal2033.qrextractor.core.User
+import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentation.viewmodel.ScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel.QRCodeScannerViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.UIScannerEvent
 import kotlinx.coroutines.flow.collectLatest
@@ -22,51 +24,51 @@ import kotlinx.coroutines.flow.collectLatest
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ScannedListView(
-    viewModel: QRCodeScannerViewModel,
+    viewModel: ScannedDataGroupsViewModel,
     onNavigate: (UIScannerEvent.Navigate) -> Unit,
     onPopBackStack: () -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
-    val groupedByClassesScannedObjects =
-        viewModel.listOfAddedScannables.groupBy { it.javaClass.kotlin }
+//    val groupedByClassesScannedObjects =
+//        viewModel.listOfAddedScannables.groupBy { it.javaClass.kotlin }
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
-            when (event) {
-                is UIScannerEvent.ShowSnackBar -> {
-                    snackbarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = "Okay",
-                        duration = SnackbarDuration.Long
-                    )
-                }
-
-                is UIScannerEvent.Navigate -> {
-                    onNavigate(event)
-                }
-
-                else -> Unit
-            }
+//            when (event) {
+//                is UIScannerEvent.ShowSnackBar -> {
+//                    snackbarHostState.showSnackbar(
+//                        message = event.message,
+//                        actionLabel = "Okay",
+//                        duration = SnackbarDuration.Long
+//                    )
+//                }
+//
+//                is UIScannerEvent.Navigate -> {
+//                    onNavigate(event)
+//                }
+//
+//                else -> Unit
+//            }
         }
     }
 
     Scaffold {
         Box() {
-            LazyColumn(modifier = Modifier.align(Alignment.TopCenter)) {
-                groupedByClassesScannedObjects.forEach { (initial, contactsForInitial) ->
-                    stickyHeader {
-                        Text(text = "${initial.simpleName}")
-                    }
-
-                    items(contactsForInitial) { scannedObject ->
-                        ShowListItemByType(scannedObject)
-                    }
-                }
-            }
-
-            Button( modifier = Modifier.align(Alignment.TopEnd),
-                onClick = { onPopBackStack() }) {
-                Text(text = "Go back dude")
-            }
+//            LazyColumn(modifier = Modifier.align(Alignment.TopCenter)) {
+//                groupedByClassesScannedObjects.forEach { (initial, contactsForInitial) ->
+//                    stickyHeader {
+//                        Text(text = "${initial.simpleName}")
+//                    }
+//
+//                    items(contactsForInitial) { scannedObject ->
+//                        ShowListItemByType(scannedObject)
+//                    }
+//                }
+//            }
+//
+//            Button( modifier = Modifier.align(Alignment.TopEnd),
+//                onClick = { onPopBackStack() }) {
+//                Text(text = "Go back dude")
+//            }
 
         }
     }

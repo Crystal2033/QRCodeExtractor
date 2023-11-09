@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.crystal2033.qrextractor.core.User
 import com.crystal2033.qrextractor.nav_graphs.addQRCodeGraph
 import com.crystal2033.qrextractor.nav_graphs.documentsGraph
 import com.crystal2033.qrextractor.nav_graphs.historyGraph
@@ -73,11 +74,12 @@ fun MyNavGraph(
         navController = navController,
         startDestination = context.resources.getString(R.string.home_head_graph_route)
     ) {
+        val userViewModel = User("some user", 1)
         homeGraph(navController, context, snackbarHostState)
 
         addQRCodeGraph(navController, context, snackbarHostState)
 
-        scannerGraph(navController, context, snackbarHostState)
+        scannerGraph(navController, context, snackbarHostState, userViewModel)
 
         historyGraph(navController, context, snackbarHostState)
 

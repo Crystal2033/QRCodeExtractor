@@ -23,14 +23,7 @@ object DatabaseModule {
 //        return ScannedObjectsListRepositoryImpl(db.userDao)
 //    }
 
-    @Provides
-    @Singleton
-    fun provideScannedGroupRepositoryImpl(
-        db: AppDatabase,
-        @ApplicationContext context: Context
-    ): ScannedGroupCreatorRepository {
-        return ScannedGroupRepositoryImpl(db.scannedObjectDao, db.scannedGroupDao, db.userDao, context)
-    }
+
 
 
     @Provides

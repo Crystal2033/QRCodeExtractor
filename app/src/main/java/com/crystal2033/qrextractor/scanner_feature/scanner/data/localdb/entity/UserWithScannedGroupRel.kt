@@ -4,13 +4,12 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.crystal2033.qrextractor.core.localdb.entity.UserEntity
 
-data class UserWithScannedGroupsAndObjects(
+data class UserWithScannedGroupRel(
     @Embedded val user: UserEntity,
     @Relation(
-        entity = ScannedGroupEntity::class,
         parentColumn = "userId",
         entityColumn = "userCreatorId"
     )
 
-    val scannedGroupWithScannedObjects: List<ScannedGroupWithScannedObjects>
+    val scannedGroups: List<ScannedGroupEntity>
 )
