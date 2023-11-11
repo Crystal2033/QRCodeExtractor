@@ -126,7 +126,7 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navControll
 }
 
 @Composable
-inline fun <reified T : ViewModel> NavBackStackEntry.sharedNotHiltViewModel(
+inline fun <reified T : ViewModel> NavBackStackEntry.sharedScannedDataGroupsViewModel(
     navController: NavController,
     user: User
 ): T {

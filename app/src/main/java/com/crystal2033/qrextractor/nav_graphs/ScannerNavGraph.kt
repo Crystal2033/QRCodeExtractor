@@ -14,7 +14,7 @@ import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentatio
 import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentation.viewmodel.ScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.QRCodeView
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel.QRCodeScannerViewModel
-import com.crystal2033.qrextractor.sharedNotHiltViewModel
+import com.crystal2033.qrextractor.sharedScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.sharedViewModel
 
 fun NavGraphBuilder.scannerGraph(
@@ -29,7 +29,7 @@ fun NavGraphBuilder.scannerGraph(
     ) {
         composable(context.resources.getString(R.string.scanner_route)) {
             val viewModel = it.sharedViewModel<QRCodeScannerViewModel>(navController)
-            val viewModel2 = it.sharedNotHiltViewModel<ScannedDataGroupsViewModel>(
+            val viewModel2 = it.sharedScannedDataGroupsViewModel<ScannedDataGroupsViewModel>(
                 navController = navController,
                 user = userViewModel
             )
@@ -49,7 +49,7 @@ fun NavGraphBuilder.scannerGraph(
 
         composable(context.resources.getString(R.string.list_of_scanned_objects_route)) {
             //val viewModel = scannedDataGroupsViewModel(user = userViewModel)
-            val viewModel = it.sharedNotHiltViewModel<ScannedDataGroupsViewModel>(
+            val viewModel = it.sharedScannedDataGroupsViewModel<ScannedDataGroupsViewModel>(
                 navController = navController,
                 user = userViewModel
             )

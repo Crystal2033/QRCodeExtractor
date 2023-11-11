@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 //@HiltViewModel
+
 class ScannedDataGroupsViewModel @AssistedInject constructor(
     private val getListOfUserScannedGroupsUseCase: GetListOfUserScannedGroupsUseCase,
     @Assisted private val user: User?

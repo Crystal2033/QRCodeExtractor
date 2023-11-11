@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
-    id("kotlin-kapt")
     id("com.google.devtools.ksp")
 }
 
@@ -61,8 +60,8 @@ dependencies {
 
     val hilt_version = "2.48.1"
     implementation("com.google.dagger:hilt-android:$hilt_version")
-    kapt("com.google.dagger:hilt-android-compiler:$hilt_version")
-    kapt("androidx.hilt:hilt-compiler:1.1.0")
+    ksp("com.google.dagger:hilt-android-compiler:$hilt_version")
+    //ksp("androidx.hilt:hilt-compiler:1.1.0")
 
     // https://mvnrepository.com/artifact/androidx.hilt/hilt-navigation-compose
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
