@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +14,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +29,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.User
 import com.crystal2033.qrextractor.nav_graphs.addQRCodeGraph
 import com.crystal2033.qrextractor.nav_graphs.documentsGraph
@@ -78,11 +78,16 @@ fun MyNavGraph(
     snackbarHostState: SnackbarHostState
 
 ) {
+
+    val userViewModel: User by remember {
+        mutableStateOf(User("123", 1))
+
+    }
     NavHost(
         navController = navController,
         startDestination = context.resources.getString(R.string.home_head_graph_route)
     ) {
-        val userViewModel = User("some user", 1)
+        //val userViewModel = User("some user", 1)
         homeGraph(navController, context, snackbarHostState)
 
         addQRCodeGraph(navController, context, snackbarHostState)
@@ -121,13 +126,34 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navControll
 }
 
 @Composable
-fun scannedDataGroupsViewModel(user: User?): ScannedDataGroupsViewModel {
+inline fun <reified T : ViewModel> NavBackStackEntry.sharedNotHiltViewModel(
+    navController: NavController,
+    user: User
+): T {
+    val navGraphRoute = destination.parent?.route ?: return viewModel()
+    val parentEntry = remember(this) {
+        navController.getBackStackEntry(navGraphRoute)
+    }
+
     val factory = EntryPointAccessors.fromActivity(
         LocalContext.current as Activity,
         ScannedDataViewModelFactoryProvider::class.java
     ).scannedDataGroupsViewModelFactory()
 
-    return viewModel(factory = ScannedDataGroupsViewModel.provideFactory(factory, user))
+    return viewModel(
+        viewModelStoreOwner = parentEntry,
+        factory = ScannedDataGroupsViewModel.provideFactory(factory, user)
+    )
 }
+
+//@Composable
+//fun scannedDataGroupsViewModel(user: User?): ScannedDataGroupsViewModel {
+//    val factory = EntryPointAccessors.fromActivity(
+//        LocalContext.current as Activity,
+//        ScannedDataViewModelFactoryProvider::class.java
+//    ).scannedDataGroupsViewModelFactory()
+//
+//    return viewModel(factory = ScannedDataGroupsViewModel.provideFactory(factory, user))
+//}
 
 
