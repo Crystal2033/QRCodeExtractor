@@ -33,9 +33,9 @@ fun ShowGroupIcon(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Icon(
-                modifier = Modifier
-                    .size(100.dp),
-                imageVector = ImageVector.vectorResource(R.drawable.folder_35),
+//                modifier = Modifier
+//                    .size(100.dp),
+                imageVector = ImageVector.vectorResource(R.drawable.folder_100),
                 contentDescription = "File with groups",
                 tint = Color.White
             )
@@ -45,7 +45,7 @@ fun ShowGroupIcon(
             modifier = Modifier.align(Alignment.CenterHorizontally),
             text = scannedGroup.groupName ?: "Unknown name",
             textAlign = TextAlign.Center,
-            color = Color.Gray
+            color = Color.LightGray
         )
 
     }
