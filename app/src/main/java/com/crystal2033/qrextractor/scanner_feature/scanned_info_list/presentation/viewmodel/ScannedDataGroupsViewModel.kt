@@ -41,9 +41,9 @@ class ScannedDataGroupsViewModel @AssistedInject constructor(
     val scannedGroupsForUser : State<UserScannedGroupsState> = _scannedGroupsForUser
     //states
 
-    fun printUserAddress(): Unit{
-        Log.i(LOG_TAG_NAMES.INFO_TAG, "User address is: ${System.identityHashCode(user)}")
-    }
+//    fun printUserAddress(): Unit{
+//        Log.i(LOG_TAG_NAMES.INFO_TAG, "User address is: ${System.identityHashCode(user)}")
+//    }
     init {
         Log.i(LOG_TAG_NAMES.INFO_TAG, "RESRESH")
         refresh()
@@ -84,7 +84,7 @@ class ScannedDataGroupsViewModel @AssistedInject constructor(
     }
 
     private fun refresh(){
-        Log.i(LOG_TAG_NAMES.INFO_TAG, "REFRESHED with user: ${user?.name} with address: ${System.identityHashCode(user)}")
+        //Log.i(LOG_TAG_NAMES.INFO_TAG, "REFRESHED with user: ${user?.name} with address: ${System.identityHashCode(user)}")
         user?.let {
             existingUser ->
             viewModelScope.launch {

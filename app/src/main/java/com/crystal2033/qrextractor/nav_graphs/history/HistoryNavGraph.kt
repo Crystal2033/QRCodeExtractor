@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.nav_graphs
+package com.crystal2033.qrextractor.nav_graphs.history
 
 import android.content.Context
 import androidx.compose.material3.SnackbarHostState

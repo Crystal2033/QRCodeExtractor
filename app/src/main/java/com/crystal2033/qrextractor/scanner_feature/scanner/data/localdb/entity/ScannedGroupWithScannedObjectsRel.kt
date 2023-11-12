@@ -17,6 +17,7 @@ data class ScannedGroupWithScannedObjectsRel(
 ) {
     fun toScannedGroupWithObjects(): ScannedGroup {
         return ScannedGroup(
+            id = scannedGroup.scannedGroupId,
             groupName = scannedGroup.groupName,
             listOfScannedObjects = scannedObjects.map { scannedObjectEntity ->
                 scannedObjectEntity.toScannedTableNameAndId()
