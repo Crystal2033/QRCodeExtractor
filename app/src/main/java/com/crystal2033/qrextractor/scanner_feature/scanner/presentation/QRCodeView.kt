@@ -291,8 +291,8 @@ fun QRCodeView(
                 }
             ) {
                 Icon(
-                    ImageVector.vectorResource(R.drawable.folder_35),
-                    contentDescription = "Folder"
+                    ImageVector.vectorResource(R.drawable.folders_100),
+                    contentDescription = "Folder",
                 )
             }
 
