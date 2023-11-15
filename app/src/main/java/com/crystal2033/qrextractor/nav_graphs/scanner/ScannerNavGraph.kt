@@ -12,8 +12,10 @@ import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.nav_graphs.scanner.ScannerViewModels.Companion.sharedScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.nav_graphs.ViewModelWithoutUserParameters.Companion.sharedViewModel
+import com.crystal2033.qrextractor.nav_graphs.scanner.ScannerViewModels.Companion.sharedScannedObjectsListViewModel
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.ScannedGroupsView
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.viewmodel.ScannedDataGroupsViewModel
+import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.viewmodel.ScannedObjectsListViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.QRCodeView
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel.QRCodeScannerViewModel
 
@@ -59,11 +61,16 @@ fun NavGraphBuilder.scannerGraph(
         }
 
         composable(context.resources.getString(R.string.list_of_scanned_objects)){
-//            val viewModel = it.sharedScannedDataGroupsViewModel<ScannedDataGroupsViewModel>(
-//                navController = navController,
-//                user = user
-//            )
-            Log.i(LOG_TAG_NAMES.INFO_TAG, "WE ARE FROM SCANNED OBJECTS")
+            val viewModelFromGroups = it.sharedScannedDataGroupsViewModel<ScannedDataGroupsViewModel>(
+                navController = navController,
+                user = user
+            )
+
+            val viewModel = sharedScannedObjectsListViewModel<ScannedObjectsListViewModel>(
+                scannedGroup = viewModelFromGroups.chosenGroup.value
+            )
+
+            Log.i(LOG_TAG_NAMES.INFO_TAG, "WE ARE FROM SCANNED OBJECTS size= ${viewModel.objectsListState.value.listOfObjects?.size}")
         }
     }
 }

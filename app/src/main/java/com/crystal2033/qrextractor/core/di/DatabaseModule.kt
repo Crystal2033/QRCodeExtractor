@@ -16,16 +16,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
-//    @Provides
-//    @Singleton
-//    fun provideScannedObjectsListRepository(db: AppDatabase) : ScannedObjectsListRepository {
-//        return ScannedObjectsListRepositoryImpl(db.userDao)
-//    }
-
-
-
-
     @Provides
     @Singleton
     fun provideAppDatabase(app: Application): AppDatabase {

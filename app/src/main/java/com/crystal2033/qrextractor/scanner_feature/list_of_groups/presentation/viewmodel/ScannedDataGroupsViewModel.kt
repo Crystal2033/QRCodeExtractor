@@ -51,10 +51,10 @@ class ScannedDataGroupsViewModel @AssistedInject constructor(
         refresh()
     }
 
-//    override fun onCleared() {
-//        super.onCleared()
-//        Log.i(LOG_TAG_NAMES.INFO_TAG, "CLEARED")
-//    }
+    override fun onCleared() {
+        super.onCleared()
+        Log.i(LOG_TAG_NAMES.INFO_TAG, "CLEARED")
+    }
 
     @AssistedFactory
     interface Factory {
