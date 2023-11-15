@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.crystal2033.qrextractor.core.User
+import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.addQRCodeGraph
 import com.crystal2033.qrextractor.nav_graphs.documents.documentsGraph
 import com.crystal2033.qrextractor.nav_graphs.history.historyGraph

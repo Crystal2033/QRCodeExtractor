@@ -1,10 +1,10 @@
 package com.crystal2033.qrextractor.scanner_feature.scanner.di
 
 import android.content.Context
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.QRCodeScannerUseCases
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetKeyboardFromQRCodeUseCase
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetPersonFromQRCodeUseCase
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetQRCodeFactory
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.DataGetterUseCases
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetKeyboardUseCase
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetPersonUseCase
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetObjectFromServerFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,19 +17,19 @@ import javax.inject.Singleton
 object UseCaseModule {
     @Provides
     @Singleton
-    fun provideQRCodeScannerUseCasesFactory(qrCodeScannerUseCases: QRCodeScannerUseCases,
+    fun provideQRCodeScannerUseCasesFactory(qrCodeScannerUseCases: DataGetterUseCases,
                                             @ApplicationContext context : Context
-    ) : UseCaseGetQRCodeFactory {
-        return UseCaseGetQRCodeFactory(qrCodeScannerUseCases, context)
+    ) : UseCaseGetObjectFromServerFactory {
+        return UseCaseGetObjectFromServerFactory(qrCodeScannerUseCases, context)
     }
 
     @Provides
     @Singleton
     fun provideQRCodeScannerUseCases(
-        getPersonFromQRCodeUseCase: GetPersonFromQRCodeUseCase,
-        getKeyboardFromQRCodeUseCase: GetKeyboardFromQRCodeUseCase
-    ): QRCodeScannerUseCases {
-        return QRCodeScannerUseCases(
+        getPersonFromQRCodeUseCase: GetPersonUseCase,
+        getKeyboardFromQRCodeUseCase: GetKeyboardUseCase
+    ): DataGetterUseCases {
+        return DataGetterUseCases(
             getPersonFromQRCodeUseCase,
             getKeyboardFromQRCodeUseCase
         )

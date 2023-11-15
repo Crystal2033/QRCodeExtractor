@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import com.crystal2033.qrextractor.core.User
+import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.scanner_feature.general.di.ScannedDataViewModelFactoryProvider
-import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.presentation.viewmodel.ScannedDataGroupsViewModel
+import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.viewmodel.ScannedDataGroupsViewModel
 import dagger.hilt.android.EntryPointAccessors
 
-sealed class ScannerViewModels(){
+sealed class ScannerViewModels{
     companion object{
         @Composable
         inline fun <reified T : ViewModel> NavBackStackEntry.sharedScannedDataGroupsViewModel(

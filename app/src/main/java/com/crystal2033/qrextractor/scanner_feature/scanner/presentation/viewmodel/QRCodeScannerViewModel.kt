@@ -12,15 +12,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
-import com.crystal2033.qrextractor.core.User
+import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.util.ScannedTableNameAndId
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetDataFromQRCodeUseCase
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetQRCodeFactory
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetDataFromServerUseCase
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetObjectFromServerFactory
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.state.ScannedDataState
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.QRScannerEvent
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.UIScannerEvent
@@ -41,7 +41,7 @@ import javax.inject.Inject
 @HiltViewModel
 class QRCodeScannerViewModel @Inject constructor(
     private val converter: Converters,
-    private val useCaseGetQRCodeFactory: UseCaseGetQRCodeFactory,
+    private val useCaseGetQRCodeFactory: UseCaseGetObjectFromServerFactory,
     private val insertScannedGroupInDBUseCase: InsertScannedGroupInDBUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -49,7 +49,7 @@ class QRCodeScannerViewModel @Inject constructor(
         const val timeForDuplicateQRCodesResistInMs = 12000L
     }
 
-    private lateinit var getDataFromQRCodeUseCase: GetDataFromQRCodeUseCase
+    private lateinit var getDataFromQRCodeUseCase: GetDataFromServerUseCase
 
     ///States
     private val _previewDataFromQRState = mutableStateOf(ScannedDataState())
@@ -91,7 +91,7 @@ class QRCodeScannerViewModel @Inject constructor(
             }
 
             is QRScannerEvent.OnGoToScannedGroupsWindow -> {
-                sendUiEvent(UIScannerEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects_route)))
+                sendUiEvent(UIScannerEvent.Navigate(context.resources.getString(R.string.list_of_groups_route)))
             }
         }
     }

@@ -3,11 +3,10 @@ package com.crystal2033.qrextractor.scanner_feature.general.di
 import android.content.Context
 import com.crystal2033.qrextractor.core.localdb.AppDatabase
 import com.crystal2033.qrextractor.scanner_feature.general.repository_impl.ScannedGroupRepositoryImpl
-import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.domain.repository.UserWithScannedGroupsRepository
-import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.domain.use_case.GetListOfUserScannedGroupsUseCase
+import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.repository.UserWithScannedGroupsRepository
+import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.use_case.GetListOfUserScannedGroupsUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.ScannedGroupCreatorRepository
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +25,7 @@ object ScannedGroupsModule {
     }
 
     @Provides //Not singleton because ScannedGroupRepositoryImpl is singleton
-    fun provideScannedGroupRepositoryImpl(
+    fun provideScannedGroupRepositoryImplToCreateData(
         db: AppDatabase,
         @ApplicationContext context: Context
     ): ScannedGroupCreatorRepository {
@@ -40,7 +39,7 @@ object ScannedGroupsModule {
     }
 
     @Provides //Not singleton because ScannedGroupRepositoryImpl is singleton
-    fun provideScannedGroupRepository2Impl(
+    fun provideScannedGroupRepositoryToGetData(
         db: AppDatabase,
         @ApplicationContext context: Context
     ): UserWithScannedGroupsRepository {

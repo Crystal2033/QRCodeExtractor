@@ -29,10 +29,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Department
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Person
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Title
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.WorkSpace
+import com.crystal2033.qrextractor.core.model.Department
+import com.crystal2033.qrextractor.core.model.Person
+import com.crystal2033.qrextractor.core.model.Title
+import com.crystal2033.qrextractor.core.model.WorkSpace
 
 
 @Composable

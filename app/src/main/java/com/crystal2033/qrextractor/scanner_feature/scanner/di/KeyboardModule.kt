@@ -5,7 +5,7 @@ import com.crystal2033.qrextractor.core.ApiInfo
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.KeyboardApi
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.repository.KeyboardRepositoryImpl
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.KeyboardRepository
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetKeyboardFromQRCodeUseCase
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetKeyboardUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,8 +22,8 @@ object KeyboardModule {
 
     @Provides
     @Singleton
-    fun provideGetKeyboardUseCase(repository: KeyboardRepository): GetKeyboardFromQRCodeUseCase {
-        return GetKeyboardFromQRCodeUseCase(repository)
+    fun provideGetKeyboardUseCase(repository: KeyboardRepository): GetKeyboardUseCase {
+        return GetKeyboardUseCase(repository)
     }
 
     @Provides

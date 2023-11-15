@@ -2,7 +2,7 @@ package com.crystal2033.qrextractor.core.localdb.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.crystal2033.qrextractor.core.User
+import com.crystal2033.qrextractor.core.model.User
 
 @Entity(tableName = "User")
 data class UserEntity(

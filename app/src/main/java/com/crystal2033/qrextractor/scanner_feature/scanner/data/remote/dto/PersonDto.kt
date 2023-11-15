@@ -1,7 +1,7 @@
 package com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.dto
 
 import com.crystal2033.qrextractor.scanner_feature.scanner.StaticConverters
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Person
+import com.crystal2033.qrextractor.core.model.Person
 
 
 data class PersonDto(

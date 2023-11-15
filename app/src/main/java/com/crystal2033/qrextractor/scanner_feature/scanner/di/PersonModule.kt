@@ -7,7 +7,7 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.Perso
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.repository.PersonRepositoryImpl
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.util.GsonParser
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.PersonRepository
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetPersonFromQRCodeUseCase
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetPersonUseCase
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -25,8 +25,8 @@ object PersonModule {
 
     @Provides
     @Singleton
-    fun provideGetPersonUseCase(repository: PersonRepository): GetPersonFromQRCodeUseCase {
-        return GetPersonFromQRCodeUseCase(repository)
+    fun provideGetPersonUseCase(repository: PersonRepository): GetPersonUseCase {
+        return GetPersonUseCase(repository)
     }
 
     @Provides

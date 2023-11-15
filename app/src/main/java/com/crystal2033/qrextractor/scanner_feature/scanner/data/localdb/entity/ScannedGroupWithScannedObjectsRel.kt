@@ -3,7 +3,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.crystal2033.qrextractor.scanner_feature.scanned_info_list.domain.model.ScannedGroup
+import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
 
 data class ScannedGroupWithScannedObjectsRel(
     @Embedded val scannedGroup: ScannedGroupEntity,

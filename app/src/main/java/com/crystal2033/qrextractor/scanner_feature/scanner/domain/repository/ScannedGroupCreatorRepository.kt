@@ -1,6 +1,6 @@
 package com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository
 
-import com.crystal2033.qrextractor.core.User
+import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 import kotlinx.coroutines.flow.Flow

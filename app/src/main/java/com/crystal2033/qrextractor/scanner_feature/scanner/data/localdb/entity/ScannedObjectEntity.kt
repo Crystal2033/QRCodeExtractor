@@ -2,7 +2,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.util.ScannedTableNameAndId
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
 
 @Entity(tableName = "ScannedObject")
 data class ScannedObjectEntity(
@@ -12,7 +12,7 @@ data class ScannedObjectEntity(
     @PrimaryKey(autoGenerate = true)
     var scannedObjectId: Long= 0
 ){
-    fun toScannedTableNameAndId() : ScannedTableNameAndId{
+    fun toScannedTableNameAndId() : ScannedTableNameAndId {
         return ScannedTableNameAndId(tableNameInRemoteDb, tableIdInRemoteDb)
     }
 }

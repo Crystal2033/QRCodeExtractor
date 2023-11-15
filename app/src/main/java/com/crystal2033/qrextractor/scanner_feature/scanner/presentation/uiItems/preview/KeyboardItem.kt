@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Keyboard
+import com.crystal2033.qrextractor.core.model.Keyboard
 
 @Composable
 fun KeyboardItem(keyboard: Keyboard?,
