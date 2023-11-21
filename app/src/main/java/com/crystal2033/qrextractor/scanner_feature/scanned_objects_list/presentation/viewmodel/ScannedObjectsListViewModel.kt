@@ -11,6 +11,7 @@ import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.state.ObjectsListState
+import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.vm_view_communication.ScannedObjectsListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.vm_view_communication.UIScannedObjectsListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
@@ -78,14 +79,21 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
     }
 
 
-
-
-    fun onEvent() {
+    fun onEvent(event: ScannedObjectsListEvent) {
+        when (event) {
+            is ScannedObjectsListEvent.OnScannedObjectClicked -> {
+                Log.i(
+                    LOG_TAG_NAMES.INFO_TAG,
+                    "Clicked on ${event.scannedObject.javaClass.simpleName} with id " +
+                            "${event.scannedObject.getDatabaseID()}"
+                )
+            }
+        }
 
     }
 
 
-    private fun loadDataFromRemoteServer() : Job {
+    private fun loadDataFromRemoteServer(): Job {
         return viewModelScope.launch {
             for (scannedObject in scannedGroup.listOfScannedObjects) {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "ID=${scannedObject.id}")
@@ -100,7 +108,6 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
         }
 
 
-
     }
 
     private fun addResultInList(objectGetResult: Resource<QRScannableData>, id: Long) {
@@ -108,9 +115,11 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
             is Resource.Error -> {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "ERROR WITH ID: $id")
             }
+
             is Resource.Loading -> {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "LOADING WITH ID: $id")
             }
+
             is Resource.Success -> {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "SUCCESS ID: $id")
                 _objectsListState.value.listOfObjects?.add(
