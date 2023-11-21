@@ -40,8 +40,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
     //states
     private val _objectsListState = mutableStateOf(ObjectsListState())
     val objectsListState: State<ObjectsListState> = _objectsListState
-
-    private var job: Job? = null
+    //states
 
     init {
         Log.i(LOG_TAG_NAMES.INFO_TAG, "load data from the server")
@@ -80,7 +79,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
 
 
 
-    //states
+
     fun onEvent() {
 
     }
@@ -107,10 +106,10 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
     private fun addResultInList(objectGetResult: Resource<QRScannableData>, id: Long) {
         when (objectGetResult) {
             is Resource.Error -> {
-
+                Log.i(LOG_TAG_NAMES.INFO_TAG, "ERROR WITH ID: $id")
             }
             is Resource.Loading -> {
-
+                Log.i(LOG_TAG_NAMES.INFO_TAG, "LOADING WITH ID: $id")
             }
             is Resource.Success -> {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "SUCCESS ID: $id")

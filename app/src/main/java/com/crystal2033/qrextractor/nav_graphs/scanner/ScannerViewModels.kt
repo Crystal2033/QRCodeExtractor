@@ -39,7 +39,7 @@ sealed class ScannerViewModels{
         }
 
         @Composable
-        inline fun <reified T : ViewModel> sharedScannedObjectsListViewModel(
+        inline fun <reified T : ViewModel> scannedObjectsListInGroupViewModel(
             scannedGroup: ScannedGroup
         ): T {
 //            val navGraphRoute = destination.parent?.route ?: return viewModel()

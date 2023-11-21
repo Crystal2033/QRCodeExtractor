@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 sealed class ViewModelWithoutUserParameters(){
     companion object{
         @Composable
-        inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(navController: NavController): T {
+        inline fun <reified T : ViewModel> NavBackStackEntry.sharedHiltViewModel(navController: NavController): T {
             val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
             val parentEntry = remember(this) {
                 navController.getBackStackEntry(navGraphRoute)

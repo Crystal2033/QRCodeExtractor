@@ -2,4 +2,5 @@ package com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.present
 
 sealed class UIScannedObjectsListEvent{
     data class ShowSnackBar(val message: String) : UIScannedObjectsListEvent()
+    data class Navigate(val route: String): UIScannedObjectsListEvent()
 }
