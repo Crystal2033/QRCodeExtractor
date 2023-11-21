@@ -20,6 +20,8 @@ fun NavGraphBuilder.homeGraph(
     ) {
         composable(context.resources.getString(R.string.home_route)) {
             TextWindow("Home")
+
+
         }
     }
 }
