@@ -13,7 +13,8 @@
 
     <string name="documents_route">documents</string>
 
-    <string name="add_data_route">add_data</string>
+    <string name="menu_add_route">add_menu</string>
+    <string name="add_concrete_class">add_concrete_object</string>
 
 
     <!--  Heads of navigation subgraph-->

@@ -84,7 +84,7 @@ fun MyNavGraph(
         //val userViewModel = User("some user", 1)
         homeGraph(navController, context, snackbarHostState)
 
-        addQRCodeGraph(navController, context, snackbarHostState)
+        addQRCodeGraph(navController, context, snackbarHostState, userViewModel)
 
         scannerGraph(navController, context, snackbarHostState, userViewModel)
 

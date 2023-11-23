@@ -5,6 +5,7 @@ import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.localdb.ScannedGroupDao
 import com.crystal2033.qrextractor.core.localdb.ScannedObjectDao
 import com.crystal2033.qrextractor.core.localdb.UserDao
+import com.crystal2033.qrextractor.core.localdb.entity.UserEntity
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.UserWithScannedGroups
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.repository.UserWithScannedGroupsRepository

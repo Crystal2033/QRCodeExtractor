@@ -43,12 +43,6 @@ fun ScannedObjectsListView(
         mutableStateOf(viewModel.objectsListState)
     }
 
-//    val groupedByClassScannedObjects = remember {
-//        mutableStateOf(
-//            viewModel.objectsListState.value.listOfObjects?.groupBy { it.javaClass.kotlin }
-////            listOfObjectsState.value.listOfObjects?.groupBy { it.javaClass.kotlin }
-//        )
-//    }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
