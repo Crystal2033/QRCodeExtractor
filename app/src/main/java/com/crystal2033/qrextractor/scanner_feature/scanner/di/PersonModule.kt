@@ -3,7 +3,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanner.di
 import android.content.Context
 import com.crystal2033.qrextractor.core.ApiInfo
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.PersonApi
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.ScanPersonApi
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.repository.PersonRepositoryImpl
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.util.GsonParser
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.PersonRepository
@@ -31,19 +31,19 @@ object PersonModule {
 
     @Provides
     @Singleton
-    fun providePersonRepository(personApi: PersonApi, @ApplicationContext context: Context): PersonRepository {
+    fun providePersonRepository(personApi: ScanPersonApi, @ApplicationContext context: Context): PersonRepository {
         return PersonRepositoryImpl(personApi, context)
     }
 
     @Provides
     @Singleton
-    fun providePersonApi(okHttpClient: OkHttpClient) : PersonApi {
+    fun providePersonApi(okHttpClient: OkHttpClient) : ScanPersonApi {
         return Retrofit.Builder()
             .baseUrl(ApiInfo.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
-            .create(PersonApi::class.java)
+            .create(ScanPersonApi::class.java)
     }
 
 

@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.dto
+package com.crystal2033.qrextractor.core.dto
 
 import android.os.Build
 import androidx.annotation.RequiresApi

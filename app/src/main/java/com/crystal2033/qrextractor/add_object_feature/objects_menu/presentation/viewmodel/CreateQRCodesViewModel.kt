@@ -9,13 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.add_object_feature.objects_menu.domain.model.QRCodeStickerInfo
+import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.CreateQRCodeEvent
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.UICreateQRCodeEvent
 import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.model.User
-import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
-import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.viewmodel.ScannedObjectsListViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -72,10 +70,14 @@ class CreateQRCodesViewModel @AssistedInject constructor(
     }
 
     fun onEvent(event: CreateQRCodeEvent) {
-        when(event){
+        when (event) {
             is CreateQRCodeEvent.SetChosenObjectClass -> {
                 _chosenObjectClassState.value = event.objectType
                 sendUiEvent(UICreateQRCodeEvent.Navigate(context.getString(R.string.add_concrete_class)))
+            }
+
+            is CreateQRCodeEvent.OnAddNewObjectInList -> {
+                _listOfAddedQRCodes.add(event.qrCodeStickerInfo)
             }
         }
     }

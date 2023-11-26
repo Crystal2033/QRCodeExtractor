@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.util.Resource
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.KeyboardApi
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.ScanKeyboardApi
 import com.crystal2033.qrextractor.core.model.Keyboard
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.KeyboardRepository
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.ExceptionAndErrorParsers
@@ -18,7 +18,7 @@ import java.io.IOException
 
 
 class KeyboardRepositoryImpl(
-    private val keyboardApi: KeyboardApi,
+    private val keyboardApi: ScanKeyboardApi,
     private val context: Context
 ) : KeyboardRepository {
 

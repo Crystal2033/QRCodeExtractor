@@ -1,6 +1,6 @@
 package com.crystal2033.qrextractor.add_object_feature.general.di
 
-import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.AddPersonViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn

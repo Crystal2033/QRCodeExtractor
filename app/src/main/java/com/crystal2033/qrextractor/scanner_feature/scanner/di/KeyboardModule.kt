@@ -2,7 +2,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanner.di
 
 import android.content.Context
 import com.crystal2033.qrextractor.core.ApiInfo
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.KeyboardApi
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.ScanKeyboardApi
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.repository.KeyboardRepositoryImpl
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.KeyboardRepository
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetKeyboardUseCase
@@ -29,7 +29,7 @@ object KeyboardModule {
     @Provides
     @Singleton
     fun provideKeyboardRepository(
-        keyboardApi: KeyboardApi,
+        keyboardApi: ScanKeyboardApi,
         @ApplicationContext context: Context
     ): KeyboardRepository {
         return KeyboardRepositoryImpl(keyboardApi, context)
@@ -37,13 +37,13 @@ object KeyboardModule {
 
     @Provides
     @Singleton
-    fun provideKeyboardApi(okHttpClient: OkHttpClient): KeyboardApi {
+    fun provideKeyboardApi(okHttpClient: OkHttpClient): ScanKeyboardApi {
         return Retrofit.Builder()
             .baseUrl(ApiInfo.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
-            .create(KeyboardApi::class.java)
+            .create(ScanKeyboardApi::class.java)
     }
 
 }

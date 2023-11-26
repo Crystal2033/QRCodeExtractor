@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.util.Resource
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.PersonApi
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.ScanPersonApi
 import com.crystal2033.qrextractor.core.model.Person
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.PersonRepository
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.ExceptionAndErrorParsers
@@ -15,7 +15,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class PersonRepositoryImpl(
-    private val personApi: PersonApi,
+    private val personApi: ScanPersonApi,
     private val context: Context
 ) : PersonRepository {
     override fun getPerson(id: Long): Flow<Resource<Person>> = flow {
