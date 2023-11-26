@@ -10,8 +10,11 @@ import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.TextWindow
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.MenuView
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
+import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.factory.AddPersonViewModelFactory
+import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.factory.BaseAddViewModelFactory
+import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.model.User
-import com.crystal2033.qrextractor.nav_graphs.home.AddDataViewModels.Companion.sharedAddDataMenuViewModel
+import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.sharedAddDataMenuViewModel
 
 fun NavGraphBuilder.addQRCodeGraph(
     navController: NavController,
@@ -40,7 +43,45 @@ fun NavGraphBuilder.addQRCodeGraph(
                 navController = navController,
                 user = user
             )
-            TextWindow(string = "CONCRETE OBJECT: ${menuViewModel.chosenObjectClassState.value.getLabel(context)}")
+            val baseAddViewModelFactory: BaseAddViewModelFactory =
+                createConcreteAddViewModelFactory(menuViewModel.chosenObjectClassState.value)
+
+            val addViewModel = baseAddViewModelFactory.createAddObjectViewModel(
+                user = user,
+                navBackStackEntry = it,
+                navController = navController
+            )
+
+            TextWindow(
+                string = "CONCRETE OBJECT: ${
+                    menuViewModel.chosenObjectClassState.value.getLabel(
+                        context
+                    )
+                }"
+            )
+        }
+    }
+
+
+}
+
+
+fun createConcreteAddViewModelFactory(typeOfViewModel: DatabaseObjectTypes): BaseAddViewModelFactory {
+    return when (typeOfViewModel) {
+        DatabaseObjectTypes.PERSON -> {
+            AddPersonViewModelFactory()
+        }
+
+        DatabaseObjectTypes.KEYBOARD -> {
+            AddPersonViewModelFactory()
+        }
+
+        DatabaseObjectTypes.MONITOR -> {
+            AddPersonViewModelFactory()
+        }
+
+        DatabaseObjectTypes.UNKNOWN -> {
+            AddPersonViewModelFactory()
         }
     }
 }
