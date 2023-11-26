@@ -29,7 +29,7 @@ fun PersonFullInfo(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            bitmap = person.image,
+            bitmap = person.image!!,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier

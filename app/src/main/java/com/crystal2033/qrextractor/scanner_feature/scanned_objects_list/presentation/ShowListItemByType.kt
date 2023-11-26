@@ -22,7 +22,7 @@ fun ShowListItemByType(listItem: QRScannableData,
 
         is Person -> {
             StartObjectInfo(
-                image = listItem.image,
+                image = listItem.image!!,
                 text = "${listItem.firstName} ${listItem.secondName}",
                 onObjectClicked = onObjectClicked
             )
