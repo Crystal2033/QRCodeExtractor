@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.domain.use_case.person.PersonGetterUseCases
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.core.model.Department
 import com.crystal2033.qrextractor.core.model.Title
@@ -19,7 +20,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 class AddPersonViewModel @AssistedInject constructor(
     @Assisted private val user: User,
     @ApplicationContext private val context: Context,
-    //TODO: USE_CASES
+    private val personGetterUseCases: PersonGetterUseCases
 
 ) : BaseAddObjectViewModel() {
     @AssistedFactory

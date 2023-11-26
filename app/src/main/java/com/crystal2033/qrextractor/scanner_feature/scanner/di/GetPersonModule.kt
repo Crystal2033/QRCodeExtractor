@@ -21,7 +21,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object PersonModule {
+object GetPersonModule {
 
     @Provides
     @Singleton

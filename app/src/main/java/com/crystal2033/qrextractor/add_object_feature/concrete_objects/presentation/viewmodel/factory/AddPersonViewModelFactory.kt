@@ -15,6 +15,6 @@ class AddPersonViewModelFactory : BaseAddViewModelFactory() {
         navBackStackEntry: NavBackStackEntry,
         navController: NavController
     ): BaseAddObjectViewModel {
-        return navBackStackEntry.addPersonViewModel<AddPersonViewModel>(navController, user)
+        return addPersonViewModel<AddPersonViewModel>(user)
     }
 }

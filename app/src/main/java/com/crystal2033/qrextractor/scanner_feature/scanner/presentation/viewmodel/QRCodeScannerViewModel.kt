@@ -15,8 +15,8 @@ import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetDataFromServerUseCase
@@ -93,6 +93,7 @@ class QRCodeScannerViewModel @Inject constructor(
             is QRScannerEvent.OnGoToScannedGroupsWindow -> {
                 sendUiEvent(UIScannerEvent.Navigate(context.resources.getString(R.string.list_of_groups_route)))
             }
+
         }
     }
 
