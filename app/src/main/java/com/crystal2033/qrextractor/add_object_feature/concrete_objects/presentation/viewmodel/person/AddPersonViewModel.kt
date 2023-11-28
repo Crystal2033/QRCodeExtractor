@@ -55,48 +55,36 @@ class AddPersonViewModel @AssistedInject constructor(
     private fun loadInfoFromRemoteServer(): Job {
         return viewModelScope.launch {
             personGetterUseCases.getDepartmentsUseCase().onEach { statusWithState ->
-                when (statusWithState) {
-                    is Resource.Error -> {}
-                    is Resource.Loading -> {}
-                    is Resource.Success -> {
-                        Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of departments")
-                        _listOfDepartments.addAll(statusWithState.data ?: emptyList())
-                        for (department in listOfDepartments) {
-                            Log.i(LOG_TAG_NAMES.INFO_TAG, "Workspace: ${department.name}")
-                        }
-                    }
-                }
+                insertPossibleObjectsInListIfSuccess(statusWithState, _listOfDepartments)
             }.launchIn(this)
 
             personGetterUseCases.getTitlesUseCase().onEach { statusWithState ->
-                when (statusWithState) {
-                    is Resource.Error -> {}
-                    is Resource.Loading -> {}
-                    is Resource.Success -> {
-                        Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of titles")
-                        _listOfTitles.addAll(statusWithState.data ?: emptyList())
-                        for (title in listOfTitles) {
-                            Log.i(LOG_TAG_NAMES.INFO_TAG, "Workspace: ${title.name}")
-                        }
-                    }
-                }
+                insertPossibleObjectsInListIfSuccess(statusWithState, _listOfTitles)
             }.launchIn(this)
 
             personGetterUseCases.getWorkspacesUseCase().onEach { statusWithState ->
-                when (statusWithState) {
-                    is Resource.Error -> {}
-                    is Resource.Loading -> {}
-                    is Resource.Success -> {
-                        Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of workspaces")
-                        _listOfWorkSpaces.addAll(statusWithState.data ?: emptyList())
-                        for (workspace in listOfWorkSpaces) {
-                            Log.i(LOG_TAG_NAMES.INFO_TAG, "Workspace: ${workspace.id}")
-                        }
-                    }
-                }
+                insertPossibleObjectsInListIfSuccess(statusWithState, _listOfWorkSpaces)
             }.launchIn(this)
+
         }
 
+    }
+
+    private fun <T> insertPossibleObjectsInListIfSuccess(
+        statusWithState: Resource<List<T>>,
+        listOfPossibleObjects: MutableList<T>
+    ) {
+        when (statusWithState) {
+            is Resource.Error -> {}
+            is Resource.Loading -> {}
+            is Resource.Success -> {
+                Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of possible objects")
+                listOfPossibleObjects.addAll(statusWithState.data ?: emptyList())
+                for (currentObj in listOfPossibleObjects) {
+                    Log.i(LOG_TAG_NAMES.INFO_TAG, "Possible object: ${currentObj.toString()}")
+                }
+            }
+        }
     }
 
     //states
