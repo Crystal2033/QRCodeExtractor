@@ -30,10 +30,11 @@ import androidx.compose.ui.unit.sp
 fun DropListView(
     fieldName: String,
     listOfObjects: List<String>,
-    chosenValue: MutableState<String>
+    chosenValue: MutableState<String>,
+    actionAfterChoose: () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(listOfObjects[0]) }
+    var selectedText by remember { mutableStateOf("") }
 
     Column {
         Row(
@@ -77,6 +78,7 @@ fun DropListView(
                             onClick = {
                                 selectedText = item
                                 chosenValue.value = selectedText
+                                actionAfterChoose()
                                 expanded = false
                             }
                         )

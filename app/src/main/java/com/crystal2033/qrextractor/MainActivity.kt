@@ -82,6 +82,7 @@ fun MyNavGraph(
         startDestination = context.resources.getString(R.string.home_head_graph_route)
     ) {
         //val userViewModel = User("some user", 1)
+
         homeGraph(navController, context, snackbarHostState)
 
         addQRCodeGraph(navController, context, snackbarHostState, userViewModel)

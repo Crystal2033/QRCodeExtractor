@@ -1,6 +1,9 @@
 package com.crystal2033.qrextractor.core.model
 
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import com.crystal2033.qrextractor.core.dto.PersonDto
+import com.crystal2033.qrextractor.scanner_feature.scanner.StaticConverters
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 
 data class Person(
@@ -22,7 +25,16 @@ data class Person(
         return id
     }
 
-//    fun toPersonDto() : PersonDto{
-//        return PersonDto()
-//    }
+    fun toPersonDto(): PersonDto {
+        return PersonDto(
+            department = department!!.toDepartmentDto(),
+            firstName = firstName,
+            secondName = secondName,
+            id = id,
+            image = image?.let { StaticConverters.fromBitmapToString(image.asAndroidBitmap()) } ?: "" ,
+            jsondataForQR = "",
+            title = title!!.toTitleDto(),
+            workSpace = workSpace!!.toWorkspaceDto()
+        )
+    }
 }

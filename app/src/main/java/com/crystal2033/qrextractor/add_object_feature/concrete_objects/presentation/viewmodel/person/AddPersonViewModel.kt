@@ -1,16 +1,24 @@
 package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person
 
 import android.content.Context
-import android.util.Log
+import android.graphics.BitmapFactory
+import android.os.Environment
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.domain.use_case.person.PersonGetterUseCases
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.person.PersonState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
-import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.AddNewObjectEvent
+import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.model.Department
+import com.crystal2033.qrextractor.core.model.Person
 import com.crystal2033.qrextractor.core.model.Title
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.model.WorkSpace
@@ -48,6 +56,21 @@ class AddPersonViewModel @AssistedInject constructor(
         }
     }
 
+    //states
+    private val _listOfDepartments = mutableStateListOf<Department>()
+    val listOfDepartments: SnapshotStateList<Department> = _listOfDepartments
+
+    private val _listOfTitles = mutableStateListOf<Title>()
+    val listOfTitles: SnapshotStateList<Title> = _listOfTitles
+
+    private val _listOfWorkSpaces = mutableStateListOf<WorkSpace>()
+    val listOfWorkSpaces: SnapshotStateList<WorkSpace> = _listOfWorkSpaces
+
+    private val _personState = mutableStateOf(PersonState())
+    val personState: State<PersonState> = _personState
+
+    //states
+
     init {
         loadInfoFromRemoteServer()
     }
@@ -65,41 +88,64 @@ class AddPersonViewModel @AssistedInject constructor(
             personGetterUseCases.getWorkspacesUseCase().onEach { statusWithState ->
                 insertPossibleObjectsInListIfSuccess(statusWithState, _listOfWorkSpaces)
             }.launchIn(this)
-
         }
-
     }
 
-    private fun <T> insertPossibleObjectsInListIfSuccess(
-        statusWithState: Resource<List<T>>,
-        listOfPossibleObjects: MutableList<T>
-    ) {
-        when (statusWithState) {
-            is Resource.Error -> {}
-            is Resource.Loading -> {}
-            is Resource.Success -> {
-                Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of possible objects")
-                listOfPossibleObjects.addAll(statusWithState.data ?: emptyList())
-                for (currentObj in listOfPossibleObjects) {
-                    Log.i(LOG_TAG_NAMES.INFO_TAG, "Possible object: ${currentObj.toString()}")
-                }
+
+    fun onEvent(event: AddNewObjectEvent) {
+        when (event) {
+            is AddNewObjectEvent.OnAddObjectInDatabaseClicked -> {
+
             }
         }
     }
 
-    //states
-    private val _listOfDepartments = mutableStateListOf<Department>()
-    val listOfDepartments: SnapshotStateList<Department> = _listOfDepartments
-
-    private val _listOfTitles = mutableStateListOf<Title>()
-    val listOfTitles: SnapshotStateList<Title> = _listOfTitles
-
-    private val _listOfWorkSpaces = mutableStateListOf<WorkSpace>()
-    val listOfWorkSpaces: SnapshotStateList<WorkSpace> = _listOfWorkSpaces
-
-    //states
     fun test() {
         //createQRCode()
+    }
+
+    override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
+        //send ui event to collect all inserted data from UI
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.concept)
+
+        personState.value.imageState.value = bitmap.asImageBitmap()
+        val qrCodeStickerInfo = QRCodeStickerInfo()
+
+        val person = fromPersonStateIntoPerson()
+        viewModelScope.launch {
+            personGetterUseCases.addNewPersonUseCase(person).onEach { statusWithState ->
+                when (statusWithState) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        personState.value.id.value = statusWithState.data?.id ?: 0
+                        setQRStickerInfo(statusWithState.data, qrCodeStickerInfo)
+                        onAddObjectClicked(qrCodeStickerInfo)
+                    }
+                }
+            }.launchIn(this)
+        }
+    }
+
+    private fun setQRStickerInfo(person: Person?, qrCodeStickerInfo: QRCodeStickerInfo) {
+        person?.let {
+            qrCodeStickerInfo.qrCode = createQRCode(person)
+            qrCodeStickerInfo.essentialName = person.firstName + person.secondName
+            qrCodeStickerInfo.inventoryNumber = "ASD"
+        }
+
+    }
+
+    private fun fromPersonStateIntoPerson(): Person {
+        return Person(
+            id = 0,
+            department = listOfDepartments.find { it.name == personState.value.departmentState.value.name.value },
+            firstName = personState.value.firstNameState.value,
+            secondName = personState.value.secondNameState.value,
+            image = personState.value.imageState.value,
+            title = listOfTitles.find { it.name == personState.value.titleState.value.name.value },
+            workSpace = listOfWorkSpaces.find { it.id.toString() == personState.value.workspaceState.value.id.value }
+        )
     }
 
 

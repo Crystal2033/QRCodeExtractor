@@ -10,7 +10,7 @@ class AddNewPersonUseCase(
     private val addPersonRepository: AddPersonRepository
 ) : AddOnRemoteServerUseCase<Person> {
     override fun invoke(newObject: Person): Flow<Resource<Person>> {
-        return addPersonRepository.addPerson(newObject)
+        return addPersonRepository.addPerson(newObject.toPersonDto())
     }
 
 }

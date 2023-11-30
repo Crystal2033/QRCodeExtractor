@@ -23,13 +23,15 @@ import androidx.compose.ui.unit.sp
 fun TextFieldView(
     fieldName: String,
     fieldValue: MutableState<String>,
-    pattern: Regex = Regex("^*\$")
+    pattern: Regex = Regex("(\\w|\\d)*"),
+    actionAfterValueChanged: () -> Unit = {}
+
 ) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalArrangement = Arrangement.Start
         ) {
             Text(
                 text = fieldName,
@@ -47,12 +49,10 @@ fun TextFieldView(
         ) {
             OutlinedTextField(
                 value = fieldValue.value,
-                placeholder = {
-                    Text("Input value...")
-                },
                 onValueChange = {
                     if (it.matches(pattern)) {
                         fieldValue.value = it
+                        actionAfterValueChanged()
                     }
 
                 },
@@ -69,5 +69,7 @@ fun TextFieldPreview() {
     val textToInsert = remember {
         mutableStateOf("")
     }
-    TextFieldView("Test string", textToInsert)
+    TextFieldView("Test string", textToInsert){
+
+    }
 }

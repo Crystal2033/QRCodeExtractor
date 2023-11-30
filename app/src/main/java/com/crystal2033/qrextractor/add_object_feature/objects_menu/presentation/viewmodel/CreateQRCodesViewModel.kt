@@ -1,6 +1,7 @@
 package com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +13,7 @@ import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.CreateQRCodeEvent
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.UICreateQRCodeEvent
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.model.User
 import dagger.assisted.Assisted
@@ -77,6 +79,8 @@ class CreateQRCodesViewModel @AssistedInject constructor(
             }
 
             is CreateQRCodeEvent.OnAddNewObjectInList -> {
+                Log.i(LOG_TAG_NAMES.INFO_TAG, "Added new QRCode in list:" +
+                        " ${event.qrCodeStickerInfo.essentialName}")
                 _listOfAddedQRCodes.add(event.qrCodeStickerInfo)
             }
         }

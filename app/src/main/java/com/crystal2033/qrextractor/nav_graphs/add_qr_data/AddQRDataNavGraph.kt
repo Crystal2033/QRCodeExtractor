@@ -3,21 +3,33 @@ package com.crystal2033.qrextractor.nav_graphs.add_qr_data
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.TextWindow
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.person.AddPersonView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.MenuView
@@ -43,12 +55,16 @@ fun NavGraphBuilder.addQRCodeGraph(
                 navController = navController,
                 user = user
             )
-            MenuView(
-                viewModel = menuViewModel,
-                onNavigate = { navigateEvent ->
-                    navController.navigate(navigateEvent.route)
-                }
-            )
+            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 90.dp)) {
+                MenuView(
+                    viewModel = menuViewModel,
+                    onNavigate = { navigateEvent ->
+                        navController.navigate(navigateEvent.route)
+                    }
+                )
+            }
+
+
         }
         composable(context.resources.getString(R.string.add_concrete_class)) {
             val menuViewModel = it.sharedAddDataMenuViewModel<CreateQRCodesViewModel>(
@@ -63,24 +79,18 @@ fun NavGraphBuilder.addQRCodeGraph(
 //                navBackStackEntry = it,
 //                navController = navController
 //            )
+            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 90.dp)) {
+                createViewByAddType(
+                    typeOfViewModel = menuViewModel.chosenObjectClassState.value,
+                    navBackStackEntry = it,
+                    navController = navController,
+                    user = user
+                ) { qrCodeStickerInfo ->
+                    menuViewModel.onEvent(CreateQRCodeEvent.OnAddNewObjectInList(qrCodeStickerInfo))
+                }
 
-            val addViewModel = createViewByAddType(
-                typeOfViewModel = menuViewModel.chosenObjectClassState.value,
-                navBackStackEntry = it,
-                navController = navController,
-                user = user
-            ) { qrCodeStickerInfo ->
-                menuViewModel.onEvent(CreateQRCodeEvent.OnAddNewObjectInList(qrCodeStickerInfo))
             }
 
-
-            TextWindow(
-                string = "CONCRETE OBJECT: ${
-                    menuViewModel.chosenObjectClassState.value.getLabel(
-                        context
-                    )
-                }"
-            )
         }
     }
 
@@ -101,49 +111,65 @@ fun createViewByAddType(
         mutableStateOf(false)
     }
 
-    val qrCodeStickerInfoState by remember {
+    val qrCodeStickerInfoState = remember {
         mutableStateOf(QRCodeStickerInfo())
     }
 
+
+    lateinit var viewModel: BaseAddObjectViewModel
+
     Scaffold {
         Box() {
-            when (typeOfViewModel) {
-                DatabaseObjectTypes.PERSON -> {
-                    val viewModel = addPersonViewModel<AddPersonViewModel>(
-                        user = user
-                    )
-                    AddPersonView(
-                        viewModel = viewModel,
-                        qrCodeStickerInfo = qrCodeStickerInfoState
-                    )
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+
+            ) {
+                when (typeOfViewModel) {
+                    DatabaseObjectTypes.PERSON -> {
+                        viewModel = addPersonViewModel<AddPersonViewModel>(
+                            user = user
+                        )
+                        AddPersonView(
+                            viewModel = viewModel as AddPersonViewModel,
+                            isAllFieldsInsertedState = isAddButtonEnabled
+                        )
+                    }
+
+                    DatabaseObjectTypes.KEYBOARD -> {
+                        null
+                    }
+
+                    DatabaseObjectTypes.MONITOR -> {
+                        null
+                    }
+
+                    DatabaseObjectTypes.UNKNOWN -> {
+                        null
+                    }
                 }
 
-                DatabaseObjectTypes.KEYBOARD -> {
-                    null
-                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
 
-                DatabaseObjectTypes.MONITOR -> {
-                    null
-                }
-
-                DatabaseObjectTypes.UNKNOWN -> {
-                    null
+                ) {
+                    Button(enabled = isAddButtonEnabled.value,
+                        onClick = {
+                            viewModel.addObjectInDatabaseClicked(onAddObjectClicked)
+                        }) {
+                        Text(text = "Add")
+                    }
+                    Spacer(modifier = Modifier.width(30.dp))
+                    Button(onClick = {
+                        navController.navigate(context.getString(R.string.menu_add_route))
+                    }) {
+                        Text(text = "Cancel")
+                    }
                 }
             }
 
-//            Row(modifier = Modifier.fillMaxWidth()) {
-//                Button(enabled = isAddButtonEnabled.value,
-//                    onClick = {
-//                        onAddObjectClicked(qrCodeStickerInfoState)
-//                    }) {
-//                    Text(text = "Add")
-//                }
-//                Button(onClick = {
-//                    navController.navigate(context.getString(R.string.menu_add_route))
-//                }) {
-//                    Text(text = "Cancel")
-//                }
-//            }
+
         }
     }
 
