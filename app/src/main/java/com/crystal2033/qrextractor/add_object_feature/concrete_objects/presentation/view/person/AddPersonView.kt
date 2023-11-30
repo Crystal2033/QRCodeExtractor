@@ -13,6 +13,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.general.view_elements.DropListView
 import com.crystal2033.qrextractor.add_object_feature.general.view_elements.TextFieldView
@@ -21,11 +22,16 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun AddPersonView(
     viewModel: AddPersonViewModel,
-    isAllFieldsInsertedState: MutableState<Boolean>
+    isAllFieldsInsertedState: MutableState<Boolean>,
+    onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit
 ) {
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
-
+            when(event) {
+                is UIAddNewObjectEvent.Navigate -> {
+                    onNavigate(event)
+                }
+            }
         }
     }
 

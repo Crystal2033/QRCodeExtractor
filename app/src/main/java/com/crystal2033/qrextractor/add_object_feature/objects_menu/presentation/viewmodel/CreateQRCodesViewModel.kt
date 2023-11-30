@@ -1,11 +1,13 @@
 package com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -69,6 +71,50 @@ class CreateQRCodesViewModel @AssistedInject constructor(
                 DatabaseObjectTypes.KEYBOARD
             )
         )
+        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.person_qr_code)
+
+
+        _listOfAddedQRCodes.addAll(
+            listOf(
+                QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 1",
+                    inventoryNumber = "000000227"
+                ),
+                QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 2",
+                    inventoryNumber = "000000222"
+                ),
+                QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 3",
+                    inventoryNumber = "000000223"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 4",
+                    inventoryNumber = "000000224"
+                ),
+                QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 5",
+                    inventoryNumber = "000000225"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 6",
+                    inventoryNumber = "000000226"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 7",
+                    inventoryNumber = "000000228"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 8",
+                    inventoryNumber = "000000229"
+                )
+            )
+
+        )
     }
 
     fun onEvent(event: CreateQRCodeEvent) {
@@ -79,9 +125,15 @@ class CreateQRCodesViewModel @AssistedInject constructor(
             }
 
             is CreateQRCodeEvent.OnAddNewObjectInList -> {
-                Log.i(LOG_TAG_NAMES.INFO_TAG, "Added new QRCode in list:" +
-                        " ${event.qrCodeStickerInfo.essentialName}")
+                Log.i(
+                    LOG_TAG_NAMES.INFO_TAG, "Added new QRCode in list:" +
+                            " ${event.qrCodeStickerInfo.essentialName}"
+                )
                 _listOfAddedQRCodes.add(event.qrCodeStickerInfo)
+            }
+
+            CreateQRCodeEvent.OnQRCodesListClicked -> {
+                sendUiEvent(UICreateQRCodeEvent.Navigate(context.resources.getString(R.string.qr_codes_list)))
             }
         }
     }

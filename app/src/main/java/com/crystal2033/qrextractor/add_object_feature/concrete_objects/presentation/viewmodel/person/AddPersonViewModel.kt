@@ -2,7 +2,6 @@ package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presenta
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.os.Environment
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +15,7 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.domain.us
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.person.PersonState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.AddNewObjectEvent
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.model.Department
 import com.crystal2033.qrextractor.core.model.Person
@@ -93,22 +93,15 @@ class AddPersonViewModel @AssistedInject constructor(
 
 
     fun onEvent(event: AddNewObjectEvent) {
-        when (event) {
-            is AddNewObjectEvent.OnAddObjectInDatabaseClicked -> {
 
-            }
-        }
     }
 
-    fun test() {
-        //createQRCode()
-    }
 
     override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
         //send ui event to collect all inserted data from UI
         val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.concept)
-
         personState.value.imageState.value = bitmap.asImageBitmap()
+
         val qrCodeStickerInfo = QRCodeStickerInfo()
 
         val person = fromPersonStateIntoPerson()
@@ -121,6 +114,7 @@ class AddPersonViewModel @AssistedInject constructor(
                         personState.value.id.value = statusWithState.data?.id ?: 0
                         setQRStickerInfo(statusWithState.data, qrCodeStickerInfo)
                         onAddObjectClicked(qrCodeStickerInfo)
+                        sendUiEvent(UIAddNewObjectEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
                     }
                 }
             }.launchIn(this)
@@ -132,6 +126,7 @@ class AddPersonViewModel @AssistedInject constructor(
             qrCodeStickerInfo.qrCode = createQRCode(person)
             qrCodeStickerInfo.essentialName = person.firstName + person.secondName
             qrCodeStickerInfo.inventoryNumber = "ASD"
+            qrCodeStickerInfo.databaseObjectTypes = person.getDatabaseTableName()
         }
 
     }

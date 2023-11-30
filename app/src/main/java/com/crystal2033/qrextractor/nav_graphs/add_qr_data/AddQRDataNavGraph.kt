@@ -16,7 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -35,9 +34,12 @@ import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeSticke
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.MenuView
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.CreateQRCodeEvent
+import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.QRCodeStickersView
+import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.viewmodel.DocumentWithQRCodesViewModel
 import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addPersonViewModel
+import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.qrCodeDocumentViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.sharedAddDataMenuViewModel
 
 fun NavGraphBuilder.addQRCodeGraph(
@@ -81,7 +83,7 @@ fun NavGraphBuilder.addQRCodeGraph(
 //            )
             Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 90.dp)) {
                 createViewByAddType(
-                    typeOfViewModel = menuViewModel.chosenObjectClassState.value,
+                    typeOfView = menuViewModel.chosenObjectClassState.value,
                     navBackStackEntry = it,
                     navController = navController,
                     user = user
@@ -92,6 +94,16 @@ fun NavGraphBuilder.addQRCodeGraph(
             }
 
         }
+
+        composable(context.resources.getString(R.string.qr_codes_list)){
+            val menuViewModel = it.sharedAddDataMenuViewModel<CreateQRCodesViewModel>(
+                navController = navController,
+                user = user
+            )
+            val documentQRCodesViewModel = qrCodeDocumentViewModel<DocumentWithQRCodesViewModel>(listOfQRCodes = menuViewModel.listOfAddedQRCodes)
+            QRCodeStickersView(viewModel = documentQRCodesViewModel)
+
+        }
     }
 
 
@@ -100,7 +112,7 @@ fun NavGraphBuilder.addQRCodeGraph(
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun createViewByAddType(
-    typeOfViewModel: DatabaseObjectTypes,
+    typeOfView: DatabaseObjectTypes,
     navBackStackEntry: NavBackStackEntry,
     navController: NavController,
     user: User,
@@ -111,11 +123,6 @@ fun createViewByAddType(
         mutableStateOf(false)
     }
 
-    val qrCodeStickerInfoState = remember {
-        mutableStateOf(QRCodeStickerInfo())
-    }
-
-
     lateinit var viewModel: BaseAddObjectViewModel
 
     Scaffold {
@@ -125,14 +132,17 @@ fun createViewByAddType(
                     .verticalScroll(rememberScrollState())
 
             ) {
-                when (typeOfViewModel) {
+                when (typeOfView) {
                     DatabaseObjectTypes.PERSON -> {
                         viewModel = addPersonViewModel<AddPersonViewModel>(
                             user = user
                         )
                         AddPersonView(
                             viewModel = viewModel as AddPersonViewModel,
-                            isAllFieldsInsertedState = isAddButtonEnabled
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            }
                         )
                     }
 

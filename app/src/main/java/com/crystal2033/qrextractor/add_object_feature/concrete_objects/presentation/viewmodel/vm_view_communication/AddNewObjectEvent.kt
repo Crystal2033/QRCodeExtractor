@@ -3,5 +3,5 @@ package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presenta
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 
 sealed class AddNewObjectEvent{
-    data class OnAddObjectInDatabaseClicked(val qrScannableData: QRScannableData) : AddNewObjectEvent()
+    //data class OnAddObjectInDatabaseClicked(val qrScannableData: QRScannableData) : AddNewObjectEvent()
 }

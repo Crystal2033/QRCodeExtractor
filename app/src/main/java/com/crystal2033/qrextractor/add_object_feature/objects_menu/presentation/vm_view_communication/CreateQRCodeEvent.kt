@@ -6,4 +6,6 @@ import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 sealed class CreateQRCodeEvent{
     data class SetChosenObjectClass(val objectType: DatabaseObjectTypes) : CreateQRCodeEvent()
     data class OnAddNewObjectInList(val qrCodeStickerInfo: QRCodeStickerInfo): CreateQRCodeEvent()
+
+    data object OnQRCodesListClicked : CreateQRCodeEvent()
 }
