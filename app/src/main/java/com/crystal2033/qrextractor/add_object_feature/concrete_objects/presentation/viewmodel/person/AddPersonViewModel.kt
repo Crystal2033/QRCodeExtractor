@@ -23,6 +23,7 @@ import com.crystal2033.qrextractor.core.model.Title
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.model.WorkSpace
 import com.crystal2033.qrextractor.core.util.Resource
+import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -36,9 +37,10 @@ import kotlinx.coroutines.launch
 class AddPersonViewModel @AssistedInject constructor(
     @Assisted private val user: User,
     @ApplicationContext private val context: Context,
+    private val converters: Converters,
     private val personGetterUseCases: PersonGetterUseCases
 
-) : BaseAddObjectViewModel() {
+) : BaseAddObjectViewModel(context, converters) {
     @AssistedFactory
     interface Factory {
         fun create(user: User?): AddPersonViewModel

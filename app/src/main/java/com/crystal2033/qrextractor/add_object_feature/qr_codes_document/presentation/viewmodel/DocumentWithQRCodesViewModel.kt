@@ -5,6 +5,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
+import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.vm_view_communication.DocumentQRCodeStickersEvent
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -29,7 +30,15 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
         }
     }
 
-    fun onValueChanged(
+    fun onEvent(event: DocumentQRCodeStickersEvent) {
+        when (event) {
+            is DocumentQRCodeStickersEvent.OnChangeQRCodeStickerSize -> {
+                onValueChanged(event.oldQRCodeStickerInfo, event.newStickerSize)
+            }
+        }
+    }
+
+    private fun onValueChanged(
         oldQRStickerInfo: QRCodeStickerInfo,
         newStickerSize: QRCodeStickerInfo.StickerSize
     ) { //in onEvent
@@ -43,10 +52,6 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
         )
     }
 
-    fun dropLast() {
-        listOfQRCodes.removeLast()
-    }
-
     companion object {
         @Suppress("UNCHECKED_CAST")
         fun provideFactory(
@@ -58,10 +63,5 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
             }
         }
     }
-
-    fun getSizeOfList(): Int {
-        return listOfQRCodes.size
-    }
-
 
 }

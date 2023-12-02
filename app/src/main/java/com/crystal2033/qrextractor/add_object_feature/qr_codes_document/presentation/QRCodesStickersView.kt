@@ -12,10 +12,6 @@ import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presenta
 fun QRCodeStickersView(
     viewModel: DocumentWithQRCodesViewModel
 ) {
-
-//    val qrStickersList = remember {
-//         viewModel.listOfQRCodesState
-//    }
     LazyVerticalGrid(
         columns = GridCells.Adaptive(200.dp),
         horizontalArrangement = Arrangement.spacedBy(30.dp),
@@ -24,7 +20,7 @@ fun QRCodeStickersView(
         items(viewModel.listOfQRCodesState) { qrSticker ->
             QRCodeStickerView(
                 qrCodeStickerInfo = qrSticker,
-                onSizeChanged = viewModel::onValueChanged
+                onSizeChanged = viewModel::onEvent
             )
         }
     }

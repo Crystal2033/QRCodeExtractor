@@ -14,20 +14,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
+import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.vm_view_communication.DocumentQRCodeStickersEvent
 
 @Composable
 fun QRCodeStickerView(
     qrCodeStickerInfo: QRCodeStickerInfo,
-    onSizeChanged: (QRCodeStickerInfo, QRCodeStickerInfo.StickerSize) -> Unit
+    onSizeChanged: (DocumentQRCodeStickersEvent) -> Unit
 ) {
 
     val sizes = listOf(
@@ -42,8 +39,12 @@ fun QRCodeStickerView(
         }
     val onChangeState: (QRCodeStickerInfo.StickerSize) -> Unit =
         {
-            //qrCodeStickerInfo.stickerSize = it
-            onSizeChanged(qrCodeStickerInfo, it)
+            onSizeChanged(
+                DocumentQRCodeStickersEvent.OnChangeQRCodeStickerSize(
+                    qrCodeStickerInfo,
+                    it
+                )
+            )
         }
 
 
