@@ -2,7 +2,11 @@ package com.crystal2033.qrextractor.nav_graphs.scanner
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -19,6 +23,7 @@ import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presenta
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.viewmodel.ScannedObjectsListViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.QRCodeView
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel.QRCodeScannerViewModel
+import com.crystal2033.qrextractor.ui.NavBottomBarConstants
 
 
 fun NavGraphBuilder.scannerGraph(
@@ -33,14 +38,15 @@ fun NavGraphBuilder.scannerGraph(
     ) {
         composable(context.resources.getString(R.string.scanner_route)) {
             val viewModel = it.sharedHiltViewModel<QRCodeScannerViewModel>(navController)
-
-            QRCodeView(
-                viewModel = viewModel,
-                onNavigate = { navigationEvent ->
-                    navController.navigate(navigationEvent.route)
-                },
-                snackbarHostState = snackbarHostState
-            )
+            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, NavBottomBarConstants.HEIGHT_BOTTOM_BAR)) {
+                QRCodeView(
+                    viewModel = viewModel,
+                    onNavigate = { navigationEvent ->
+                        navController.navigate(navigationEvent.route)
+                    },
+                    snackbarHostState = snackbarHostState
+                )
+            }
         }
 
         composable(context.resources.getString(R.string.list_of_groups_route)) {
@@ -48,17 +54,18 @@ fun NavGraphBuilder.scannerGraph(
                 navController = navController,
                 user = user
             )
-
-            ScannedGroupsView(
-                viewModel = viewModel,
-                onNavigate = { navigationEvent ->
-                    navController.navigate(navigationEvent.route)
-                },
-                onPopBackStack = {
-                    navController.popBackStack()
-                },
-                snackbarHostState = snackbarHostState
-            )
+            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, NavBottomBarConstants.HEIGHT_BOTTOM_BAR)) {
+                ScannedGroupsView(
+                    viewModel = viewModel,
+                    onNavigate = { navigationEvent ->
+                        navController.navigate(navigationEvent.route)
+                    },
+                    onPopBackStack = {
+                        navController.popBackStack()
+                    },
+                    snackbarHostState = snackbarHostState
+                )
+            }
         }
 
         composable(context.resources.getString(R.string.list_of_scanned_objects)) {
@@ -71,15 +78,16 @@ fun NavGraphBuilder.scannerGraph(
             val viewModel = scannedObjectsListInGroupViewModel<ScannedObjectsListViewModel>(
                 scannedGroup = viewModelFromGroups.chosenGroup.value
             )
+            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, NavBottomBarConstants.HEIGHT_BOTTOM_BAR)) {
+                ScannedObjectsListView(
+                    viewModel = viewModel,
+                    onNavigate = { navigationEvent ->
+                        navController.navigate(navigationEvent.route)
 
-            ScannedObjectsListView(
-                viewModel = viewModel,
-                onNavigate = { navigationEvent ->
-                    navController.navigate(navigationEvent.route)
-
-                },
-                snackbarHostState = snackbarHostState
-            )
+                    },
+                    snackbarHostState = snackbarHostState
+                )
+            }
 
             Log.i(
                 LOG_TAG_NAMES.INFO_TAG,

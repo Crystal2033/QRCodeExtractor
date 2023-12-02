@@ -107,10 +107,6 @@ class CreateQRCodesViewModel @AssistedInject constructor(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
                     inventoryNumber = "000000228"
-                ), QRCodeStickerInfo(
-                    qrCode = bitmap.asImageBitmap(),
-                    essentialName = "Essential name for object 8",
-                    inventoryNumber = "000000229"
                 )
             )
 

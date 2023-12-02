@@ -41,6 +41,7 @@ import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addPersonViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.qrCodeDocumentViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.sharedAddDataMenuViewModel
+import com.crystal2033.qrextractor.ui.NavBottomBarConstants
 
 fun NavGraphBuilder.addQRCodeGraph(
     navController: NavController,
@@ -57,7 +58,7 @@ fun NavGraphBuilder.addQRCodeGraph(
                 navController = navController,
                 user = user
             )
-            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 90.dp)) {
+            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, NavBottomBarConstants.HEIGHT_BOTTOM_BAR)) {
                 MenuView(
                     viewModel = menuViewModel,
                     onNavigate = { navigateEvent ->
@@ -81,7 +82,7 @@ fun NavGraphBuilder.addQRCodeGraph(
 //                navBackStackEntry = it,
 //                navController = navController
 //            )
-            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 90.dp)) {
+            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, NavBottomBarConstants.HEIGHT_BOTTOM_BAR)) {
                 createViewByAddType(
                     typeOfView = menuViewModel.chosenObjectClassState.value,
                     navBackStackEntry = it,
@@ -101,7 +102,10 @@ fun NavGraphBuilder.addQRCodeGraph(
                 user = user
             )
             val documentQRCodesViewModel = qrCodeDocumentViewModel<DocumentWithQRCodesViewModel>(listOfQRCodes = menuViewModel.listOfAddedQRCodes)
-            QRCodeStickersView(viewModel = documentQRCodesViewModel)
+            Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, NavBottomBarConstants.HEIGHT_BOTTOM_BAR)) {
+                QRCodeStickersView(viewModel = documentQRCodesViewModel)
+            }
+
 
         }
     }

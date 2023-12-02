@@ -1,11 +1,10 @@
 package com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.viewmodel
 
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
-import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
-import com.crystal2033.qrextractor.core.model.User
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -15,9 +14,37 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
     @Assisted private val listOfQRCodes: SnapshotStateList<QRCodeStickerInfo>
 ) : ViewModel() {
 
+
+    private val _listOfQRCodesState = mutableStateListOf<QRCodeStickerInfo>()
+    val listOfQRCodesState: SnapshotStateList<QRCodeStickerInfo> = _listOfQRCodesState
+
     @AssistedFactory
-    interface Factory{
-        fun create(listOfQRCodes: SnapshotStateList<QRCodeStickerInfo>) : DocumentWithQRCodesViewModel
+    interface Factory {
+        fun create(listOfQRCodes: SnapshotStateList<QRCodeStickerInfo>): DocumentWithQRCodesViewModel
+    }
+
+    init {
+        listOfQRCodes.forEach { qrCodeSticker ->
+            _listOfQRCodesState.add(qrCodeSticker)
+        }
+    }
+
+    fun onValueChanged(
+        oldQRStickerInfo: QRCodeStickerInfo,
+        newStickerSize: QRCodeStickerInfo.StickerSize
+    ) { //in onEvent
+        val index = _listOfQRCodesState.indexOf(oldQRStickerInfo)
+        _listOfQRCodesState[index] = _listOfQRCodesState[index].copy(
+            qrCode = oldQRStickerInfo.qrCode,
+            essentialName = oldQRStickerInfo.essentialName,
+            inventoryNumber = oldQRStickerInfo.inventoryNumber,
+            databaseObjectTypes = oldQRStickerInfo.databaseObjectTypes,
+            stickerSize = newStickerSize
+        )
+    }
+
+    fun dropLast() {
+        listOfQRCodes.removeLast()
     }
 
     companion object {
@@ -32,10 +59,9 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
         }
     }
 
-    fun getSizeOfList() : Int{
+    fun getSizeOfList(): Int {
         return listOfQRCodes.size
     }
-
 
 
 }

@@ -85,7 +85,7 @@ fun NavBottomBar(navController: NavController, applicationContext: Context) {
     )
     NavigationBar(
         modifier = Modifier
-            .height(90.dp)
+            .height(NavBottomBarConstants.HEIGHT_BOTTOM_BAR)
             .background(
                 brush = Brush.verticalGradient(
                     colors = gradientColors,
