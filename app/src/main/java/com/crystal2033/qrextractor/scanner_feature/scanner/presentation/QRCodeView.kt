@@ -52,7 +52,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.scanner_feature.scanner.StaticConverters
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.dialog_window.DialogMessage
-import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.dialog_window.DialogScannedGroupName
+import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.dialog_window.DialogInsertName
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.state.DialogWindowInfoState
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.uiItems.preview.ShowDataItemByType
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.util.QRCodeAnalyzer
@@ -153,11 +153,14 @@ fun QRCodeView(
             }
 
             if (isNeedToShowGroupNameInsertDialog.value) {
-                DialogScannedGroupName(
+                DialogInsertName(
                     isNeedToShowDialog = isNeedToShowGroupNameInsertDialog,
-                    onConfirmButtonClicked = { groupName ->
+                    onAcceptButtonClicked = { groupName ->
                         viewModel.onEvent(QRScannerEvent.OnAddNameForScannedGroup(groupName))
-                    }
+                    },
+                    title = "Scanned objects group name",
+                    helpMessage = "Please set scanned group name for added objects. ",
+                    placeholderInTextField = "Group name",
                 )
             }
 

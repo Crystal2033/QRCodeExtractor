@@ -16,36 +16,38 @@ import androidx.compose.ui.graphics.Color
 
 //TODO: what if group name already exist. Need to check the group name in database using viewmodel
 @Composable
-fun DialogScannedGroupName(
+fun DialogInsertName(
     isNeedToShowDialog: MutableState<Boolean>,
-    onConfirmButtonClicked: (String) -> Unit
+    onAcceptButtonClicked: (String) -> Unit,
+    title: String,
+    helpMessage: String,
+    placeholderInTextField: String,
+    ifBlankErrorMessage: String = "This field can not be blank"
 ) {
     var text by rememberSaveable { mutableStateOf("") }
-
-
     AlertDialog(
         icon = {
             //Icon(dialogWindowInfoState.icon, contentDescription = "Example Icon")
         },
         title = {
-            Text(text = "Scanned objects group name")
+            Text(text = title)
         },
         text = {
             Column {
-                Text(text = "Please set scanned group name for added objects. ")
+                Text(text = helpMessage)
                 TextField(
                     value = text,
                     onValueChange = {
                         text = it
                     },
                     placeholder = {
-                        Text(text = "Group name")
+                        Text(text = placeholderInTextField)
                     },
                     isError = text.isBlank()
                 )
                 if (text.isBlank()) {
                     Text(
-                        text = "Your group name should not be blank.",
+                        text = ifBlankErrorMessage,
                         color = Color.Red
                     )
                 }
@@ -60,7 +62,7 @@ fun DialogScannedGroupName(
                 enabled = text.isNotBlank(),
                 onClick = {
                     isNeedToShowDialog.value = false
-                    onConfirmButtonClicked(text)
+                    onAcceptButtonClicked(text)
                 }
             ) {
                 Text("Accept")

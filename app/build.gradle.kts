@@ -57,6 +57,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.documentfile:documentfile:1.0.1")
 
     val hilt_version = "2.48.1"
     implementation("com.google.dagger:hilt-android:$hilt_version")
