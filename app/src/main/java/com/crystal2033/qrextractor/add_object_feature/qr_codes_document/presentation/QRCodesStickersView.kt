@@ -47,19 +47,17 @@ fun QRCodeStickersView(
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) {
             dirUri.value = it
-//            result.value?.let { uri ->
-//                viewModel.onEvent(
-//                    DocumentQRCodeStickersEvent.CreatePDFFileWithQRCodes(uri)
-//                )
-//            }
-            isChosenDirectory.value = true
+            val nameOfFile = "TestFile.pdf"
+            viewModel.onEvent(DocumentQRCodeStickersEvent.CreateDocumentByDirUriAndFileName(dirUri.value!!, nameOfFile))
+            //isChosenDirectory.value = true
+
         }
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UIDocumentQRCodeStickersEvent.OnFileCreatedSuccessfully -> {
-                    Toast.makeText(context, "File ${event.fullFilePath} created successfully,", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "File created successfully,", Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -72,17 +70,25 @@ fun QRCodeStickersView(
                 DialogInsertName(
                     isNeedToShowDialog = isChosenDirectory,
                     onAcceptButtonClicked = { fileName ->
-                        viewModel.onEvent(DocumentQRCodeStickersEvent.CreateDocumentByDirUriAndFileName(dirUri.value!!, fileName))
+                        viewModel.onEvent(
+                            DocumentQRCodeStickersEvent.CreateDocumentByDirUriAndFileName(
+                                dirUri.value!!,
+                                fileName
+                            )
+                        )
                     },
                     title = "QR-code filename",
                     helpMessage = "Please set file name for created qr-codes.",
-                    placeholderInTextField = "File name",
+                    placeholderInTextField = "File name...",
                 )
             }
 
             Column {
                 Button(
-                    onClick = { launcher.launch(dirUri.value) },
+                    onClick = {
+                        launcher.launch(dirUri.value)
+                        //val uri = Uri.parse("/tree/primary:Download/Inventory")
+                    },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(15.dp)

@@ -13,7 +13,9 @@ data class QRCodeStickerInfo(
     var stickerSize: StickerSize = StickerSize.NORMAL
     //val scannedTableNameAndId: ScannedTableNameAndId? = null
 ) {
-    enum class StickerSize(val sizeDp: Dp, val sizeDpString: String) {
-        SMALL(50.dp, "50 dp"), NORMAL(100.dp, "100 dp"), BIG(150.dp, "150 dp")
+    enum class StickerSize(val sizeDp: Dp, val sizeDpString: String, val bitmapSize: Int) {
+        SMALL(50.dp, "150x150", 150),
+        NORMAL(100.dp, "300x300", 300),
+        BIG(150.dp, "450x450", 450)
     }
 }

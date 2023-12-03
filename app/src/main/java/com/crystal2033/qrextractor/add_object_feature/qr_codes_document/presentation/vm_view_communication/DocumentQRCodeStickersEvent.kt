@@ -9,7 +9,5 @@ sealed class DocumentQRCodeStickersEvent {
         val newStickerSize: QRCodeStickerInfo.StickerSize
     ) : DocumentQRCodeStickersEvent()
 
-//    data object CreatePDFFileWithQRCodes : DocumentQRCodeStickersEvent()
-
     data class CreateDocumentByDirUriAndFileName(val dirUri: Uri, val fileName: String) : DocumentQRCodeStickersEvent()
 }
