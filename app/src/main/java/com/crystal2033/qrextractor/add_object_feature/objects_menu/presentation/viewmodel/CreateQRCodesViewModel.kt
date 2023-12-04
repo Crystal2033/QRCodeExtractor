@@ -108,6 +108,71 @@ class CreateQRCodesViewModel @AssistedInject constructor(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
                     inventoryNumber = "000000228"
+                ),
+                QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 5",
+                    inventoryNumber = "000000225"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 6",
+                    inventoryNumber = "000000226"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 7",
+                    inventoryNumber = "000000228"
+                ),
+                QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 5",
+                    inventoryNumber = "000000225"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 6",
+                    inventoryNumber = "000000226"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 7",
+                    inventoryNumber = "000000228"
+                ),
+                QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 5",
+                    inventoryNumber = "000000225"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 6",
+                    inventoryNumber = "000000226"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 7",
+                    inventoryNumber = "000000228"
+                ),
+                QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 5",
+                    inventoryNumber = "000000225"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 6",
+                    inventoryNumber = "000000226"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 7",
+                    inventoryNumber = "000000228"
+                ),
+                QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 5",
+                    inventoryNumber = "000000225"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 6",
+                    inventoryNumber = "000000226"
+                ), QRCodeStickerInfo(
+                    qrCode = bitmap.asImageBitmap(),
+                    essentialName = "Essential name for object 7",
+                    inventoryNumber = "000000228"
                 )
             )
 
