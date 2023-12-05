@@ -78,7 +78,7 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
                                 val out: OutputStream? =
                                     contentResolver.openOutputStream(tmpFile!!.uri)
 
-                                createPdfFile(1150, 2100, out!!)
+                                createPdfFile(2490, 3740, out!!)
                                 out.flush()
                                 out.close()
 
@@ -108,26 +108,16 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
 
     private fun createPdfFile(pageWidth: Int, pageHeight: Int, foutStream: OutputStream) {
         val pdfDocument = PdfDocument()
+        val essentialNameMaxLength = 40
 
-        val pageNumber = 1;
+        val essentialNameShiftInCellX = 15
+        val essentialNameShiftInCellY = 60
 
-
-//        val paint = Paint()
-//        paint.color = Color.GREEN
-//        paint.textSize = 42.0F
-
-
-        //canvas.drawText("Pavel Kulikov!!!", x, y, paint)
-//        val maxObjectsInRow = 3
-//        val maxValueOfRows = 5
-
-        //val cellWidth = pageWidth / maxObjectsInRow
-        //val cellHeigth = pageHeight / maxValueOfRows
         val cellWidth = QRCodeStickerInfo.StickerSize.BIG.bitmapSize + 50
         val cellHeigth = QRCodeStickerInfo.StickerSize.BIG.bitmapSize + 50
 
         val maxObjectsInRow = floor(pageWidth.toDouble() / cellWidth.toDouble()).toInt()
-        val maxValueOfRows = ceil(pageHeight.toDouble() / cellHeigth.toDouble()).toInt()
+        val maxValueOfRows = floor(pageHeight.toDouble() / cellHeigth.toDouble()).toInt()
 
         var cellOffsetX = 0
         var cellOffsetY = 0
@@ -146,6 +136,7 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
         var page: Page? = null
 
         listOfQRCodes.forEachIndexed { i, qrInfo ->
+
             if (i % (maxObjectsInRow * maxValueOfRows) == 0) {
                 page?.let { existingPage ->
                     pdfDocument.finishPage(existingPage)
@@ -174,8 +165,8 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
             cellOffsetX = (i % maxObjectsInRow) * cellWidth
             cellOffsetY = ((i % (maxObjectsInRow * maxValueOfRows)) / maxObjectsInRow) * cellHeigth
 
-            qrCodeOffsetInCellX = (cellWidth - qrInfo.stickerSize.bitmapSize) / 2 + cellOffsetX
-            qrCodeOffsetInCellY = (cellHeigth - qrInfo.stickerSize.bitmapSize) / 2 + cellOffsetY
+            qrCodeOffsetInCellX = (cellWidth - qrInfo.stickerSize.bitmapSize) / 2
+            qrCodeOffsetInCellY = (cellHeigth - qrInfo.stickerSize.bitmapSize) / 2
 
             qrInfo.qrCode = Bitmap.createScaledBitmap(
                 qrInfo.qrCode!!.asAndroidBitmap(),
@@ -188,20 +179,40 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
                 qrInfo.qrCode!!.asAndroidBitmap(),
                 Rect(0, 0, qrInfo.stickerSize.bitmapSize, qrInfo.stickerSize.bitmapSize),
                 Rect(
-                    qrCodeOffsetInCellX,
-                    qrCodeOffsetInCellY,
-                    qrCodeOffsetInCellX + qrInfo.stickerSize.bitmapSize,
-                    qrCodeOffsetInCellY + qrInfo.stickerSize.bitmapSize
+                    qrCodeOffsetInCellX + cellOffsetX,
+                    qrCodeOffsetInCellY + cellOffsetY,
+                    qrCodeOffsetInCellX + qrInfo.stickerSize.bitmapSize + cellOffsetX,
+                    qrCodeOffsetInCellY + qrInfo.stickerSize.bitmapSize + cellOffsetY
                 ), null
             )
 
 
-            essentialNameOffsetInCellX = cellOffsetX + 5
-            essentialNameOffsetInCellY = cellOffsetY + 5
+            val penPainter = Paint()
+            penPainter.textSize = 28f
 
-            invNumberOffsetInCellX = cellOffsetX + (cellWidth.toFloat() * 0.44f).toInt()
-            invNumberOffsetInCellY = cellOffsetY + qrCodeOffsetInCellY +
-                    qrInfo.stickerSize.bitmapSize + 10
+
+
+            essentialNameOffsetInCellX = cellOffsetX + essentialNameShiftInCellX
+            essentialNameOffsetInCellY = cellOffsetY + essentialNameShiftInCellY
+            canvas?.drawText(
+                if (qrInfo.essentialName.length > essentialNameMaxLength) qrInfo.essentialName.substring(
+                    0,
+                    essentialNameMaxLength
+                ) else qrInfo.essentialName,
+                essentialNameOffsetInCellX.toFloat(),
+                essentialNameOffsetInCellY.toFloat(),
+                penPainter
+            )
+
+            penPainter.textSize = (qrInfo.stickerSize.bitmapSize.toFloat() / 8)
+            invNumberOffsetInCellX = cellOffsetX + (qrCodeOffsetInCellX.toFloat() + 0.2f * qrInfo.stickerSize.bitmapSize.toFloat()).toInt()
+            invNumberOffsetInCellY = cellOffsetY + cellHeigth - qrCodeOffsetInCellY
+            canvas?.drawText(
+                qrInfo.inventoryNumber,
+                invNumberOffsetInCellX.toFloat(),
+                invNumberOffsetInCellY.toFloat(),
+                penPainter
+            )
 
 
         }
