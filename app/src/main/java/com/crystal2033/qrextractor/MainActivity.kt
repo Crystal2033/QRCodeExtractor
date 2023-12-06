@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment.getExternalStorageDirectory
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.contextaware.withContextAvailable
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.addQRCodeGraph
 import com.crystal2033.qrextractor.nav_graphs.documents.documentsGraph
@@ -36,6 +40,10 @@ import com.crystal2033.qrextractor.nav_graphs.scanner.scannerGraph
 import com.crystal2033.qrextractor.ui.NavBottomBar
 import com.crystal2033.qrextractor.ui.theme.QRExtractorTheme
 import dagger.hilt.android.AndroidEntryPoint
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.io.read
+import java.nio.file.Paths
 
 
 @AndroidEntryPoint

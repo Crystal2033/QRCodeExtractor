@@ -13,6 +13,7 @@ import android.util.Log
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.core.graphics.withRotation
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -215,18 +216,16 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
                 penPainter
             )
 
-            canvas?.save()
-            canvas?.rotate(-90f)
-            penPainter.textSize = 40f
-            penPainter.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
-            canvas?.drawText(//after rotation (x,y)->(-y, x)
-
-                qrInfo.databaseObjectTypes.name,
-                -(cellHeigth + cellOffsetY - penPainter.textSize / 2),
-                (cellWidth + cellOffsetX - penPainter.textSize / 2),
-                penPainter
-            )
-            canvas?.restore()
+            canvas?.withRotation(-90f, 0f, 0f) {
+                penPainter.textSize = 40f
+                penPainter.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+                drawText(//after rotation (x,y)->(-y, x)
+                    qrInfo.databaseObjectTypes.name,
+                    -(cellHeigth + cellOffsetY - penPainter.textSize / 2),
+                    (cellWidth + cellOffsetX - penPainter.textSize / 2),
+                    penPainter
+                )
+            }
 
 
         }

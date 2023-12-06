@@ -4,6 +4,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
+
 }
 
 android {
@@ -12,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.crystal2033.qrextractor"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -51,13 +52,40 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            pickFirsts += listOf(
+                "META-INF/AL2.0",
+                "META-INF/LGPL2.1",
+                "META-INF/ASL-2.0.txt",
+                "META-INF/LICENSE.md",
+                "META-INF/NOTICE.md",
+                "META-INF/LGPL-3.0.txt",
+            )
+            excludes += listOf(
+                "META-INF/kotlin-jupyter-libraries/libraries.json",
+                "META-INF/{INDEX.LIST,DEPENDENCIES}",
+                "{draftv3,draftv4}/schema",
+                "arrow-git.properties",
+            )
         }
+
     }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = "17"
+}
+
+
+
+
 dependencies {
     implementation("androidx.documentfile:documentfile:1.0.1")
+
+    implementation("org.jetbrains.kotlinx:dataframe:0.12.0"){
+        exclude(group = "commons-logging", module = "commons-logging")
+    }
+//    implementation("org.slf4j:jcl-over-slf4j:2.0.9")
+
 
     val hilt_version = "2.48.1"
     implementation("com.google.dagger:hilt-android:$hilt_version")
