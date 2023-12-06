@@ -80,125 +80,153 @@ class CreateQRCodesViewModel @AssistedInject constructor(
                 QRCodeStickerInfo(
                     qrCode = QRCodeGenerator.encodeAsBitmap("{\"id\":0,\"tableName\":\"SomeTable\"}", 250, 250).asImageBitmap(),
                     essentialName = "Essential name for object 1HELLOWORLDpavelkilkov",
-                    inventoryNumber = "000000227"
+                    inventoryNumber = "000000227",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 2",
-                    inventoryNumber = "000000222"
+                    inventoryNumber = "000000222",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 3",
-                    inventoryNumber = "000000223"
+                    inventoryNumber = "000000223",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 4",
-                    inventoryNumber = "000000224"
+                    inventoryNumber = "000000224",
+                    databaseObjectTypes = DatabaseObjectTypes.MONITOR
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 5",
-                    inventoryNumber = "000000225"
+                    inventoryNumber = "000000225",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 6",
-                    inventoryNumber = "000000226"
+                    inventoryNumber = "000000226",
+                    databaseObjectTypes = DatabaseObjectTypes.MONITOR
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
-                    inventoryNumber = "000000228"
+                    inventoryNumber = "000000228",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 5",
-                    inventoryNumber = "000000225"
+                    inventoryNumber = "000000225",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 6",
-                    inventoryNumber = "000000226"
+                    inventoryNumber = "000000226",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
-                    inventoryNumber = "000000228"
+                    inventoryNumber = "000000228",
+                    databaseObjectTypes = DatabaseObjectTypes.MONITOR
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 5",
-                    inventoryNumber = "000000225"
+                    inventoryNumber = "000000225",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 6",
-                    inventoryNumber = "000000226"
+                    inventoryNumber = "000000226",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
-                    inventoryNumber = "000000228"
+                    inventoryNumber = "000000228",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 5",
-                    inventoryNumber = "000000225"
+                    inventoryNumber = "000000225",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 6",
-                    inventoryNumber = "000000226"
+                    inventoryNumber = "000000226",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
-                    inventoryNumber = "000000228"
+                    inventoryNumber = "000000228",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 5",
-                    inventoryNumber = "000000225"
+                    inventoryNumber = "000000225",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 6",
-                    inventoryNumber = "000000226"
+                    inventoryNumber = "000000226",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
-                    inventoryNumber = "000000228"
+                    inventoryNumber = "000000228",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 5",
-                    inventoryNumber = "000000225"
+                    inventoryNumber = "000000225",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 6",
-                    inventoryNumber = "000000226"
+                    inventoryNumber = "000000226",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
-                    inventoryNumber = "000000228"
+                    inventoryNumber = "000000228",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 5",
-                    inventoryNumber = "000000225"
+                    inventoryNumber = "000000225",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 6",
-                    inventoryNumber = "000000226"
+                    inventoryNumber = "000000226",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
-                    inventoryNumber = "000000228"
+                    inventoryNumber = "000000228",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 ),
                 QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 5",
-                    inventoryNumber = "000000225"
+                    inventoryNumber = "000000225",
+                    databaseObjectTypes = DatabaseObjectTypes.KEYBOARD
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 6",
-                    inventoryNumber = "000000226"
+                    inventoryNumber = "000000226",
+                    databaseObjectTypes = DatabaseObjectTypes.MONITOR
                 ), QRCodeStickerInfo(
                     qrCode = bitmap.asImageBitmap(),
                     essentialName = "Essential name for object 7",
-                    inventoryNumber = "000000228"
+                    inventoryNumber = "000000228",
+                    databaseObjectTypes = DatabaseObjectTypes.PERSON
                 )
             )
 

@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Rect
+import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.Page
 import android.util.Log
@@ -32,7 +33,6 @@ import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.OutputStream
-import kotlin.math.ceil
 import kotlin.math.floor
 
 
@@ -205,7 +205,8 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
             )
 
             penPainter.textSize = (qrInfo.stickerSize.bitmapSize.toFloat() / 8)
-            invNumberOffsetInCellX = cellOffsetX + (qrCodeOffsetInCellX.toFloat() + 0.2f * qrInfo.stickerSize.bitmapSize.toFloat()).toInt()
+            invNumberOffsetInCellX =
+                cellOffsetX + (qrCodeOffsetInCellX.toFloat() + 0.2f * qrInfo.stickerSize.bitmapSize.toFloat()).toInt()
             invNumberOffsetInCellY = cellOffsetY + cellHeigth - qrCodeOffsetInCellY
             canvas?.drawText(
                 qrInfo.inventoryNumber,
@@ -213,6 +214,19 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
                 invNumberOffsetInCellY.toFloat(),
                 penPainter
             )
+
+            canvas?.save()
+            canvas?.rotate(-90f)
+            penPainter.textSize = 40f
+            penPainter.typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            canvas?.drawText(//after rotation (x,y)->(-y, x)
+
+                qrInfo.databaseObjectTypes.name,
+                -(cellHeigth + cellOffsetY - penPainter.textSize / 2),
+                (cellWidth + cellOffsetX - penPainter.textSize / 2),
+                penPainter
+            )
+            canvas?.restore()
 
 
         }
