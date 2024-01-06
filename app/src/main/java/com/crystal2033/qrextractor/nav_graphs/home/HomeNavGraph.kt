@@ -1,27 +1,68 @@
 package com.crystal2033.qrextractor.nav_graphs.home
 
 import android.content.Context
+import android.graphics.Bitmap
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.TextWindow
+import com.crystal2033.qrextractor.ui.CameraXView
+import com.crystal2033.qrextractor.ui.NavBottomBarConstants
+import com.crystal2033.qrextractor.ui.PickImageFromGallery
 
 fun NavGraphBuilder.homeGraph(
     navController: NavController,
     context: Context,
     snackbarHostState: SnackbarHostState
 ) {
+
     navigation(
         startDestination = context.resources.getString(R.string.home_route),
         route = context.resources.getString(R.string.home_head_graph_route)
     ) {
         composable(context.resources.getString(R.string.home_route)) {
-            TextWindow("Home")
-
-
+            val image = remember {
+                mutableStateOf<Bitmap?>(null)
+            }
+            Column(
+                modifier = Modifier.padding(
+                    0.dp,
+                    0.dp,
+                    0.dp,
+                    NavBottomBarConstants.HEIGHT_BOTTOM_BAR
+                )
+            )
+            {
+                //TextWindow("Home")
+                CameraXView(darkTheme = true, image)
+                //PickImageFromGallery()
+                image.value?.let { bitmap ->
+                    Image(
+                        bitmap = bitmap.asImageBitmap(),
+                        contentDescription = "Picture",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(20.dp)
+                    )
+                }
+            }
         }
+
     }
 }
+

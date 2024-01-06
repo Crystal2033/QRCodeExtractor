@@ -2,20 +2,13 @@ package com.crystal2033.qrextractor
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment.getExternalStorageDirectory
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.contextaware.withContextAvailable
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -27,10 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.addQRCodeGraph
 import com.crystal2033.qrextractor.nav_graphs.documents.documentsGraph
@@ -40,10 +34,6 @@ import com.crystal2033.qrextractor.nav_graphs.scanner.scannerGraph
 import com.crystal2033.qrextractor.ui.NavBottomBar
 import com.crystal2033.qrextractor.ui.theme.QRExtractorTheme
 import dagger.hilt.android.AndroidEntryPoint
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.io.read
-import java.nio.file.Paths
 
 
 @AndroidEntryPoint
@@ -51,6 +41,13 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (!hasRequiredPermissions()) {
+            ActivityCompat.requestPermissions(
+                this,
+                CAMERAX_PERMISSIONS,
+                0
+            )
+        }
 
         setContent {
             QRExtractorTheme(darkTheme = true) {
@@ -70,6 +67,23 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+
+    }
+
+    private fun hasRequiredPermissions(): Boolean {
+        return CAMERAX_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    companion object {
+        private val CAMERAX_PERMISSIONS = arrayOf(
+            android.Manifest.permission.CAMERA
+        )
     }
 }
 
@@ -128,7 +142,6 @@ fun TextWindow(string: String) {
         )
     }
 }
-
 
 
 //@Composable

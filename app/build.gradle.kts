@@ -116,14 +116,19 @@ dependencies {
     // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
+    // https://mvnrepository.com/artifact/androidx.compose.material/material-icons-extended
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation("androidx.compose.material:material:1.5.4")
+
     // CameraX core library using the camera2 implementation
-    val camerax_version = "1.4.0-alpha02"
+    val camerax_version = "1.4.0-alpha03"
+    implementation("androidx.camera:camera-core:${camerax_version}")
     implementation("androidx.camera:camera-camera2:${camerax_version}")
     // If you want to additionally use the CameraX Lifecycle library
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     // If you want to additionally use the CameraX View class
     implementation("androidx.camera:camera-view:${camerax_version}")
-
+    implementation("androidx.camera:camera-extensions:${camerax_version}")
     //QR-code
     implementation("com.google.zxing:core:3.4.0")
 
