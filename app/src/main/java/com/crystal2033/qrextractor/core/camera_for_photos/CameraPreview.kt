@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.ui
+package com.crystal2033.qrextractor.core.camera_for_photos
 
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView

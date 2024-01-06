@@ -6,24 +6,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.ui.CameraXView
+import com.crystal2033.qrextractor.core.camera_for_photos.CameraXView
 import com.crystal2033.qrextractor.ui.NavBottomBarConstants
-import com.crystal2033.qrextractor.ui.PickImageFromGallery
 
 fun NavGraphBuilder.homeGraph(
     navController: NavController,

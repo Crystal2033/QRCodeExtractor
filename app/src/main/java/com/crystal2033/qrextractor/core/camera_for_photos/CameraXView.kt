@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterialApi::class)
 
-package com.crystal2033.qrextractor.ui
+package com.crystal2033.qrextractor.core.camera_for_photos
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -35,12 +35,13 @@ import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.Icon
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -62,13 +63,9 @@ fun CameraXView(
         }
     }
 
-    //var imageUri by remember { mutableStateOf<Uri?>(null) }
-    //val bitmap = remember { mutableStateOf<Bitmap?>(null) }
-
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             val source = uri?.let { ImageDecoder.createSource(context.contentResolver, it) }
-            //bitmap.value = source?.let { ImageDecoder.decodeBitmap(it) }
             image.value = source?.let { ImageDecoder.decodeBitmap(it) }
         }
 
@@ -76,10 +73,8 @@ fun CameraXView(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
         modifier = Modifier.size(400.dp),
-        backgroundColor = Color.DarkGray
-//        if (darkTheme) dynamicDarkColorScheme(context).background
-//        else dynamicLightColorScheme(context).background
-        ,
+        backgroundColor = if (darkTheme) dynamicDarkColorScheme(context).background
+        else dynamicLightColorScheme(context).background,
         sheetContent = {
 
         }
