@@ -2,6 +2,8 @@ package com.crystal2033.qrextractor.nav_graphs.home
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

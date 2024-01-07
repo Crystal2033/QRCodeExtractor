@@ -35,18 +35,20 @@ import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material3.Icon
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
+import com.crystal2033.qrextractor.R
 
-@RequiresApi(Build.VERSION_CODES.S)
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun CameraXView(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -58,23 +60,35 @@ fun CameraXView(
     val controller = remember {
         LifecycleCameraController(context).apply {
             setEnabledUseCases(
-                CameraController.IMAGE_CAPTURE
+                CameraController.IMAGE_CAPTURE or CameraController.VIDEO_CAPTURE
             )
         }
     }
 
+    val needToAcceptOrDeclinePhoto = remember {
+        mutableStateOf(false)
+    }
+
+    val photoForAcception = remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
-            val source = uri?.let { ImageDecoder.createSource(context.contentResolver, it) }
-            image.value = source?.let { ImageDecoder.decodeBitmap(it) }
+            if (uri != null) {
+                val source = ImageDecoder.createSource(context.contentResolver, uri)
+                image.value = ImageDecoder.decodeBitmap(source)
+            }
+
         }
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
-        modifier = Modifier.size(400.dp),
-        backgroundColor = if (darkTheme) dynamicDarkColorScheme(context).background
-        else dynamicLightColorScheme(context).background,
+        modifier = Modifier.size(450.dp),
+        backgroundColor =
+        if (darkTheme) Color(context.resources.getColor(R.color.dark_gray, context.theme))
+        else Color(context.resources.getColor(R.color.white, context.theme)),
         sheetContent = {
 
         }
@@ -83,66 +97,81 @@ fun CameraXView(
             modifier = Modifier
                 .padding(padding)
         ) {
-            CameraPreview(
-                controller = controller,
-                modifier = Modifier
-                    .size(400.dp)
-                    .align(Alignment.Center)
-            )
-
-            IconButton(
-                onClick =
-                {
-                    controller.cameraSelector =
-                        if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-                            CameraSelector.DEFAULT_FRONT_CAMERA
-                        } else CameraSelector.DEFAULT_BACK_CAMERA
-                },
-                modifier = Modifier.offset(16.dp, 16.dp)
-            ) {
-
-                Icon(
-                    imageVector = Icons.Default.Cameraswitch,
-                    contentDescription = "Switch"
+            if (!needToAcceptOrDeclinePhoto.value){
+                CameraPreview(
+                    controller = controller,
+                    modifier = Modifier
+                        .size(400.dp)
+                        .align(Alignment.Center)
                 )
-            }
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
                 IconButton(
-                    onClick = {
-                        launcher.launch("image/*")
-                    }
+                    onClick =
+                    {
+                        controller.cameraSelector =
+                            if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+                                CameraSelector.DEFAULT_FRONT_CAMERA
+                            } else CameraSelector.DEFAULT_BACK_CAMERA
+                    },
+                    modifier = Modifier.offset(16.dp, 16.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Photo,
-                        contentDescription = "Open gallery"
-                    )
 
+                    Icon(
+                        imageVector = Icons.Default.Cameraswitch,
+                        contentDescription = "Switch"
+                    )
                 }
 
-                IconButton(
-                    onClick = {
-                        takePhoto(
-                            controller = controller,
-                            onPhotoTaken = {
-                                image.value = it
-                            },
-                            context = context
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    IconButton(
+                        onClick = {
+                            launcher.launch("image/*")
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Photo,
+                            contentDescription = "Open gallery"
                         )
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.PhotoCamera,
-                        contentDescription = "Take photo"
-                    )
 
+                    }
+
+                    IconButton(
+                        onClick = {
+                            takePhoto(
+                                controller = controller,
+                                onPhotoTaken = {
+                                    photoForAcception.value = it
+                                    needToAcceptOrDeclinePhoto.value = true
+                                    //image.value = it
+                                },
+                                context = context
+                            )
+
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PhotoCamera,
+                            contentDescription = "Take photo"
+                        )
+
+                    }
                 }
+            }
+            else{
+                AcceptOrDeclinePhotoView(
+                    photo = photoForAcception.value!!,
+                    onAcceptPhoto = {
+                        image.value = it
+                        needToAcceptOrDeclinePhoto.value = false
+                    },
+                    onDeclinePhoto = {
+                        needToAcceptOrDeclinePhoto.value = false
+                    })
             }
         }
 
