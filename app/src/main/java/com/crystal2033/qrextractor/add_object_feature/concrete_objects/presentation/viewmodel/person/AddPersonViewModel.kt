@@ -101,8 +101,8 @@ class AddPersonViewModel @AssistedInject constructor(
 
     override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
         //send ui event to collect all inserted data from UI
-        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.concept)
-        personState.value.imageState.value = bitmap.asImageBitmap()
+//        val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.concept)
+//        personState.value.imageState.value = bitmap
 
         val qrCodeStickerInfo = QRCodeStickerInfo()
 

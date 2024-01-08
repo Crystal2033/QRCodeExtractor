@@ -39,9 +39,9 @@ fun QRCodeStickersView(
         mutableStateOf(false)
     }
 
-//    val isNeedToShowGroupNameInsertDialog = remember {
-//        mutableStateOf(false)
-//    }
+    val isNeedToShowGroupNameInsertDialog = remember {
+        mutableStateOf(false)
+    }
     val context = LocalContext.current
     val dirUri = remember { mutableStateOf<Uri?>(null) }
     val launcher =
@@ -49,7 +49,7 @@ fun QRCodeStickersView(
             dirUri.value = it
             val nameOfFile = "TestFile.pdf"
             viewModel.onEvent(DocumentQRCodeStickersEvent.CreateDocumentByDirUriAndFileName(dirUri.value!!, nameOfFile))
-            //isChosenDirectory.value = true
+            isChosenDirectory.value = true
 
         }
 

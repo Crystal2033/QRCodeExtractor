@@ -31,6 +31,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.rememberBottomSheetScaffoldState
@@ -44,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import com.crystal2033.qrextractor.R
 
@@ -52,7 +52,8 @@ import com.crystal2033.qrextractor.R
 @Composable
 fun CameraXView(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    image: MutableState<Bitmap?>
+    image: MutableState<Bitmap?>,
+    onCloseButtonClicked: () -> Unit
 ) {
 
     val scaffoldState = rememberBottomSheetScaffoldState()
@@ -97,7 +98,7 @@ fun CameraXView(
             modifier = Modifier
                 .padding(padding)
         ) {
-            if (!needToAcceptOrDeclinePhoto.value){
+            if (!needToAcceptOrDeclinePhoto.value) {
                 CameraPreview(
                     controller = controller,
                     modifier = Modifier
@@ -107,12 +108,30 @@ fun CameraXView(
                 IconButton(
                     onClick =
                     {
+                        onCloseButtonClicked()
+                    },
+                    modifier = Modifier
+                        .offset(16.dp, 16.dp)
+                        .align(Alignment.TopEnd)
+                ) {
+
+                    Icon(
+                        imageVector = Icons.Default.Clear,
+                        contentDescription = "Close camera"
+                    )
+                }
+
+                IconButton(
+                    onClick =
+                    {
                         controller.cameraSelector =
                             if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
                                 CameraSelector.DEFAULT_FRONT_CAMERA
                             } else CameraSelector.DEFAULT_BACK_CAMERA
                     },
-                    modifier = Modifier.offset(16.dp, 16.dp)
+                    modifier = Modifier
+                        .offset(16.dp, 16.dp)
+                        .align(Alignment.TopStart)
                 ) {
 
                     Icon(
@@ -147,7 +166,6 @@ fun CameraXView(
                                 onPhotoTaken = {
                                     photoForAcception.value = it
                                     needToAcceptOrDeclinePhoto.value = true
-                                    //image.value = it
                                 },
                                 context = context
                             )
@@ -161,8 +179,7 @@ fun CameraXView(
 
                     }
                 }
-            }
-            else{
+            } else {
                 AcceptOrDeclinePhotoView(
                     photo = photoForAcception.value!!,
                     onAcceptPhoto = {

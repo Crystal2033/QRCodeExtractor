@@ -34,7 +34,6 @@ class ScannedGroupRepositoryImpl(
         emit(Resource.Loading())
 
         //val testUserId = userDao.saveUser(UserEntity(username = user.name, password = "12345"))
-
         val userEntity = userDao.getUserById(user.id)
         val scannedGroupEntity = ScannedGroupEntity(groupName, userEntity.userId)
 
@@ -60,8 +59,9 @@ class ScannedGroupRepositoryImpl(
 
     override fun getScannedGroupsForUserFromDb(userId: Long): Flow<Resource<UserWithScannedGroups>> = flow {
         emit(Resource.Loading())
+        //val testUserId = userDao.saveUser(UserEntity(username = "TestUser", password = "12345"))
         val usersScannedGroups = userDao.getUserWithScannedGroupsAndObjects(userId)
-        val convertedValue = usersScannedGroups.toUserWithScannedGroups()
+        val convertedValue = usersScannedGroups?.toUserWithScannedGroups()
         emit(Resource.Success(convertedValue))
     }
 

@@ -52,9 +52,9 @@ fun PersonInfo(
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column {
-                    person?.image?.let { imageBitmap ->
+                    person?.image?.let { bitmap ->
                         Image(
-                            bitmap = imageBitmap,
+                            bitmap = bitmap.asImageBitmap(),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
@@ -141,7 +141,7 @@ fun PersonItemPreview() {
             name = "Google",
             id = 2
         ),
-        image = bitmap.asImageBitmap(),
+        image = bitmap,
         firstName = "Paul",
         secondName = "Kulikov",
         title = Title(

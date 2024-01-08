@@ -46,17 +46,17 @@ fun NavGraphBuilder.homeGraph(
             )
             {
                 //TextWindow("Home")
-                CameraXView(darkTheme = true, image)
+                //CameraXView(darkTheme = true, image)
                 //PickImageFromGallery()
-                image.value?.let { bitmap ->
-                    Image(
-                        bitmap = bitmap.asImageBitmap(),
-                        contentDescription = "Picture",
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(20.dp)
-                    )
-                }
+//                image.value?.let { bitmap ->
+//                    Image(
+//                        bitmap = bitmap.asImageBitmap(),
+//                        contentDescription = "Picture",
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                            .padding(20.dp)
+//                    )
+//                }
             }
         }
 

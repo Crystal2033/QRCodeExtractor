@@ -2,6 +2,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.present
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.asImageBitmap
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.Keyboard
 import com.crystal2033.qrextractor.core.model.Person
@@ -22,7 +23,7 @@ fun ShowListItemByType(listItem: QRScannableData,
 
         is Person -> {
             StartObjectInfo(
-                image = listItem.image!!,
+                image = listItem.image!!.asImageBitmap(),
                 text = "${listItem.firstName} ${listItem.secondName}",
                 onObjectClicked = onObjectClicked
             )

@@ -1,5 +1,6 @@
 package com.crystal2033.qrextractor.core.dto
 
+import androidx.compose.ui.graphics.asAndroidBitmap
 import com.crystal2033.qrextractor.scanner_feature.scanner.StaticConverters
 import com.crystal2033.qrextractor.core.model.Person
 
@@ -19,7 +20,7 @@ data class PersonDto(
             id = id,
             firstName = firstName,
             secondName = secondName,
-            image = StaticConverters.fromBytesIntoImageBitmap(image),
+            image = StaticConverters.fromBytesIntoImageBitmap(image).asAndroidBitmap(),
             title = title.toTitle(),
             department = department.toDepartment(),
             workSpace = workSpace.toWorkSpace()
