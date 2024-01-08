@@ -8,6 +8,7 @@ import android.graphics.ImageDecoder
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -48,7 +49,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.crystal2033.qrextractor.R
 
-@RequiresApi(Build.VERSION_CODES.P)
+
 @Composable
 fun CameraXView(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -77,8 +78,12 @@ fun CameraXView(
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
-                val source = ImageDecoder.createSource(context.contentResolver, uri)
-                image.value = ImageDecoder.decodeBitmap(source)
+                image.value = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, uri))
+                } else {
+                    MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                }
+                onCloseButtonClicked()
             }
 
         }
@@ -185,6 +190,7 @@ fun CameraXView(
                     onAcceptPhoto = {
                         image.value = it
                         needToAcceptOrDeclinePhoto.value = false
+                        onCloseButtonClicked()
                     },
                     onDeclinePhoto = {
                         needToAcceptOrDeclinePhoto.value = false
