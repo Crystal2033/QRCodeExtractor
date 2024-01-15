@@ -19,7 +19,7 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScanna
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetDataFromServerUseCase
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetScannableDataFromServerUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetObjectFromServerFactory
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.state.ScannedDataState
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.QRScannerEvent
@@ -49,7 +49,7 @@ class QRCodeScannerViewModel @Inject constructor(
         const val timeForDuplicateQRCodesResistInMs = 12000L
     }
 
-    private lateinit var getDataFromQRCodeUseCase: GetDataFromServerUseCase
+    private lateinit var getDataFromQRCodeUseCase: GetScannableDataFromServerUseCase
 
     ///States
     private val _previewDataFromQRState = mutableStateOf(ScannedDataState())
@@ -100,7 +100,8 @@ class QRCodeScannerViewModel @Inject constructor(
 
     private fun onAddScannedGroupClicked(groupName: String) {
         Log.i(LOG_TAG_NAMES.INFO_TAG, "Group name: $groupName")
-        val TEST_USER = User("empty", 1)
+        val TEST_USER = User("empty", 1, "Paul",
+            "Kulikov", "login", 1)
         viewModelScope.launch {
             insertScannedGroupInDBUseCase(
                 qrScannableDataList = listOfAddedScannables.toList(),

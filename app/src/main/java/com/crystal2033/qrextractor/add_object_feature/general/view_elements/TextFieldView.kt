@@ -24,28 +24,30 @@ fun TextFieldView(
     fieldName: String,
     fieldValue: MutableState<String>,
     pattern: Regex = Regex("(\\w|\\d)*"),
-    actionAfterValueChanged: () -> Unit = {}
+    verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    actionAfterValueChanged: () -> Unit = {},
 
 ) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            verticalAlignment = verticalAlignment,
+            horizontalArrangement = horizontalArrangement
         ) {
             Text(
                 text = fieldName,
                 fontWeight = FontWeight.Bold,
                 fontSize = 17.sp,
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier.align(verticalAlignment)
             )
         }
 
         Spacer(modifier = Modifier.height(10.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start
+            verticalAlignment = verticalAlignment,
+            horizontalArrangement = horizontalArrangement
         ) {
             OutlinedTextField(
                 value = fieldValue.value,
@@ -56,7 +58,7 @@ fun TextFieldView(
                     }
 
                 },
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier.align(verticalAlignment)
             )
         }
 

@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.crystal2033.qrextractor.R
 
@@ -57,10 +56,10 @@ fun initBottomItems(context: Context): List<BottomNavigationItem> {
             unselectedIcon = ImageVector.vectorResource(R.drawable.outline_qr_code_35)
         ),
         BottomNavigationItem(
-            title = "Documents",
-            mainRouteInGraph = context.resources.getString(R.string.documents_head_graph_route),
-            selectedIcon = ImageVector.vectorResource(R.drawable.filled_description_35),
-            unselectedIcon = ImageVector.vectorResource(R.drawable.outline_description_35)
+            title = "Profile",
+            mainRouteInGraph = context.resources.getString(R.string.profile_head_graph_route),
+            selectedIcon = ImageVector.vectorResource(R.drawable.filled_account_circle_35),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.outline_account_circle_35)
         )
     )
 }

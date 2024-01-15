@@ -11,7 +11,8 @@
     <string name="list_of_groups_route">list_of_groups</string>
     <string name="list_of_scanned_objects">list_of_scanned_objects</string>
 
-    <string name="documents_route">documents</string>
+    <string name="profile_route">profile</string>
+    <string name="login_route">login</string>
 
     <string name="menu_add_route">add_menu</string>
     <string name="add_concrete_class">add_concrete_object</string>
@@ -22,7 +23,7 @@
     <string name="home_head_graph_route">home_graph</string>
     <string name="history_head_graph_route">history_graph</string>
     <string name="scanner_head_graph_route">scanner_graph</string>
-    <string name="documents_head_graph_route">documents_graph</string>
+    <string name="profile_head_graph_route">profile_graph</string>
     <string name="add_data_head_graph_route">add_data_graph</string>
     <!--  Heads of navigation subgraph-->
 

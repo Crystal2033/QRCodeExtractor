@@ -27,7 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.addQRCodeGraph
-import com.crystal2033.qrextractor.nav_graphs.documents.documentsGraph
+import com.crystal2033.qrextractor.nav_graphs.documents.profileGraph
 import com.crystal2033.qrextractor.nav_graphs.history.historyGraph
 import com.crystal2033.qrextractor.nav_graphs.home.homeGraph
 import com.crystal2033.qrextractor.nav_graphs.scanner.scannerGraph
@@ -97,7 +97,8 @@ fun MyNavGraph(
 ) {
 
     val userViewModel: User by remember {
-        mutableStateOf(User("123", 1))
+        mutableStateOf(User("123", 1,
+            "Paul", "Kulikov", "login", 1L))
 
     }
     NavHost(
@@ -114,7 +115,7 @@ fun MyNavGraph(
 
         historyGraph(navController, context, snackbarHostState)
 
-        documentsGraph(navController, context, snackbarHostState)
+        profileGraph(navController, context, snackbarHostState)
     }
 }
 

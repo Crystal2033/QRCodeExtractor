@@ -15,7 +15,7 @@ import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presenta
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.vm_view_communication.UIScannedObjectsListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetDataFromServerUseCase
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetScannableDataFromServerUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetObjectFromServerFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -59,7 +59,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
         Log.i(LOG_TAG_NAMES.INFO_TAG, "CLEARED")
     }
 
-    private lateinit var getObjectInfoUseCase: GetDataFromServerUseCase
+    private lateinit var getObjectInfoUseCase: GetScannableDataFromServerUseCase
 
     @AssistedFactory
     interface Factory {

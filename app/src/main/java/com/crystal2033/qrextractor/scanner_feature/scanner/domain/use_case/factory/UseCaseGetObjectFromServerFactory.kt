@@ -8,7 +8,7 @@ class UseCaseGetObjectFromServerFactory(
     private val getObjectInfoUseCases: DataGetterUseCases,
     private val applicationContext: Context
 ) {
-    fun createUseCase(dataTableName: String) : GetDataFromServerUseCase {
+    fun createUseCase(dataTableName: String) : GetScannableDataFromServerUseCase {
         return when(dataTableName){
             applicationContext.getString(R.string.person_table_name) -> {
                 getObjectInfoUseCases.getPersonUseCase
