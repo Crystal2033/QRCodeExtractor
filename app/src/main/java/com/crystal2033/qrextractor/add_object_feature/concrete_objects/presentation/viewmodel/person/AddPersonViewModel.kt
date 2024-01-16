@@ -113,7 +113,7 @@ class AddPersonViewModel @AssistedInject constructor(
                     is Resource.Error -> {}
                     is Resource.Loading -> {}
                     is Resource.Success -> {
-                        personState.value.id.value = statusWithState.data?.id ?: 0
+                        personState.value.id = statusWithState.data?.id ?: 0
                         setQRStickerInfo(statusWithState.data, qrCodeStickerInfo)
                         onAddObjectClicked(qrCodeStickerInfo)
                         sendUiEvent(UIAddNewObjectEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
@@ -136,12 +136,12 @@ class AddPersonViewModel @AssistedInject constructor(
     private fun fromPersonStateIntoPerson(): Person {
         return Person(
             id = 0,
-            department = listOfDepartments.find { it.name == personState.value.departmentState.value.name.value },
-            firstName = personState.value.firstNameState.value,
-            secondName = personState.value.secondNameState.value,
-            image = personState.value.imageState.value,
-            title = listOfTitles.find { it.name == personState.value.titleState.value.name.value },
-            workSpace = listOfWorkSpaces.find { it.id.toString() == personState.value.workspaceState.value.id.value }
+            department = listOfDepartments.find { it.name == personState.value.department!!.name },
+            firstName = personState.value.firstName,
+            secondName = personState.value.secondName,
+            image = personState.value.image,
+            title = listOfTitles.find { it.name == personState.value.title!!.name },
+            workSpace = listOfWorkSpaces.find { it.id == personState.value.workSpace!!.id }
         )
     }
 

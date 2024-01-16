@@ -10,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.auth_feature.data.dto.UserLoginDTO
 import com.crystal2033.qrextractor.auth_feature.domain.use_case.LoginUserUseCase
-import com.crystal2033.qrextractor.auth_feature.presentation.state.UserLoginDTOState
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UIUserLoginEvent
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UserLoginEvent
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
@@ -37,8 +36,8 @@ class ProfileViewModel @Inject constructor(
 //    private val _password = mutableStateOf("")
 //    val password: State<String> = _password
 
-    private val _userLoginDTOState = mutableStateOf(UserLoginDTOState())
-    val userLoginDTOState: State<UserLoginDTOState> = _userLoginDTOState
+    private val _userLoginDTO = mutableStateOf(UserLoginDTO())
+    val userLoginDTO: State<UserLoginDTO> = _userLoginDTO
 
 //    private val _userLoginDTO = mutableStateOf(UserLoginDTO())
 //    val userLoginDTO : State<UserLoginDTO> = _userLoginDTO
@@ -52,21 +51,16 @@ class ProfileViewModel @Inject constructor(
     fun onEvent(event: UserLoginEvent) {
         when (event) {
             is UserLoginEvent.OnLoginChanged -> {
-                _userLoginDTOState.value.loginState.value = event.login
+                _userLoginDTO.value.login = event.login
             }
 
             is UserLoginEvent.OnPasswordChanged -> {
-                _userLoginDTOState.value.passwordState.value = event.password
+                _userLoginDTO.value.password = event.password
             }
 
             UserLoginEvent.OnLoginPressed -> {
                 viewModelScope.launch {
-                    loginUserUseCase(
-                        UserLoginDTO(
-                            _userLoginDTOState.value.loginState.value,
-                            _userLoginDTOState.value.passwordState.value
-                        )
-                    )
+                    loginUserUseCase(userLoginDTO.value)
                         .onEach { status ->
                             makeActionsByStatus(status)
                         }.launchIn(this)

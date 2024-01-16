@@ -53,7 +53,7 @@ import com.crystal2033.qrextractor.R
 @Composable
 fun CameraXView(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    image: MutableState<Bitmap?>,
+    onImageChanged: (Bitmap?) -> Unit,
     onCloseButtonClicked: () -> Unit
 ) {
 
@@ -75,6 +75,10 @@ fun CameraXView(
         mutableStateOf<Bitmap?>(null)
     }
 
+    val image = remember {
+        mutableStateOf<Bitmap?>(null)
+    }
+
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
             if (uri != null) {
@@ -83,6 +87,7 @@ fun CameraXView(
                 } else {
                     MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
                 }
+                onImageChanged(image.value)
                 onCloseButtonClicked()
             }
 
@@ -189,6 +194,7 @@ fun CameraXView(
                     photo = photoForAcception.value!!,
                     onAcceptPhoto = {
                         image.value = it
+                        onImageChanged(image.value)
                         needToAcceptOrDeclinePhoto.value = false
                         onCloseButtonClicked()
                     },

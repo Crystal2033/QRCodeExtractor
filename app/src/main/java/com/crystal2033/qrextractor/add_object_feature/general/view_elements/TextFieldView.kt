@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,14 +21,18 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun TextFieldView(
-    fieldName: String,
-    fieldValue: MutableState<String>,
+    fieldHint: String,
+    onValueChanged: (String) -> Unit,
     pattern: Regex = Regex("(\\w|\\d)*"),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    actionAfterValueChanged: () -> Unit = {},
 
-) {
+    ) {
+
+    val fieldValue = remember {
+        mutableStateOf("")
+    }
+
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -36,7 +40,7 @@ fun TextFieldView(
             horizontalArrangement = horizontalArrangement
         ) {
             Text(
-                text = fieldName,
+                text = fieldHint,
                 fontWeight = FontWeight.Bold,
                 fontSize = 17.sp,
                 modifier = Modifier.align(verticalAlignment)
@@ -54,7 +58,7 @@ fun TextFieldView(
                 onValueChange = {
                     if (it.matches(pattern)) {
                         fieldValue.value = it
-                        actionAfterValueChanged()
+                        onValueChanged(fieldValue.value)
                     }
 
                 },
@@ -68,10 +72,10 @@ fun TextFieldView(
 @Composable
 @Preview
 fun TextFieldPreview() {
-    val textToInsert = remember {
-        mutableStateOf("")
-    }
-    TextFieldView("Test string", textToInsert){
-
-    }
+//    val textToInsert = remember {
+//        mutableStateOf("")
+//    }
+//    TextFieldView("Test string", textToInsert){
+//
+//    }
 }

@@ -29,9 +29,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun DropListView(
     fieldName: String,
+    onValueChanged: (String) -> Unit,
     listOfObjects: List<String>,
-    chosenValue: MutableState<String>,
-    actionAfterChoose: () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf("") }
@@ -77,8 +76,7 @@ fun DropListView(
                             text = { Text(text = item) },
                             onClick = {
                                 selectedText = item
-                                chosenValue.value = selectedText
-                                actionAfterChoose()
+                                onValueChanged(selectedText)
                                 expanded = false
                             }
                         )
@@ -94,9 +92,9 @@ fun DropListView(
 @Composable
 @Preview
 fun PreviewDropListView() {
-    val coffeeDrinks = listOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha")
-    val chosenValue = remember {
-        mutableStateOf("")
-    }
-    DropListView("Coffee", coffeeDrinks, chosenValue)
+//    val coffeeDrinks = listOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha")
+//    val chosenValue = remember {
+//        mutableStateOf("")
+//    }
+//    DropListView("Coffee", coffeeDrinks, chosenValue)
 }

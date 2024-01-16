@@ -25,8 +25,8 @@ fun LoginView(
     viewModel: ProfileViewModel,
     onNavigate: (UIUserLoginEvent.Navigate) -> Unit
 ) {
-    val userLoginDTOState = remember {
-        viewModel.userLoginDTOState
+    val userLoginDTO = remember {
+        viewModel.userLoginDTO
     }
 
     val spaceBetween = 15.dp
@@ -44,14 +44,17 @@ fun LoginView(
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Alignment.Center)) {
             TextFieldView(
-                fieldName = "Login",
-                fieldValue = userLoginDTOState.value.loginState,
+                fieldHint = "Login",
+                onValueChanged = {
+                    userLoginDTO.value.login = it
+                },
                 horizontalArrangement = Arrangement.Center
             )
             Spacer(modifier = Modifier.height(spaceBetween))
             TextFieldView(
-                fieldName = "Password",
-                fieldValue = userLoginDTOState.value.passwordState,
+                fieldHint = "Password", onValueChanged = {
+                    userLoginDTO.value.password = it
+                },
                 horizontalArrangement = Arrangement.Center
             )
 

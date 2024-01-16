@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -49,10 +48,6 @@ fun AddPersonView(
         viewModel.personState
     }
 
-    val personPhotoState = remember {
-        mutableStateOf<Bitmap?>(null)
-    }
-
     val isNeedToShowCamera = remember {
         mutableStateOf(false)
     }
@@ -63,7 +58,7 @@ fun AddPersonView(
         if (!isNeedToShowCamera.value) {
             Row {
                 Column {
-                    personState.value.imageState.value?.let { bitmap ->
+                    personState.value.image?.let { bitmap ->
                         Image(
                             bitmap = bitmap.asImageBitmap(),
                             contentDescription = "Picture",
@@ -82,44 +77,58 @@ fun AddPersonView(
 
                 Column {
                     TextFieldView(
-                        fieldName = "First name",
-                        fieldValue = personState.value.firstNameState
+                        fieldHint = "First name",
+                        onValueChanged = {
+                            personState.value.firstName = it
+                        },
                     )
                     Spacer(modifier = Modifier.height(spaceBetween))
                     TextFieldView(
-                        fieldName = "Second name",
-                        fieldValue = personState.value.secondNameState
+                        fieldHint = "Second name",
+                        onValueChanged = {
+                            personState.value.secondName = it
+                        }
                     )
                     Spacer(modifier = Modifier.height(spaceBetween))
                     TextFieldView(
-                        fieldName = "Inventory number",
-                        fieldValue = personState.value.inventoryNumberState
+                        fieldHint = "Inventory number",
+                        onValueChanged = {
+                            personState.value.inventoryNumber = it
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(spaceBetween))
                     DropListView(
                         fieldName = "Department",
                         listOfObjects = viewModel.listOfDepartments.map { it.name },
-                        chosenValue = personState.value.departmentState.value.name
+                        onValueChanged = {
+                            personState.value.department?.name = it
+                        },
                     )
                     Spacer(modifier = Modifier.height(spaceBetween))
                     DropListView(
                         fieldName = "Title",
                         listOfObjects = viewModel.listOfTitles.map { it.name },
-                        chosenValue = personState.value.titleState.value.name
+                        onValueChanged = {
+                            personState.value.title?.name = it
+                        }
                     )
                     Spacer(modifier = Modifier.height(spaceBetween))
                     DropListView(
                         fieldName = "Workspace",
                         listOfObjects = viewModel.listOfWorkSpaces.map { it.id.toString() },
-                        chosenValue = personState.value.workspaceState.value.id
+                        onValueChanged = {
+                            personState.value.workSpace?.id = it.toLong()
+                        }
                     )
                 }
             }
         } else {
             CameraXView(
                 darkTheme = true,
-                personState.value.imageState,
+                onImageChanged = {
+                    personState.value.image = it
+                },
                 onCloseButtonClicked = {
                     isNeedToShowCamera.value = false
                 })
@@ -131,14 +140,14 @@ fun AddPersonView(
 }
 
 fun isAllFieldInsertedCorrectly(personState: PersonState): Boolean {
-    return (personState.firstNameState.value.isNotBlank()
+    return (personState.firstName.isNotBlank()
             &&
-            personState.secondNameState.value.isNotBlank()
+            personState.secondName.isNotBlank()
             &&
-            personState.departmentState.value.name.value.isNotBlank()
+            personState.department?.name?.isNotBlank() ?: false
             &&
-            personState.titleState.value.name.value.isNotBlank()
+            personState.title?.name?.isNotBlank() ?: false
             &&
-            personState.workspaceState.value.id.value.isNotBlank()
+            personState.workSpace?.id != 0L
             )
 }
