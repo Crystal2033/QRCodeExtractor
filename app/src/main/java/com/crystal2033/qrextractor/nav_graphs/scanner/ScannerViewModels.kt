@@ -20,7 +20,7 @@ sealed class ScannerViewModels{
         @Composable
         inline fun <reified T : ViewModel> NavBackStackEntry.sharedScannedDataGroupsViewModel(
             navController: NavController,
-            user: User
+            user: User?
         ): T {
             val navGraphRoute = destination.parent?.route ?: return viewModel()
             val parentEntry = remember(this) {

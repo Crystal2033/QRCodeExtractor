@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -14,18 +15,23 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.crystal2033.qrextractor.core.model.User
+import androidx.navigation.navigation
+import com.crystal2033.qrextractor.auth_feature.presentation.viewmodel.UserHolderViewModel
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.addQRCodeGraph
 import com.crystal2033.qrextractor.nav_graphs.documents.profileGraph
 import com.crystal2033.qrextractor.nav_graphs.history.historyGraph
@@ -53,6 +59,7 @@ class MainActivity : ComponentActivity() {
             QRExtractorTheme(darkTheme = true) {
                 val navController = rememberNavController()
                 val snackbarHostState = remember { SnackbarHostState() }
+
                 Scaffold(
                     snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                     bottomBar = {
@@ -93,29 +100,34 @@ fun MyNavGraph(
     navController: NavHostController,
     context: Context,
     snackbarHostState: SnackbarHostState
-
 ) {
 
-    val userViewModel: User by remember {
-        mutableStateOf(User(1,
-            "Paul", "Kulikov", "login", 1L))
+    val userViewModelHolder: UserHolderViewModel = viewModel()
 
-    }
     NavHost(
         navController = navController,
         startDestination = context.resources.getString(R.string.home_head_graph_route)
     ) {
-        //val userViewModel = User("some user", 1)
 
-        homeGraph(navController, context, snackbarHostState)
+        homeGraph(navController, context, snackbarHostState, userViewModelHolder.userState)
 
-        addQRCodeGraph(navController, context, snackbarHostState, userViewModel)
+        addQRCodeGraph(
+            navController,
+            context,
+            snackbarHostState,
+            userViewModelHolder.userState.value
+        )
 
-        scannerGraph(navController, context, snackbarHostState, userViewModel)
+        scannerGraph(navController, context, snackbarHostState, userViewModelHolder.userState)
 
         historyGraph(navController, context, snackbarHostState)
 
-        profileGraph(navController, context, snackbarHostState)
+        profileGraph(navController, context, onLoginUser = {
+            userViewModelHolder.setUser(it)
+
+        }, userViewModelHolder.userState, snackbarHostState)
+
+
     }
 }
 
@@ -142,6 +154,18 @@ fun TextWindow(string: String) {
             fontSize = 35.sp
         )
     }
+}
+
+@Composable
+inline fun <reified T : ViewModel> NavBackStackEntry.sharedUserHolderViewModel(
+    navController: NavController
+): T {
+    val navGraphRoute = destination.parent?.route ?: return viewModel()
+    val parentEntry = remember(this) {
+        navController.getBackStackEntry(navGraphRoute)
+    }
+
+    return viewModel(viewModelStoreOwner = parentEntry)
 }
 
 

@@ -6,8 +6,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
 import com.crystal2033.qrextractor.auth_feature.data.dto.UserLoginDTO
 import com.crystal2033.qrextractor.auth_feature.domain.use_case.LoginUserUseCase
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UIUserLoginEvent
@@ -15,6 +17,9 @@ import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communicati
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.util.Resource
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -24,11 +29,29 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class ProfileViewModel @Inject constructor(
+class ProfileViewModel @AssistedInject constructor(
     private val loginUserUseCase: LoginUserUseCase,
     @ApplicationContext private val context: Context,
+    @Assisted private val onLoginUser: (User) -> Unit
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(onLoginUser: (User) -> Unit): ProfileViewModel
+    }
+
+    companion object {
+        @Suppress("UNCHECKED_CAST")
+        fun provideFactory(
+            assistedFactory: Factory,
+            onLoginUser: (User) -> Unit
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(onLoginUser) as T
+            }
+        }
+    }
+
 
     private val _userLoginDTO = mutableStateOf(UserLoginDTO())
     val userLoginDTO: State<UserLoginDTO> = _userLoginDTO
@@ -77,6 +100,7 @@ class ProfileViewModel @Inject constructor(
 
             is Resource.Success -> {
                 _user.value = data.data
+                onLoginUser(_user.value!!)
                 sendUiEvent(UIUserLoginEvent.OnSuccessLoginNavigate(context.resources.getString(R.string.profile_route)))
             }
         }

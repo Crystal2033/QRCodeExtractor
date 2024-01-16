@@ -2,6 +2,7 @@ package com.crystal2033.qrextractor.nav_graphs.add_qr_data
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +37,7 @@ import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.CreateQRCodeEvent
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.QRCodeStickersView
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.viewmodel.DocumentWithQRCodesViewModel
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addPersonViewModel
@@ -47,13 +49,14 @@ fun NavGraphBuilder.addQRCodeGraph(
     navController: NavController,
     context: Context,
     snackbarHostState: SnackbarHostState,
-    user: User
+    user: User?
 ) {
     navigation(
         startDestination = context.resources.getString(R.string.menu_add_route),
         route = context.resources.getString(R.string.add_data_head_graph_route)
     ) {
         composable(context.resources.getString(R.string.menu_add_route)) {
+            Log.i(LOG_TAG_NAMES.INFO_TAG, "USER IS: ${user?.firstName} ${user?.secondName}")
             val menuViewModel = it.sharedAddDataMenuViewModel<CreateQRCodesViewModel>(
                 navController = navController,
                 user = user
@@ -119,7 +122,7 @@ fun createViewByAddType(
     typeOfView: DatabaseObjectTypes,
     navBackStackEntry: NavBackStackEntry,
     navController: NavController,
-    user: User,
+    user: User?,
     onAddObjectClicked: (QRCodeStickerInfo) -> Unit
 ) {
     val context = LocalContext.current

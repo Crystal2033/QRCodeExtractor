@@ -23,7 +23,7 @@ sealed class AddDataViewModels {
         @Composable
         inline fun <reified T : ViewModel> NavBackStackEntry.sharedAddDataMenuViewModel(
             navController: NavController,
-            user: User
+            user: User?
         ): T {
             val navGraphRoute = destination.parent?.route ?: return viewModel()
             val parentEntry = remember(this) {
@@ -43,7 +43,7 @@ sealed class AddDataViewModels {
 
         @Composable
         inline fun <reified T : ViewModel> addPersonViewModel(
-            user: User
+            user: User?
         ): T {
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
