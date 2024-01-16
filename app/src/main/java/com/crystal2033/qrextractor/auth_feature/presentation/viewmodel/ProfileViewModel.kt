@@ -30,17 +30,8 @@ class ProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
-//    private val _login = mutableStateOf("")
-//    val login: State<String> = _login
-//
-//    private val _password = mutableStateOf("")
-//    val password: State<String> = _password
-
     private val _userLoginDTO = mutableStateOf(UserLoginDTO())
     val userLoginDTO: State<UserLoginDTO> = _userLoginDTO
-
-//    private val _userLoginDTO = mutableStateOf(UserLoginDTO())
-//    val userLoginDTO : State<UserLoginDTO> = _userLoginDTO
 
     private val _user: MutableState<User?> = mutableStateOf(null)
     val user: State<User?> = _user
@@ -60,7 +51,7 @@ class ProfileViewModel @Inject constructor(
 
             UserLoginEvent.OnLoginPressed -> {
                 viewModelScope.launch {
-                    loginUserUseCase(userLoginDTO.value)
+                    loginUserUseCase(_userLoginDTO.value)
                         .onEach { status ->
                             makeActionsByStatus(status)
                         }.launchIn(this)
@@ -77,11 +68,16 @@ class ProfileViewModel @Inject constructor(
 
             is Resource.Error -> {
                 Log.e(LOG_TAG_NAMES.ERROR_TAG, "Error")
+                sendUiEvent(
+                    UIUserLoginEvent.OnAuthError(
+                        errorMessage = data.message ?: "Unknown error"
+                    )
+                )
             }
 
             is Resource.Success -> {
                 _user.value = data.data
-                sendUiEvent(UIUserLoginEvent.Navigate(context.resources.getString(R.string.profile_route)))
+                sendUiEvent(UIUserLoginEvent.OnSuccessLoginNavigate(context.resources.getString(R.string.profile_route)))
             }
         }
     }

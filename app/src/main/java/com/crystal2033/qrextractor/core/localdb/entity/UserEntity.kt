@@ -7,7 +7,6 @@ import com.crystal2033.qrextractor.core.model.User
 @Entity(tableName = "User")
 data class UserEntity(
     val login: String,
-    val password: String,
     val firstName: String,
     val secondName: String,
     val organizationId: Long,

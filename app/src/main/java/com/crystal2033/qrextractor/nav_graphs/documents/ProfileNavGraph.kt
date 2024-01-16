@@ -34,6 +34,7 @@ fun NavGraphBuilder.profileGraph(
         composable(context.resources.getString(R.string.profile_route)){
             val profileViewModel =
                 it.sharedHiltViewModel<ProfileViewModel>(navController = navController)
+
             profileViewModel.user.value?.let {user ->
                 Text(text = "Hello ${user.firstName} ${user.secondName} from ${user.organizationId} organization")
             }
