@@ -24,6 +24,9 @@ interface UserDao {
     @Query("SELECT * FROM USER WHERE userId = :id")
     suspend fun getUserById(id: Long): UserEntity
 
+    @Query("SELECT * FROM USER WHERE login = :login")
+    suspend fun getUserByLogin(login: String): UserEntity
+
     @Transaction
     @Query("SELECT * FROM USER WHERE userId = :id")
     suspend fun getUserWithScannedGroupsAndObjects(id: Long): UserWithScannedGroupsAndObjectsRel?

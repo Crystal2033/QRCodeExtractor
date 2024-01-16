@@ -97,7 +97,7 @@ fun MyNavGraph(
 ) {
 
     val userViewModel: User by remember {
-        mutableStateOf(User("123", 1,
+        mutableStateOf(User(1,
             "Paul", "Kulikov", "login", 1L))
 
     }

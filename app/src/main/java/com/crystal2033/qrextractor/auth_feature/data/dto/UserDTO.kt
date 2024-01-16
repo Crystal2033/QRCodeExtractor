@@ -11,7 +11,6 @@ data class UserDTO(
 ) {
     fun toUser(): User {
         return User(
-            name = "SomeName",
             id = id,
             firstName = firstName,
             secondName = secondName,

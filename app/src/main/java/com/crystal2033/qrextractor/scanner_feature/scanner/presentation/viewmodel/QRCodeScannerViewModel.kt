@@ -100,7 +100,7 @@ class QRCodeScannerViewModel @Inject constructor(
 
     private fun onAddScannedGroupClicked(groupName: String) {
         Log.i(LOG_TAG_NAMES.INFO_TAG, "Group name: $groupName")
-        val TEST_USER = User("empty", 1, "Paul",
+        val TEST_USER = User(1, "Paul",
             "Kulikov", "login", 1)
         viewModelScope.launch {
             insertScannedGroupInDBUseCase(
