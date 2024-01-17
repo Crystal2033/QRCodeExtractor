@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.add_object_feature.general.view_elements
+package com.crystal2033.qrextractor.ui.text_elements
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

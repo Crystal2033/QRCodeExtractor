@@ -38,9 +38,6 @@ fun NavGraphBuilder.homeGraph(
         route = context.resources.getString(R.string.home_head_graph_route)
     ) {
         composable(context.resources.getString(R.string.home_route)) {
-            val user = userState.value
-            Log.i(LOG_TAG_NAMES.INFO_TAG, "USER IS: ${user?.firstName} ${user?.secondName}")
-
             val image = remember {
                 mutableStateOf<Bitmap?>(null)
             }

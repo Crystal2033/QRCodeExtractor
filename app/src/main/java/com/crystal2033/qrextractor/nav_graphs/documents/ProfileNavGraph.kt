@@ -33,19 +33,21 @@ fun NavGraphBuilder.profileGraph(
                 navController = navController,
                 onLoginUser = onLoginUser
             )
-            LoginView(
-                viewModel = profileViewModel,
-                onNavigate = { event ->
-                    navController.navigate(event.route)
-                }
-            )
+            if(stateUser.value == null){
+                LoginView(
+                    viewModel = profileViewModel,
+                    onNavigate = { event ->
+                        navController.navigate(event.route)
+                    }
+                )
+            }
+            else{
+                navController.navigate(context.resources.getString(R.string.profile_route))
+            }
+
         }
         composable(context.resources.getString(R.string.profile_route)) {
 
-            Log.i(
-                LOG_TAG_NAMES.INFO_TAG,
-                "USER IS: ${stateUser.value?.firstName} ${stateUser.value?.secondName}"
-            )
             stateUser.value?.let { user ->
                 Text(text = "Hello ${user.firstName} ${user.secondName} from ${user.organizationId} organization")
             }

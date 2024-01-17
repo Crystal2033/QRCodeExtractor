@@ -40,9 +40,6 @@ fun NavGraphBuilder.scannerGraph(
         route = context.resources.getString(R.string.scanner_head_graph_route)
     ) {
         composable(context.resources.getString(R.string.scanner_route)) {
-            val user = stateUser.value
-            Log.i(LOG_TAG_NAMES.INFO_TAG, "USER IS: ${user?.firstName} ${user?.secondName}")
-
             val viewModel = it.sharedHiltViewModel<QRCodeScannerViewModel>(navController)
             Column(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, NavBottomBarConstants.HEIGHT_BOTTOM_BAR)) {
                 QRCodeView(

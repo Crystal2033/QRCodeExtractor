@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.crystal2033.qrextractor.add_object_feature.general.view_elements.TextFieldView
+import com.crystal2033.qrextractor.ui.text_elements.TextFieldView
 import com.crystal2033.qrextractor.auth_feature.presentation.viewmodel.ProfileViewModel
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UIUserLoginEvent
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UserLoginEvent

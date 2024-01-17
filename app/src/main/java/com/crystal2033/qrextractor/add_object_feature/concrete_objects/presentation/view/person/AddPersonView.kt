@@ -1,6 +1,5 @@
 package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.person
 
-import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,8 +20,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
-import com.crystal2033.qrextractor.add_object_feature.general.view_elements.DropListView
-import com.crystal2033.qrextractor.add_object_feature.general.view_elements.TextFieldView
+import com.crystal2033.qrextractor.ui.text_elements.DropListView
+import com.crystal2033.qrextractor.ui.text_elements.TextFieldView
 import com.crystal2033.qrextractor.core.camera_for_photos.CameraXView
 import kotlinx.coroutines.flow.collectLatest
 

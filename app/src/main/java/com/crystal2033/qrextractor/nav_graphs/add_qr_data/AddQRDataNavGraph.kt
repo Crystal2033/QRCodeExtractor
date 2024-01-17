@@ -56,7 +56,6 @@ fun NavGraphBuilder.addQRCodeGraph(
         route = context.resources.getString(R.string.add_data_head_graph_route)
     ) {
         composable(context.resources.getString(R.string.menu_add_route)) {
-            Log.i(LOG_TAG_NAMES.INFO_TAG, "USER IS: ${user?.firstName} ${user?.secondName}")
             val menuViewModel = it.sharedAddDataMenuViewModel<CreateQRCodesViewModel>(
                 navController = navController,
                 user = user
