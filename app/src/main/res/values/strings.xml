@@ -31,6 +31,10 @@
     <string name="person_table_name">person</string>
     <string name="keyboard_table_name">keyboard</string>
     <string name="monitor_table_name">monitor</string>
+    <string name="desk_table_name">desk</string>
+    <string name="system_unit_table_name">system_unit</string>
+    <string name="projector_table_name">projector</string>
+    <string name="chair_table_name">chair</string>
     <string name="unknown_table_name">unknown</string>
     <!--  Database table names  -->
 

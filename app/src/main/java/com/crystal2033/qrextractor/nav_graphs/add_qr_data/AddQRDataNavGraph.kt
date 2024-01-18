@@ -163,6 +163,11 @@ fun createViewByAddType(
                     DatabaseObjectTypes.UNKNOWN -> {
                         null
                     }
+
+                    DatabaseObjectTypes.DESK -> TODO()
+                    DatabaseObjectTypes.CHAIR -> TODO()
+                    DatabaseObjectTypes.SYSTEM_UNIT -> TODO()
+                    DatabaseObjectTypes.PROJECTOR -> TODO()
                 }
 
                 Row(

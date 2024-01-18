@@ -20,13 +20,13 @@ interface CRUDDeviceOperationsRepository<M : InventarizedModel<D>,
         D : InventarizedDTO<M>, A> {
     fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<M>>>
 
-    fun getDeviceById(chairId: Long): Flow<Resource<M>>
+    fun getDeviceById(deviceId: Long): Flow<Resource<M>>
 
     fun addDevice(deviceDTO: D?): Flow<Resource<M>>
 
     fun updateDevice(deviceDTO: D): Flow<Resource<M>>
 
-    fun deleteDevice(chairId: Long): Flow<Resource<Unit>>
+    fun deleteDevice(deviceId: Long): Flow<Resource<Unit>>
 
     fun <T, AT> apiCall(
         api: A,

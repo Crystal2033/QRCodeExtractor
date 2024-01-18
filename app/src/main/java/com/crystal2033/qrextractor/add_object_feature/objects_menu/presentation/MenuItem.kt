@@ -34,19 +34,38 @@ fun MenuItem(
     }
 }
 
-fun getGoodNameByDatabaseObjectType(item: DatabaseObjectTypes): String{
-    return when(item){
+fun getGoodNameByDatabaseObjectType(item: DatabaseObjectTypes): String {
+    return when (item) {
         DatabaseObjectTypes.PERSON -> {
             "Person"
         }
+
         DatabaseObjectTypes.KEYBOARD -> {
             "Keyboard"
         }
+
         DatabaseObjectTypes.MONITOR -> {
             "Monitor"
         }
+
         DatabaseObjectTypes.UNKNOWN -> {
             "Unknown"
+        }
+
+        DatabaseObjectTypes.DESK -> {
+            "Desk"
+        }
+
+        DatabaseObjectTypes.CHAIR -> {
+            "Chair"
+        }
+
+        DatabaseObjectTypes.SYSTEM_UNIT -> {
+            "System unit"
+        }
+
+        DatabaseObjectTypes.PROJECTOR -> {
+            "Projector"
         }
     }
 }
