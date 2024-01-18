@@ -7,7 +7,7 @@ data class CabinetDTO(
     val name: String,
     val buildingId: Long
 ) {
-    private fun toCabinet() : Cabinet {
+    public fun toCabinet() : Cabinet {
         return Cabinet(
             id, name, buildingId
         )

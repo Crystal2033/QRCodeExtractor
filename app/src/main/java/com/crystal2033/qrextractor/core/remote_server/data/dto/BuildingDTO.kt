@@ -7,7 +7,7 @@ data class BuildingDTO(
     val address: String,
     val branchId: Long
 ) {
-    private fun toBuilding() : Building{
+    public fun toBuilding() : Building{
         return Building(
             id, address, branchId
         )

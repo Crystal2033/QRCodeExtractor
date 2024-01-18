@@ -21,7 +21,7 @@ import javax.inject.Singleton
 object OrganizationModule {
     @Provides
     @Singleton
-    fun provideGetOrganizationUseCase(organizationRepository: OrganizationRepository): GetOrganizationsUseCase {
+    fun provideGetOrganizationsUseCase(organizationRepository: OrganizationRepository): GetOrganizationsUseCase {
         return GetOrganizationsUseCase(organizationRepository)
     }
 

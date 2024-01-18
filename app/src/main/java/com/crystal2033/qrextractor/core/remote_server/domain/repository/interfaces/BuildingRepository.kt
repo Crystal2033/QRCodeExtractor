@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface BuildingRepository {
     fun getBuildingsByOrgAndBranch(
-        orgId: Long,
         branchId: Long
     ): Flow<Resource<List<Building>>>
 }

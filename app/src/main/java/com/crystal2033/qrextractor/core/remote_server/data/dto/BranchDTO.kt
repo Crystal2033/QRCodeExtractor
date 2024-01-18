@@ -9,7 +9,7 @@ data class BranchDTO(
     val organizationId: Long,
     val cityId: Long
 ) {
-    private fun toBranch(): Branch {
+    public fun toBranch(): Branch {
         return Branch(
             id, name, cityName, organizationId, cityId
         )

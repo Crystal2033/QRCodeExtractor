@@ -6,8 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface CabinetRepository {
     fun getCabinetsByOrgBranchAndBuilding(
-        orgId: Long,
-        branchId: Long,
         buildingId: Long
     ): Flow<Resource<List<Cabinet>>>
 }

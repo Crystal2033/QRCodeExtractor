@@ -22,7 +22,7 @@ class OrganizationRepositoryImpl(
     override fun getOrganizations(): Flow<Resource<List<Organization>>> = flow {
         emit(Resource.Loading())
         try {
-            val organizations = tryToGetOrganization()
+            val organizations = tryToGetOrganizations()
             emit(Resource.Success(organizations))
         } catch (e: RemoteServerRequestException) {
             Log.e("ERROR", e.message ?: "Unknown error")
@@ -30,7 +30,7 @@ class OrganizationRepositoryImpl(
         }
     }
 
-    private suspend fun tryToGetOrganization(): List<Organization> {
+    private suspend fun tryToGetOrganizations(): List<Organization> {
         val message: String
         try {
             val response = organizationAPI.getAllOrganization()
