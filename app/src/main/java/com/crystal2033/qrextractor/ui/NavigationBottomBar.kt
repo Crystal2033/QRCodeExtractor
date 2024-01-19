@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -65,14 +65,13 @@ fun initBottomItems(context: Context): List<BottomNavigationItem> {
 }
 
 @Composable
-fun NavBottomBar(navController: NavController, applicationContext: Context) {
-    val bottomItems = initBottomItems(applicationContext)
+fun NavBottomBar(navController: NavController, context: Context, startDestination: String) {
+    val bottomItems = initBottomItems(context)
 
-    var selectedItemIndex by rememberSaveable {
+    var selectedItemIndex by remember {
         val homeItem: BottomNavigationItem? = bottomItems.find { bottomItem ->
             bottomItem.mainRouteInGraph.lowercase() ==
-                    applicationContext.resources.getString(R.string.home_head_graph_route)
-                        .lowercase()
+                    startDestination.lowercase()
         }
         mutableIntStateOf(bottomItems.indexOf(homeItem))
     }

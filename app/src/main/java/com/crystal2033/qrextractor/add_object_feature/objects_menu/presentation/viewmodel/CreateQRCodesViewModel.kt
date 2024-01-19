@@ -69,7 +69,12 @@ class CreateQRCodesViewModel @AssistedInject constructor(
         _menuListState.addAll(
             listOf(
                 DatabaseObjectTypes.PERSON,
-                DatabaseObjectTypes.KEYBOARD
+                DatabaseObjectTypes.KEYBOARD,
+                DatabaseObjectTypes.DESK,
+                DatabaseObjectTypes.SYSTEM_UNIT,
+                DatabaseObjectTypes.MONITOR,
+                DatabaseObjectTypes.CHAIR,
+                DatabaseObjectTypes.PROJECTOR
             )
         )
         //val bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.person_qr_code)

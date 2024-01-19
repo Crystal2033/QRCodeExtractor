@@ -15,6 +15,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -59,17 +60,20 @@ class MainActivity : ComponentActivity() {
             QRExtractorTheme(darkTheme = true) {
                 val navController = rememberNavController()
                 val snackbarHostState = remember { SnackbarHostState() }
-
+                val startDestination = remember {
+                    mutableStateOf(applicationContext.resources.getString(R.string.profile_head_graph_route))
+                }
                 Scaffold(
                     snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                     bottomBar = {
-                        NavBottomBar(navController, applicationContext)
+                        NavBottomBar(navController, applicationContext, startDestination.value)
                     }
                 ) {
                     MyNavGraph(
                         navController = navController,
                         context = applicationContext,
-                        snackbarHostState = snackbarHostState
+                        snackbarHostState = snackbarHostState,
+                        startDestination = startDestination.value
                     )
                 }
             }
@@ -99,14 +103,15 @@ class MainActivity : ComponentActivity() {
 fun MyNavGraph(
     navController: NavHostController,
     context: Context,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    startDestination: String
 ) {
 
     val userViewModelHolder: UserHolderViewModel = viewModel()
 
     NavHost(
         navController = navController,
-        startDestination = context.resources.getString(R.string.home_head_graph_route)
+        startDestination = startDestination
     ) {
 
         homeGraph(navController, context, snackbarHostState, userViewModelHolder.userState)
@@ -115,7 +120,7 @@ fun MyNavGraph(
             navController,
             context,
             snackbarHostState,
-            userViewModelHolder.userState.value
+            userViewModelHolder.userState
         )
 
         scannerGraph(navController, context, snackbarHostState, userViewModelHolder.userState)

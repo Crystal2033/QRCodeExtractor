@@ -20,9 +20,9 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
+import com.crystal2033.qrextractor.core.camera_for_photos.CameraXView
 import com.crystal2033.qrextractor.ui.text_elements.DropListView
 import com.crystal2033.qrextractor.ui.text_elements.TextFieldView
-import com.crystal2033.qrextractor.core.camera_for_photos.CameraXView
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -99,23 +99,29 @@ fun AddPersonView(
                     Spacer(modifier = Modifier.height(spaceBetween))
                     DropListView(
                         fieldName = "Department",
-                        listOfObjects = viewModel.listOfDepartments.map { it.name },
+                        listOfObjects = viewModel.listOfDepartments.map { Pair(it.id, it.name) },
                         onValueChanged = {
-                            personState.value.department?.name = it
+                            //personState.value.department?.name = it
+                            //personState.value.department?.id = it
                         },
                     )
                     Spacer(modifier = Modifier.height(spaceBetween))
                     DropListView(
                         fieldName = "Title",
-                        listOfObjects = viewModel.listOfTitles.map { it.name },
+                        listOfObjects = viewModel.listOfTitles.map { Pair(it.id, it.name) },
                         onValueChanged = {
-                            personState.value.title?.name = it
+                            //personState.value.title?.name = it
                         }
                     )
                     Spacer(modifier = Modifier.height(spaceBetween))
                     DropListView(
                         fieldName = "Workspace",
-                        listOfObjects = viewModel.listOfWorkSpaces.map { it.id.toString() },
+                        listOfObjects = viewModel.listOfWorkSpaces.map {
+                            Pair(
+                                it.id,
+                                it.id.toString()
+                            )
+                        },
                         onValueChanged = {
                             personState.value.workSpace?.id = it.toLong()
                         }

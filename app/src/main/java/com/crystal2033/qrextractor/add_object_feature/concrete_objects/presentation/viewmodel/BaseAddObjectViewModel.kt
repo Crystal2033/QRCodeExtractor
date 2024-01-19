@@ -50,6 +50,7 @@ abstract class BaseAddObjectViewModel(
             is Resource.Loading -> {}
             is Resource.Success -> {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of possible objects")
+                listOfPossibleObjects.clear()
                 listOfPossibleObjects.addAll(statusWithState.data ?: emptyList())
                 for (currentObj in listOfPossibleObjects) {
                     Log.i(LOG_TAG_NAMES.INFO_TAG, "Possible object: ${currentObj.toString()}")

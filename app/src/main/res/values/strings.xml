@@ -14,6 +14,8 @@
     <string name="profile_route">profile</string>
     <string name="login_route">login</string>
 
+
+    <string name="place_choice">branch_and_building_choice</string>
     <string name="menu_add_route">add_menu</string>
     <string name="add_concrete_class">add_concrete_object</string>
     <string name="qr_codes_list">qr_codes_list</string>
