@@ -15,6 +15,7 @@ import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeSticke
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.viewmodel.DocumentWithQRCodesViewModel
 import com.crystal2033.qrextractor.core.model.User
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import dagger.hilt.android.EntryPointAccessors
 
 sealed class AddDataViewModels {
@@ -23,7 +24,7 @@ sealed class AddDataViewModels {
         @Composable
         inline fun <reified T : ViewModel> NavBackStackEntry.sharedAddDataMenuViewModel(
             navController: NavController,
-            user: User?
+            userWithPlaceBundle: UserAndPlaceBundle
         ): T {
             val navGraphRoute = destination.parent?.route ?: return viewModel()
             val parentEntry = remember(this) {
@@ -37,7 +38,7 @@ sealed class AddDataViewModels {
 
             return viewModel(
                 viewModelStoreOwner = parentEntry,
-                factory = CreateQRCodesViewModel.provideFactory(factory, user)
+                factory = CreateQRCodesViewModel.provideFactory(factory, userWithPlaceBundle)
             )
         }
 

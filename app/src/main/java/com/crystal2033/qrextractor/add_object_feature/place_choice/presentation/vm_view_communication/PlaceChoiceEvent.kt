@@ -4,5 +4,7 @@ sealed class PlaceChoiceEvent {
     data class OnBranchChanged(val chosenId: Long) : PlaceChoiceEvent()
     data class OnBuildingChanged(val chosenId: Long) : PlaceChoiceEvent()
 
+    data class OnCabinetChanged(val chosenId: Long) : PlaceChoiceEvent()
+
     data object OnContinueClicked : PlaceChoiceEvent()
 }

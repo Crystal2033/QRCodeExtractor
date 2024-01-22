@@ -1,8 +1,7 @@
-package com.crystal2033.qrextractor.core.di
+package com.crystal2033.qrextractor.core.remote_server.di
 
 import android.content.Context
 import com.crystal2033.qrextractor.core.ApiInfo
-import com.crystal2033.qrextractor.core.remote_server.api.ChairAPI
 import com.crystal2033.qrextractor.core.remote_server.api.DeskAPI
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.impl.DeskRepositoryImpl
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.DeskRepository

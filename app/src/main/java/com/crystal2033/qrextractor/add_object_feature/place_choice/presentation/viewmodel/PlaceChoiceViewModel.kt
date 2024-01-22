@@ -16,8 +16,10 @@ import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.remote_server.data.model.Branch
 import com.crystal2033.qrextractor.core.remote_server.data.model.Building
+import com.crystal2033.qrextractor.core.remote_server.data.model.Cabinet
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetBranchesUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetBuildingsUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetCabinetsUseCase
 import com.crystal2033.qrextractor.core.util.Resource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -33,6 +35,7 @@ import kotlinx.coroutines.launch
 class PlaceChoiceViewModel @AssistedInject constructor(
     private val getBranchesUseCase: GetBranchesUseCase,
     private val getBuildingsUseCase: GetBuildingsUseCase,
+    private val getCabinetsUseCase: GetCabinetsUseCase,
     @Assisted private val user: User?,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -46,11 +49,17 @@ class PlaceChoiceViewModel @AssistedInject constructor(
     private val _listOfBuildings = mutableStateListOf<Building>()
     val listOfBuildings: SnapshotStateList<Building> = _listOfBuildings
 
+    private val _listOfCabinets = mutableStateListOf<Cabinet>()
+    val listOfCabinets: SnapshotStateList<Cabinet> = _listOfCabinets
+
     private val _selectedBranch = mutableStateOf<Branch?>(null)
     val selectedBranch: State<Branch?> = _selectedBranch
 
     private val _selectedBuilding = mutableStateOf<Building?>(null)
     val selectedBuilding: State<Building?> = _selectedBuilding
+
+    private val _selectedCabinet = mutableStateOf<Cabinet?>(null)
+    val selectedCabinet: State<Cabinet?> = _selectedCabinet
 
     init {
         loadBranchesFromServer()
@@ -61,24 +70,48 @@ class PlaceChoiceViewModel @AssistedInject constructor(
             is PlaceChoiceEvent.OnBranchChanged -> {
                 _selectedBranch.value =
                     _listOfBranches.find { branch -> branch.id == event.chosenId }
-                _selectedBranch.value?.let {
-                    loadBuildingByBranchFromServer(it.id)
+                _listOfBuildings.clear()
+                _listOfCabinets.clear()
+                _selectedBranch.value?.let { branch ->
+                    loadBuildingsByBranchFromServer(branch.id)
                 }
+                _selectedBuilding.value = null
+                _selectedCabinet.value = null
+
             }
 
             is PlaceChoiceEvent.OnBuildingChanged -> {
                 _selectedBuilding.value =
                     _listOfBuildings.find { building -> building.id == event.chosenId }
+                _selectedBuilding.value?.let { building ->
+                    loadCabinetsByBuildingFromServer(building.id)
+                }
+                _selectedCabinet.value = null
+            }
+
+            is PlaceChoiceEvent.OnCabinetChanged -> {
+                _selectedCabinet.value =
+                    _listOfCabinets.find { cabinet -> cabinet.id == event.chosenId }
             }
 
             is PlaceChoiceEvent.OnContinueClicked -> {
                 sendUiEvent(UIPlaceChoiceEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
             }
+
+
         }
     }
 
     fun isAbleToChooseBuilding(): Boolean {
         return _selectedBranch.value != null
+    }
+
+    fun isAbleToChooseCabinet(): Boolean {
+        return _selectedBuilding.value != null
+    }
+
+    fun isPlaceChosen(): Boolean {
+        return _selectedBranch.value != null && _selectedBuilding.value != null && _selectedCabinet.value != null
     }
 
     private fun loadBranchesFromServer(): Job {
@@ -92,11 +125,20 @@ class PlaceChoiceViewModel @AssistedInject constructor(
         }
     }
 
-    private fun loadBuildingByBranchFromServer(branchId: Long): Job {
+    private fun loadBuildingsByBranchFromServer(branchId: Long): Job {
 
         return viewModelScope.launch {
             getBuildingsUseCase(branchId).onEach { statusWithState ->
                 insertPossibleObjectsInListIfSuccess(statusWithState, _listOfBuildings)
+            }.launchIn(this)
+        }
+    }
+
+    private fun loadCabinetsByBuildingFromServer(buildingId: Long): Job {
+
+        return viewModelScope.launch {
+            getCabinetsUseCase(buildingId).onEach { statusWithState ->
+                insertPossibleObjectsInListIfSuccess(statusWithState, _listOfCabinets)
             }.launchIn(this)
         }
     }

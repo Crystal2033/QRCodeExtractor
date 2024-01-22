@@ -10,6 +10,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -17,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.crystal2033.qrextractor.ui.text_elements.TextFieldView
 import com.crystal2033.qrextractor.auth_feature.presentation.viewmodel.ProfileViewModel
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UIUserLoginEvent
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UserLoginEvent
+import com.crystal2033.qrextractor.ui.text_elements.TextFieldView
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -28,9 +29,10 @@ fun LoginView(
     viewModel: ProfileViewModel,
     onNavigate: (UIUserLoginEvent.OnSuccessLoginNavigate) -> Unit
 ) {
-    val userLoginDTO = remember {
-        viewModel.userLoginDTO
-    }
+
+//    val userLoginDTO = remember {
+//        viewModel.userLoginDTO
+//    }
 
     val isAuthError = remember {
         mutableStateOf(false)
@@ -72,7 +74,7 @@ fun LoginView(
             TextFieldView(
                 fieldHint = "Login",
                 onValueChanged = {
-                    userLoginDTO.value.login = it
+                    viewModel.onEvent(UserLoginEvent.OnLoginChanged(it))
                 },
                 horizontalArrangement = Arrangement.Center,
                 focusedColor = if (isAuthError.value) Color.Red else Color.White,
@@ -82,7 +84,7 @@ fun LoginView(
             TextFieldView(
                 fieldHint = "Password",
                 onValueChanged = {
-                    userLoginDTO.value.password = it
+                    viewModel.onEvent(UserLoginEvent.OnPasswordChanged(it))
                 },
                 horizontalArrangement = Arrangement.Center,
                 isPassword = true,
@@ -96,6 +98,7 @@ fun LoginView(
                 onClick = {
                     viewModel.onEvent(UserLoginEvent.OnLoginPressed)
                 },
+                enabled = viewModel.isLoginAndPasswordFilled(),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(text = "Login")

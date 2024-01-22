@@ -23,10 +23,10 @@ fun DropListView(
     onValueChanged: (Long) -> Unit,
     listOfObjects: List<Pair<Long, String>>, //first -- ID, second -- name for choice
     isEnabled: Boolean = true,
+    currentChosenValue: String = "",
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf("") }
 
     Row(
         modifier = Modifier
@@ -41,7 +41,7 @@ fun DropListView(
             }
         ) {
             OutlinedTextField(
-                value = selectedText,
+                value = currentChosenValue,
                 label = { Text(text = fieldName) },
                 enabled = isEnabled,
                 onValueChange = {},
@@ -59,7 +59,7 @@ fun DropListView(
                     DropdownMenuItem(
                         text = { Text(text = item.second) },
                         onClick = {
-                            selectedText = item.second
+                            //selectedText.value = item.second
                             onValueChanged(item.first)
                             expanded = false
                         }

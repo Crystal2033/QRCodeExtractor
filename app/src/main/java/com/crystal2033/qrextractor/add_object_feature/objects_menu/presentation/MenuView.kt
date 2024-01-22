@@ -3,6 +3,7 @@ package com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,14 +12,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -39,7 +38,6 @@ import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.CreateQRCodeEvent
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.UICreateQRCodeEvent
-import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.QRScannerEvent
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -67,7 +65,6 @@ fun MenuView(
                     onNavigate(event)
                 }
             }
-
         }
     }
 
@@ -75,6 +72,44 @@ fun MenuView(
         Box(modifier = Modifier.fillMaxSize()) {
 
             Column {
+                Column {
+                    Spacer(modifier = Modifier.height(15.dp))
+                    Text(
+                        text = "Change place",
+                        color = Color.Cyan,
+                        fontSize = 13.sp,
+                        modifier = Modifier
+                            .clickable {
+                                viewModel.onEvent(CreateQRCodeEvent.OnChangePlaceClicked)
+                            }
+                            .align(Alignment.CenterHorizontally)
+                    )
+                    Spacer(modifier = Modifier.height(15.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceAround
+                    ) {
+                        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = "Branch", fontSize = 13.sp, color = Color.LightGray)
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(text = viewModel.branchName.value, fontSize = 15.sp)
+                        }
+                        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = "Address", fontSize = 13.sp, color = Color.LightGray)
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(text = viewModel.buildingAddress.value, fontSize = 15.sp)
+                        }
+                        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(text = "Cabinet", fontSize = 13.sp, color = Color.LightGray)
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(text = viewModel.cabinetName.value, fontSize = 15.sp)
+                        }
+
+
+                    }
+                }
+
                 IconButton(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
@@ -105,7 +140,9 @@ fun MenuView(
 
 
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    menuListWithAvailableTypes.groupBy { type -> type.getLabel(context).uppercase()[0] }
+                    menuListWithAvailableTypes.groupBy { type ->
+                        type.getLabel(context).uppercase()[0]
+                    }
                         .forEach { (firstLetter, objectType) ->
                             stickyHeader {
                                 Row(
@@ -126,16 +163,22 @@ fun MenuView(
 
 
                             items(objectType) { typeName ->
+                                //Spacer(modifier = Modifier.height(10.dp))
+                                Divider(color = Color.DarkGray, thickness = 1.dp)
                                 MenuItem(item = typeName) {
-                                    viewModel.onEvent(CreateQRCodeEvent.SetChosenObjectClass(typeName))
+                                    viewModel.onEvent(
+                                        CreateQRCodeEvent.SetChosenObjectClass(
+                                            typeName
+                                        )
+                                    )
                                 }
+                                Divider(color = Color.DarkGray, thickness = 1.dp)
                                 Spacer(modifier = Modifier.height(10.dp))
 
                             }
                         }
                 }
             }
-
 
 
         }

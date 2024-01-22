@@ -25,10 +25,6 @@ fun PlaceChoiceView(
     onNavigate: (UIPlaceChoiceEvent.Navigate) -> Unit
 ) {
 
-//    val isAbleToShowBuildingsList = remember {
-//        mutableStateOf(viewModel.isAbleToChooseBuilding())
-//    }
-
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -51,7 +47,8 @@ fun PlaceChoiceView(
                 listOfObjects = viewModel.listOfBranches.map { Pair(it.id, it.name) },
                 onValueChanged = { chosenId ->
                     viewModel.onEvent(PlaceChoiceEvent.OnBranchChanged(chosenId))
-                }
+                },
+                currentChosenValue = viewModel.selectedBranch.value?.name ?: ""
             )
             Spacer(modifier = Modifier.height(15.dp))
             DropListView(
@@ -65,13 +62,30 @@ fun PlaceChoiceView(
                 onValueChanged = { chosenId ->
                     viewModel.onEvent(PlaceChoiceEvent.OnBuildingChanged(chosenId))
                 },
-                isEnabled = viewModel.isAbleToChooseBuilding()
+                isEnabled = viewModel.isAbleToChooseBuilding(),
+                currentChosenValue = viewModel.selectedBuilding.value?.address ?: ""
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            DropListView(
+                fieldName = "Cabinets",
+                listOfObjects = viewModel.listOfCabinets.map {
+                    Pair(
+                        it.id,
+                        it.name
+                    )
+                },
+                onValueChanged = { chosenId ->
+                    viewModel.onEvent(PlaceChoiceEvent.OnCabinetChanged(chosenId))
+                },
+                isEnabled = viewModel.isAbleToChooseCabinet(),
+                currentChosenValue = viewModel.selectedCabinet.value?.name ?: ""
             )
             Spacer(modifier = Modifier.height(15.dp))
             Button(
                 onClick = {
                     viewModel.onEvent(PlaceChoiceEvent.OnContinueClicked)
                 },
+                enabled = viewModel.isPlaceChosen(),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 Text(text = "Next")

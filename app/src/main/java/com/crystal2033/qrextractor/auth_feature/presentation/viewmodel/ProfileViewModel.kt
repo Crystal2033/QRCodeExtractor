@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
 import com.crystal2033.qrextractor.auth_feature.data.dto.UserLoginDTO
 import com.crystal2033.qrextractor.auth_feature.domain.use_case.LoginUserUseCase
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UIUserLoginEvent
@@ -20,14 +19,12 @@ import com.crystal2033.qrextractor.core.util.Resource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class ProfileViewModel @AssistedInject constructor(
     private val loginUserUseCase: LoginUserUseCase,
@@ -65,11 +62,19 @@ class ProfileViewModel @AssistedInject constructor(
     fun onEvent(event: UserLoginEvent) {
         when (event) {
             is UserLoginEvent.OnLoginChanged -> {
-                _userLoginDTO.value.login = event.login
+                _userLoginDTO.value =
+                    UserLoginDTO(
+                        login = event.login,
+                        password = _userLoginDTO.value.password
+                    )
             }
 
             is UserLoginEvent.OnPasswordChanged -> {
-                _userLoginDTO.value.password = event.password
+                _userLoginDTO.value =
+                    UserLoginDTO(
+                        login = _userLoginDTO.value.login,
+                        password = event.password
+                    )
             }
 
             UserLoginEvent.OnLoginPressed -> {
@@ -81,6 +86,10 @@ class ProfileViewModel @AssistedInject constructor(
                 }
             }
         }
+    }
+
+    fun isLoginAndPasswordFilled(): Boolean {
+        return _userLoginDTO.value.login.isNotBlank() && _userLoginDTO.value.password.isNotBlank()
     }
 
     private fun makeActionsByStatus(data: Resource<User?>) {

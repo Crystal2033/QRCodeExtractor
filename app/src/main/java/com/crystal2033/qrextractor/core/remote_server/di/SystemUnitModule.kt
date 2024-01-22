@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.core.di
+package com.crystal2033.qrextractor.core.remote_server.di
 
 import android.content.Context
 import com.crystal2033.qrextractor.core.ApiInfo

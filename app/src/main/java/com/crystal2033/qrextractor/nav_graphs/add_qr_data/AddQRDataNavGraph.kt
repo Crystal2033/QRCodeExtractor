@@ -2,7 +2,6 @@ package com.crystal2033.qrextractor.nav_graphs.add_qr_data
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,10 +40,10 @@ import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.viewmodel.PlaceViewModelCreator.Companion.sharedPlaceChoiceViewModel
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.QRCodeStickersView
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.viewmodel.DocumentWithQRCodesViewModel
-import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.presentation.NotLoginLinkView
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addPersonViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.qrCodeDocumentViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.sharedAddDataMenuViewModel
@@ -94,13 +93,21 @@ fun NavGraphBuilder.addQRCodeGraph(
                     navController = navController,
                     user = userState.value
                 )
-            Log.i(
-                LOG_TAG_NAMES.INFO_TAG,
-                placeChoiceViewModel.selectedBranch.value?.cityName ?: "Not chosen"
-            )
+
+            val userWithPlaceBundle = remember {
+                mutableStateOf(
+                    UserAndPlaceBundle(
+                        user = userState.value!!,
+                        branch = placeChoiceViewModel.selectedBranch.value!!,
+                        building = placeChoiceViewModel.selectedBuilding.value!!,
+                        cabinet = placeChoiceViewModel.selectedCabinet.value!!
+                    )
+                )
+            }
+
             val menuViewModel = it.sharedAddDataMenuViewModel<CreateQRCodesViewModel>(
                 navController = navController,
-                user = userState.value
+                userWithPlaceBundle = userWithPlaceBundle.value
             )
             Column(
                 modifier = Modifier.padding(
@@ -121,9 +128,26 @@ fun NavGraphBuilder.addQRCodeGraph(
 
         }
         composable(context.resources.getString(R.string.add_concrete_class)) {
+            val placeChoiceViewModel =
+                it.sharedPlaceChoiceViewModel<PlaceChoiceViewModel>(
+                    navController = navController,
+                    user = userState.value
+                )
+
+            val userWithPlaceBundle = remember {
+                mutableStateOf(
+                    UserAndPlaceBundle(
+                        user = userState.value!!,
+                        branch = placeChoiceViewModel.selectedBranch.value!!,
+                        building = placeChoiceViewModel.selectedBuilding.value!!,
+                        cabinet = placeChoiceViewModel.selectedCabinet.value!!
+                    )
+                )
+            }
+
             val menuViewModel = it.sharedAddDataMenuViewModel<CreateQRCodesViewModel>(
                 navController = navController,
-                user = userState.value
+                userWithPlaceBundle = userWithPlaceBundle.value
             )
 //            val baseAddViewModelFactory: BaseAddViewModelFactory =
 //                createConcreteAddViewModelFactory(menuViewModel.chosenObjectClassState.value)
@@ -155,10 +179,28 @@ fun NavGraphBuilder.addQRCodeGraph(
         }
 
         composable(context.resources.getString(R.string.qr_codes_list)) {
+            val placeChoiceViewModel =
+                it.sharedPlaceChoiceViewModel<PlaceChoiceViewModel>(
+                    navController = navController,
+                    user = userState.value
+                )
+
+            val userWithPlaceBundle = remember {
+                mutableStateOf(
+                    UserAndPlaceBundle(
+                        user = userState.value!!,
+                        branch = placeChoiceViewModel.selectedBranch.value!!,
+                        building = placeChoiceViewModel.selectedBuilding.value!!,
+                        cabinet = placeChoiceViewModel.selectedCabinet.value!!
+                    )
+                )
+            }
+
             val menuViewModel = it.sharedAddDataMenuViewModel<CreateQRCodesViewModel>(
                 navController = navController,
-                user = userState.value
+                userWithPlaceBundle = userWithPlaceBundle.value
             )
+
             val documentQRCodesViewModel =
                 qrCodeDocumentViewModel<DocumentWithQRCodesViewModel>(listOfQRCodes = menuViewModel.listOfAddedQRCodes)
             Column(
