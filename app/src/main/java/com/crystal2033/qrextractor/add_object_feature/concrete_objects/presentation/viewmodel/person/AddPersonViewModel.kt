@@ -1,12 +1,10 @@
 package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -20,8 +18,8 @@ import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeSticke
 import com.crystal2033.qrextractor.core.model.Department
 import com.crystal2033.qrextractor.core.model.Person
 import com.crystal2033.qrextractor.core.model.Title
-import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.model.WorkSpace
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import dagger.assisted.Assisted
@@ -35,7 +33,7 @@ import kotlinx.coroutines.launch
 
 
 class AddPersonViewModel @AssistedInject constructor(
-    @Assisted private val user: User,
+    @Assisted private val userAndPlaceBundle: UserAndPlaceBundle,
     @ApplicationContext private val context: Context,
     private val converters: Converters,
     private val personGetterUseCases: PersonGetterUseCases
@@ -43,17 +41,17 @@ class AddPersonViewModel @AssistedInject constructor(
 ) : BaseAddObjectViewModel(context, converters) {
     @AssistedFactory
     interface Factory {
-        fun create(user: User?): AddPersonViewModel
+        fun create(userAndPlaceBundle: UserAndPlaceBundle): AddPersonViewModel
     }
 
     companion object {
         @Suppress("UNCHECKED_CAST")
         fun provideFactory(
             assistedFactory: Factory,
-            user: User?
+            userAndPlaceBundle: UserAndPlaceBundle
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(user) as T
+                return assistedFactory.create(userAndPlaceBundle) as T
             }
         }
     }

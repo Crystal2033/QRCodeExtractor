@@ -28,9 +28,9 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.person.AddPersonView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.AddChairView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.MenuView
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
@@ -44,7 +44,7 @@ import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.presentation.NotLoginLinkView
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
-import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addPersonViewModel
+import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addChairViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.qrCodeDocumentViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.sharedAddDataMenuViewModel
 import com.crystal2033.qrextractor.ui.NavBottomBarConstants
@@ -169,7 +169,7 @@ fun NavGraphBuilder.addQRCodeGraph(
                     typeOfView = menuViewModel.chosenObjectClassState.value,
                     navBackStackEntry = it,
                     navController = navController,
-                    user = userState.value
+                    userWithPlaceBundle = userWithPlaceBundle.value
                 ) { qrCodeStickerInfo ->
                     menuViewModel.onEvent(CreateQRCodeEvent.OnAddNewObjectInList(qrCodeStickerInfo))
                 }
@@ -227,7 +227,7 @@ fun createViewByAddType(
     typeOfView: DatabaseObjectTypes,
     navBackStackEntry: NavBackStackEntry,
     navController: NavController,
-    user: User?,
+    userWithPlaceBundle: UserAndPlaceBundle,
     onAddObjectClicked: (QRCodeStickerInfo) -> Unit
 ) {
     val context = LocalContext.current
@@ -246,16 +246,27 @@ fun createViewByAddType(
             ) {
                 when (typeOfView) {
                     DatabaseObjectTypes.PERSON -> {
-                        viewModel = addPersonViewModel<AddPersonViewModel>(
-                            user = user
+//                        viewModel = addPersonViewModel<AddPersonViewModel>(
+//                            userAndPlaceBundle = userWithPlaceBundle
+//                        )
+//                        AddPersonView(
+//                            viewModel = viewModel as AddPersonViewModel,
+//                            isAllFieldsInsertedState = isAddButtonEnabled,
+//                            onNavigate = { navEvent ->
+//                                navController.navigate(navEvent.route)
+//                            }
+//                        )
+                    }
+
+                    DatabaseObjectTypes.CHAIR -> {
+                        viewModel = addChairViewModel<AddChairViewModel>(
+                            userAndPlaceBundle = userWithPlaceBundle
                         )
-                        AddPersonView(
-                            viewModel = viewModel as AddPersonViewModel,
+                        AddChairView(viewModel = viewModel as AddChairViewModel,
                             isAllFieldsInsertedState = isAddButtonEnabled,
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
-                            }
-                        )
+                            })
                     }
 
                     DatabaseObjectTypes.KEYBOARD -> {
@@ -270,10 +281,18 @@ fun createViewByAddType(
                         null
                     }
 
-                    DatabaseObjectTypes.DESK -> TODO()
-                    DatabaseObjectTypes.CHAIR -> TODO()
-                    DatabaseObjectTypes.SYSTEM_UNIT -> TODO()
-                    DatabaseObjectTypes.PROJECTOR -> TODO()
+                    DatabaseObjectTypes.DESK -> {
+                        null
+                    }
+
+
+                    DatabaseObjectTypes.SYSTEM_UNIT -> {
+                        null
+                    }
+
+                    DatabaseObjectTypes.PROJECTOR -> {
+                        null
+                    }
                 }
 
                 Row(
@@ -301,6 +320,7 @@ fun createViewByAddType(
     }
 
 }
+
 
 //fun createConcreteAddViewModelFactory(typeOfViewModel: DatabaseObjectTypes): BaseAddViewModelFactory {
 //    return when (typeOfViewModel) {

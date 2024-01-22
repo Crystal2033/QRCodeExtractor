@@ -11,12 +11,7 @@ import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.ExceptionAndErrorParsers
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServerRequestException
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.internal.wait
 import retrofit2.Response
 
 class ProjectorRepositoryImpl(
@@ -48,15 +43,9 @@ class ProjectorRepositoryImpl(
                 projectors
             },
             apiCallFunction = { bundle, projectorDTO ->
-                var result: Response<List<ProjectorDTO>>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetAllProjectors(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetAllProjectors(
+                    bundle
+                )
             }
         )
     }
@@ -83,15 +72,9 @@ class ProjectorRepositoryImpl(
                 projector
             },
             apiCallFunction = { bundle, projectorDTO ->
-                var result: Response<ProjectorDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetProjectorById(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetProjectorById(
+                    bundle
+                )
             }
         )
     }
@@ -119,16 +102,10 @@ class ProjectorRepositoryImpl(
                 projector
             },
             apiCallFunction = { bundle, projectorDTO ->
-                var result: Response<ProjectorDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForAddProjector(
-                            bundle,
-                            projectorDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForAddProjector(
+                    bundle,
+                    projectorDTO
+                )
             }
         )
     }
@@ -155,16 +132,10 @@ class ProjectorRepositoryImpl(
                 projector
             },
             apiCallFunction = { bundle, projectorDTO ->
-                var result: Response<ProjectorDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForUpdateProjector(
-                            bundle,
-                            projectorDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForUpdateProjector(
+                    bundle,
+                    projectorDTO
+                )
             }
         )
     }
@@ -185,15 +156,9 @@ class ProjectorRepositoryImpl(
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
             apiCallFunction = { bundle, deviceDTO ->
-                var result: Response<Unit>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForDeleteProjector(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForDeleteProjector(
+                    bundle
+                )
             }
         )
     }

@@ -10,7 +10,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -30,9 +29,9 @@ fun LoginView(
     onNavigate: (UIUserLoginEvent.OnSuccessLoginNavigate) -> Unit
 ) {
 
-//    val userLoginDTO = remember {
-//        viewModel.userLoginDTO
-//    }
+    val userLoginDTO = remember {
+        viewModel.userLoginDTO
+    }
 
     val isAuthError = remember {
         mutableStateOf(false)
@@ -73,6 +72,7 @@ fun LoginView(
             }
             TextFieldView(
                 fieldHint = "Login",
+                currentText = userLoginDTO.value.login,
                 onValueChanged = {
                     viewModel.onEvent(UserLoginEvent.OnLoginChanged(it))
                 },
@@ -83,6 +83,7 @@ fun LoginView(
             Spacer(modifier = Modifier.height(spaceBetween))
             TextFieldView(
                 fieldHint = "Password",
+                currentText = userLoginDTO.value.password,
                 onValueChanged = {
                     viewModel.onEvent(UserLoginEvent.OnPasswordChanged(it))
                 },

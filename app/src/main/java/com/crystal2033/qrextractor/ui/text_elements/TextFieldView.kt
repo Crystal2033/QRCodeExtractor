@@ -29,20 +29,22 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun TextFieldView(
     fieldHint: String,
-    onValueChanged: (String) -> Unit,
-    pattern: Regex = Regex("(\\w|\\d)*"),
+    currentText: String,
+    onValueChanged: (String) -> Unit = {},
+    pattern: Regex = Regex("(\\w|\\d|\\s)*"),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     isPassword: Boolean = false,
     focusedColor: Color = Color.White,
     unfocusedColor: Color = Color.Black,
+    isEnabled: Boolean = true
 
 
-    ) {
+) {
 
-    val fieldValue = remember {
-        mutableStateOf("")
-    }
+//    val fieldValue = remember {
+//        mutableStateOf("")
+//    }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -51,17 +53,18 @@ fun TextFieldView(
     ) {
         if (!isPassword) {
             OutlinedTextField(
-                value = fieldValue.value,
+                value = currentText,//fieldValue.value,
                 label = { Text(fieldHint, color = focusedColor) },
                 singleLine = true,
                 placeholder = { Text(fieldHint) },
                 onValueChange = {
                     if (it.matches(pattern)) {
-                        fieldValue.value = it
-                        onValueChanged(fieldValue.value)
+                        //fieldValue.value = it
+                        onValueChanged(it)
                     }
 
                 },
+                enabled = isEnabled,
                 modifier = Modifier.align(verticalAlignment),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = focusedColor,
@@ -73,11 +76,12 @@ fun TextFieldView(
             var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
             OutlinedTextField(
-                value = fieldValue.value,
+                value = currentText,//fieldValue.value,
                 onValueChange = {
-                    fieldValue.value = it
-                    onValueChanged(fieldValue.value)
+                    //fieldValue.value = it
+                    onValueChanged(it)
                 },
+                enabled = isEnabled,
                 label = { Text(fieldHint, color = focusedColor) },
                 singleLine = true,
                 placeholder = { Text(fieldHint) },

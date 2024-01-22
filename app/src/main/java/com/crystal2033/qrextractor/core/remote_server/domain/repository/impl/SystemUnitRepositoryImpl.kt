@@ -11,12 +11,7 @@ import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.ExceptionAndErrorParsers
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServerRequestException
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.internal.wait
 import retrofit2.Response
 
 class SystemUnitRepositoryImpl(
@@ -48,15 +43,9 @@ class SystemUnitRepositoryImpl(
                 systemUnits
             },
             apiCallFunction = { bundle, systemUnitDTO ->
-                var result: Response<List<SystemUnitDTO>>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetAllSystemUnits(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetAllSystemUnits(
+                    bundle
+                )
             }
         )
     }
@@ -83,15 +72,9 @@ class SystemUnitRepositoryImpl(
                 systemUnit
             },
             apiCallFunction = { bundle, systemUnitDTO ->
-                var result: Response<SystemUnitDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetSystemUnitById(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetSystemUnitById(
+                    bundle
+                )
             }
         )
     }
@@ -119,16 +102,10 @@ class SystemUnitRepositoryImpl(
                 systemUnit
             },
             apiCallFunction = { bundle, systemUnitDTO ->
-                var result: Response<SystemUnitDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForAddSystemUnit(
-                            bundle,
-                            systemUnitDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForAddSystemUnit(
+                    bundle,
+                    systemUnitDTO
+                )
             }
         )
     }
@@ -155,16 +132,10 @@ class SystemUnitRepositoryImpl(
                 systemUnit
             },
             apiCallFunction = { bundle, systemUnitDTO ->
-                var result: Response<SystemUnitDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForUpdateSystemUnit(
-                            bundle,
-                            systemUnitDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForUpdateSystemUnit(
+                    bundle,
+                    systemUnitDTO
+                )
             }
         )
     }
@@ -185,15 +156,9 @@ class SystemUnitRepositoryImpl(
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
             apiCallFunction = { bundle, deviceDTO ->
-                var result: Response<Unit>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForDeleteSystemUnit(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForDeleteSystemUnit(
+                    bundle
+                )
             }
         )
     }

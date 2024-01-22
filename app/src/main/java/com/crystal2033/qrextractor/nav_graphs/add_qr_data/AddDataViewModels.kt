@@ -9,12 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import com.crystal2033.qrextractor.add_object_feature.general.di.AddDataViewModelFactoryProvider
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
+import com.crystal2033.qrextractor.add_object_feature.general.di.AddDataViewModelFactoryProvider
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.viewmodel.DocumentWithQRCodesViewModel
-import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import dagger.hilt.android.EntryPointAccessors
 
@@ -42,17 +42,31 @@ sealed class AddDataViewModels {
             )
         }
 
+//        @Composable
+//        inline fun <reified T : ViewModel> addPersonViewModel(
+//            userAndPlaceBundle: UserAndPlaceBundle
+//        ): T {
+//            val factory = EntryPointAccessors.fromActivity(
+//                LocalContext.current as Activity,
+//                AddDataViewModelFactoryProvider::class.java
+//            ).addPersonViewModelFactory()
+//
+//            return viewModel(
+//                factory = AddPersonViewModel.provideFactory(factory, userAndPlaceBundle)
+//            )
+//        }
+
         @Composable
-        inline fun <reified T : ViewModel> addPersonViewModel(
-            user: User?
+        inline fun <reified T : ViewModel> addChairViewModel(
+            userAndPlaceBundle: UserAndPlaceBundle
         ): T {
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
                 AddDataViewModelFactoryProvider::class.java
-            ).addPersonViewModelFactory()
+            ).addChairViewModelFactory()
 
             return viewModel(
-                factory = AddPersonViewModel.provideFactory(factory, user)
+                factory = AddChairViewModel.provideFactory(factory, userAndPlaceBundle)
             )
         }
 

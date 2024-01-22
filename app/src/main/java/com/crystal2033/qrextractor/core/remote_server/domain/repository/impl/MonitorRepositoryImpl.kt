@@ -11,12 +11,7 @@ import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.ExceptionAndErrorParsers
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServerRequestException
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.internal.wait
 import retrofit2.Response
 
 class MonitorRepositoryImpl(
@@ -48,15 +43,9 @@ class MonitorRepositoryImpl(
                 monitors
             },
             apiCallFunction = { bundle, monitorDTO ->
-                var result: Response<List<MonitorDTO>>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetAllMonitors(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetAllMonitors(
+                    bundle
+                )
             }
         )
     }
@@ -83,15 +72,9 @@ class MonitorRepositoryImpl(
                 monitor
             },
             apiCallFunction = { bundle, monitorDTO ->
-                var result: Response<MonitorDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetMonitorById(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetMonitorById(
+                    bundle
+                )
             }
         )
     }
@@ -119,16 +102,10 @@ class MonitorRepositoryImpl(
                 monitor
             },
             apiCallFunction = { bundle, monitorDTO ->
-                var result: Response<MonitorDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForAddMonitor(
-                            bundle,
-                            monitorDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForAddMonitor(
+                    bundle,
+                    monitorDTO
+                )
             }
         )
     }
@@ -155,16 +132,10 @@ class MonitorRepositoryImpl(
                 monitor
             },
             apiCallFunction = { bundle, monitorDTO ->
-                var result: Response<MonitorDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForUpdateMonitor(
-                            bundle,
-                            monitorDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForUpdateMonitor(
+                    bundle,
+                    monitorDTO
+                )
             }
         )
     }
@@ -185,15 +156,9 @@ class MonitorRepositoryImpl(
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
             apiCallFunction = { bundle, deviceDTO ->
-                var result: Response<Unit>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForDeleteMonitor(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForDeleteMonitor(
+                    bundle
+                )
             }
         )
     }

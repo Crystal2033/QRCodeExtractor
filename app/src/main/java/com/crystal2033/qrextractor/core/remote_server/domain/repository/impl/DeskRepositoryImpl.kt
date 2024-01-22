@@ -11,12 +11,7 @@ import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.ExceptionAndErrorParsers
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServerRequestException
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.internal.wait
 import retrofit2.Response
 
 class DeskRepositoryImpl(
@@ -46,15 +41,9 @@ class DeskRepositoryImpl(
                 desks
             },
             apiCallFunction = { bundle, deviceDTO ->
-                var result: Response<List<DeskDTO>>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetAllDesks(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetAllDesks(
+                    bundle
+                )
             }
         )
     }
@@ -81,15 +70,9 @@ class DeskRepositoryImpl(
                 desk
             },
             apiCallFunction = { bundle, deskDTO ->
-                var result: Response<DeskDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetDeskById(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetDeskById(
+                    bundle
+                )
             }
         )
     }
@@ -117,16 +100,10 @@ class DeskRepositoryImpl(
                 desk
             },
             apiCallFunction = { bundle, deskDTO ->
-                var result: Response<DeskDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForAddDesk(
-                            bundle,
-                            deskDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForAddDesk(
+                    bundle,
+                    deskDTO
+                )
             }
         )
     }
@@ -153,16 +130,10 @@ class DeskRepositoryImpl(
                 desk
             },
             apiCallFunction = { bundle, deskDTO ->
-                var result: Response<DeskDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForUpdateDesk(
-                            bundle,
-                            deskDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForUpdateDesk(
+                    bundle,
+                    deskDTO
+                )
             }
         )
     }
@@ -183,15 +154,9 @@ class DeskRepositoryImpl(
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
             apiCallFunction = { bundle, deskDTO ->
-                var result: Response<Unit>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForDeleteDesk(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForDeleteDesk(
+                    bundle
+                )
             }
         )
     }

@@ -33,7 +33,7 @@ interface CRUDDeviceOperationsRepository<M : InventarizedModel<D>,
         context: Context,
         bundleID: BundleID,
         deviceDTO: D?,
-        apiCallFunction: (
+        apiCallFunction: suspend(
             bundle: BundleID,
             deviceDTO: D?
         ) -> Response<AT>,
@@ -58,12 +58,12 @@ interface CRUDDeviceOperationsRepository<M : InventarizedModel<D>,
 
 
     //not needed parameters could be omitted
-    fun <T, AT> tryToMakeAPICall(
+    suspend fun <T, AT> tryToMakeAPICall(
         api: A,
         context: Context,
         bundleID: BundleID,
         deviceDTO: D?,
-        apiCallFunction: (
+        apiCallFunction: suspend (
             bundleID: BundleID,
             deviceDTO: D?
         ) -> Response<AT>,
@@ -71,8 +71,7 @@ interface CRUDDeviceOperationsRepository<M : InventarizedModel<D>,
     ): T {
         val message: String
         try {
-            val response =
-                apiCallFunction(bundleID, deviceDTO)
+            val response = apiCallFunction(bundleID, deviceDTO)
             return getRequestBodyAndConvertInModel(response)
         } catch (e: HttpException) {
             message = ExceptionAndErrorParsers.getErrorMessageFromException(e)

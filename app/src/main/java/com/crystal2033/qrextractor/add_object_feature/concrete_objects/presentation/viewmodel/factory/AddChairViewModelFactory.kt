@@ -4,14 +4,17 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
-import com.crystal2033.qrextractor.core.model.User
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
+import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addChairViewModel
 
-abstract class BaseAddViewModelFactory {
+class AddChairViewModelFactory : BaseAddViewModelFactory() {
     @Composable
-    abstract fun createAddObjectViewModel(
+    override fun createAddObjectViewModel(
         userAndPlaceBundle: UserAndPlaceBundle,
         navBackStackEntry: NavBackStackEntry,
         navController: NavController
-    ): BaseAddObjectViewModel
+    ): BaseAddObjectViewModel {
+        return addChairViewModel<AddChairViewModel>(userAndPlaceBundle)
+    }
 }

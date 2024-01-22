@@ -11,12 +11,7 @@ import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.ExceptionAndErrorParsers
 import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServerRequestException
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.internal.wait
 import retrofit2.Response
 
 class ChairRepositoryImpl(
@@ -46,15 +41,9 @@ class ChairRepositoryImpl(
                 chairs
             },
             apiCallFunction = { bundle, deviceDTO ->
-                var result: Response<List<ChairDTO>>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetAllChairs(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetAllChairs(
+                    bundle
+                )
             }
         )
     }
@@ -81,15 +70,9 @@ class ChairRepositoryImpl(
                 chair
             },
             apiCallFunction = { bundle, deviceDTO ->
-                var result: Response<ChairDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForGetChairById(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForGetChairById(
+                    bundle
+                )
             }
         )
     }
@@ -117,16 +100,10 @@ class ChairRepositoryImpl(
                 chair
             },
             apiCallFunction = { bundle, chairDTO ->
-                var result: Response<ChairDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForAddChair(
-                            bundle,
-                            chairDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForAddChair(
+                    bundle,
+                    chairDTO
+                )
             }
         )
     }
@@ -153,16 +130,10 @@ class ChairRepositoryImpl(
                 chair
             },
             apiCallFunction = { bundle, chairDTO ->
-                var result: Response<ChairDTO>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForUpdateChair(
-                            bundle,
-                            chairDTO
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForUpdateChair(
+                    bundle,
+                    chairDTO
+                )
             }
         )
     }
@@ -183,15 +154,9 @@ class ChairRepositoryImpl(
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
             apiCallFunction = { bundle, deviceDTO ->
-                var result: Response<Unit>? = null
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main) {
-                        result = decoratorForDeleteChair(
-                            bundle
-                        )
-                    }
-                }.wait()
-                result!!
+                decoratorForDeleteChair(
+                    bundle
+                )
             }
         )
     }
@@ -226,7 +191,6 @@ class ChairRepositoryImpl(
         bundleOfIds: BundleID,
         deviceDTO: ChairDTO?
     ): Response<ChairDTO> {
-
         return chairAPI.addChair(
             bundleOfIds.orgId,
             bundleOfIds.branchId,

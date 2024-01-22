@@ -4,7 +4,7 @@ import android.graphics.Bitmap
 
 interface InventarizedDTO<M> {
     val id: Long
-    val image: Bitmap?
+    val image: String
     val inventoryNumber: String
     val name: String
     val cabinetId: Long

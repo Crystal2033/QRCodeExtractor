@@ -70,8 +70,6 @@ class PlaceChoiceViewModel @AssistedInject constructor(
             is PlaceChoiceEvent.OnBranchChanged -> {
                 _selectedBranch.value =
                     _listOfBranches.find { branch -> branch.id == event.chosenId }
-                _listOfBuildings.clear()
-                _listOfCabinets.clear()
                 _selectedBranch.value?.let { branch ->
                     loadBuildingsByBranchFromServer(branch.id)
                 }
