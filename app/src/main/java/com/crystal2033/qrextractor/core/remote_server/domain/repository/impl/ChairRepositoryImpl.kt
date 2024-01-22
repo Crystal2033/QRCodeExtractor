@@ -40,7 +40,7 @@ class ChairRepositoryImpl(
                 )
                 chairs
             },
-            apiCallFunction = { bundle, deviceDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetAllChairs(
                     bundle
                 )
@@ -48,13 +48,13 @@ class ChairRepositoryImpl(
         )
     }
 
-    override fun getDeviceById(chairId: Long): Flow<Resource<Chair>> {
+    override fun getDeviceById(deviceId: Long): Flow<Resource<Chair>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
-            chairId
+            deviceId
         )
 
         return apiCall(
@@ -69,7 +69,7 @@ class ChairRepositoryImpl(
                     )
                 chair
             },
-            apiCallFunction = { bundle, deviceDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetChairById(
                     bundle
                 )
@@ -138,13 +138,13 @@ class ChairRepositoryImpl(
         )
     }
 
-    override fun deleteDevice(chairId: Long): Flow<Resource<Unit>> {
+    override fun deleteDevice(deviceId: Long): Flow<Resource<Unit>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,
             buildingId = APIArgumentsFillers.NOT_NEEDED.value,
             cabinetId = APIArgumentsFillers.NOT_NEEDED.value,
-            deviceId = chairId
+            deviceId = deviceId
         )
 
         return apiCall(
@@ -153,7 +153,7 @@ class ChairRepositoryImpl(
             bundleOfIds,
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
-            apiCallFunction = { bundle, deviceDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForDeleteChair(
                     bundle
                 )

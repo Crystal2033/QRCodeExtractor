@@ -42,7 +42,7 @@ class MonitorRepositoryImpl(
                 )
                 monitors
             },
-            apiCallFunction = { bundle, monitorDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetAllMonitors(
                     bundle
                 )
@@ -71,7 +71,7 @@ class MonitorRepositoryImpl(
                     )
                 monitor
             },
-            apiCallFunction = { bundle, monitorDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetMonitorById(
                     bundle
                 )
@@ -155,7 +155,7 @@ class MonitorRepositoryImpl(
             bundleOfIds,
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
-            apiCallFunction = { bundle, deviceDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForDeleteMonitor(
                     bundle
                 )

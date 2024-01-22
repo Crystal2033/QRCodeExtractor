@@ -42,7 +42,7 @@ class ProjectorRepositoryImpl(
                 )
                 projectors
             },
-            apiCallFunction = { bundle, projectorDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetAllProjectors(
                     bundle
                 )
@@ -71,7 +71,7 @@ class ProjectorRepositoryImpl(
                     )
                 projector
             },
-            apiCallFunction = { bundle, projectorDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetProjectorById(
                     bundle
                 )
@@ -155,7 +155,7 @@ class ProjectorRepositoryImpl(
             bundleOfIds,
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
-            apiCallFunction = { bundle, deviceDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForDeleteProjector(
                     bundle
                 )

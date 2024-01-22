@@ -42,7 +42,7 @@ class SystemUnitRepositoryImpl(
                 )
                 systemUnits
             },
-            apiCallFunction = { bundle, systemUnitDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetAllSystemUnits(
                     bundle
                 )
@@ -71,7 +71,7 @@ class SystemUnitRepositoryImpl(
                     )
                 systemUnit
             },
-            apiCallFunction = { bundle, systemUnitDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetSystemUnitById(
                     bundle
                 )
@@ -155,7 +155,7 @@ class SystemUnitRepositoryImpl(
             bundleOfIds,
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
-            apiCallFunction = { bundle, deviceDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForDeleteSystemUnit(
                     bundle
                 )

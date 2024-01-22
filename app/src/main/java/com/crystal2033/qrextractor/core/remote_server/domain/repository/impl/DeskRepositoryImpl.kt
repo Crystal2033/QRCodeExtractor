@@ -40,7 +40,7 @@ class DeskRepositoryImpl(
                 )
                 desks
             },
-            apiCallFunction = { bundle, deviceDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetAllDesks(
                     bundle
                 )
@@ -69,7 +69,7 @@ class DeskRepositoryImpl(
                     )
                 desk
             },
-            apiCallFunction = { bundle, deskDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForGetDeskById(
                     bundle
                 )
@@ -153,7 +153,7 @@ class DeskRepositoryImpl(
             bundleOfIds,
             deviceDTO = null,
             getRequestBodyAndConvertInModel = { },
-            apiCallFunction = { bundle, deskDTO ->
+            apiCallFunction = { bundle, _ ->
                 decoratorForDeleteDesk(
                     bundle
                 )
