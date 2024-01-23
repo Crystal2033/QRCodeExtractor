@@ -2,6 +2,7 @@ package com.crystal2033.qrextractor.add_object_feature.general.di
 
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.desk.AddDeskViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.monitor.AddMonitorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.system_unit.AddSystemUnitViewModel
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
@@ -24,6 +25,7 @@ interface AddDataViewModelFactoryProvider {
     fun addDeskViewModelFactory(): AddDeskViewModel.Factory
 
     fun addSystemUnitViewModelFactory(): AddSystemUnitViewModel.Factory
+    fun addMonitorViewModelFactory(): AddMonitorViewModel.Factory
 
 
 }
