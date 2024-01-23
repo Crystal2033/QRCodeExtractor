@@ -11,12 +11,13 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.BaseDeviceState
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.BaseDeviceState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.AddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.util.QRCodeGenerator
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.util.Resource
@@ -51,7 +52,23 @@ abstract class BaseAddObjectViewModel(
         }
     }
 
-    protected abstract fun isAllNeededFieldsInsertedCorrectly(): Boolean
+    private fun isBasicFieldsInsertedCorrectly(device: InventarizedModel): Boolean {
+        return device.image != null &&
+                device.name.isNotBlank() &&
+                device.cabinetId != 0L &&
+                device.inventoryNumber.isNotBlank()
+    }
+
+    protected fun isSpecificFieldInsertedCorrectly(): Boolean {
+        return true
+    }
+
+    protected fun isAllNeededFieldsInsertedCorrectly(device: InventarizedModel): Boolean {
+        return isSpecificFieldInsertedCorrectly() && isBasicFieldsInsertedCorrectly(device)
+    }
+
+    abstract fun isAllNeededFieldsInsertedCorrectly(): Boolean
+
     fun onEvent(event: AddNewObjectEvent) {
         when (event) {
             is AddNewObjectEvent.OnImageChanged -> {
@@ -72,7 +89,7 @@ abstract class BaseAddObjectViewModel(
     protected abstract fun setNewName(name: String)
     protected abstract fun setNewInventoryNumber(invNumber: String)
 
-    protected fun <M : InventarizedModel> makeActionWithResourceResult(
+    protected fun <M : InventarizedAndQRScannableModel> makeActionWithResourceResult(
         statusWithState: Resource<M>,
         deviceState: MutableState<BaseDeviceState<M>>,
         onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
@@ -100,7 +117,10 @@ abstract class BaseAddObjectViewModel(
 
             is Resource.Success -> {
                 deviceState.value.deviceState.value.id = statusWithState.data?.id ?: 0
-                setQRStickerInfo(statusWithState.data, qrCodeStickerInfo)
+                setQRStickerInfo(
+                    statusWithState.data as InventarizedAndQRScannableModel,
+                    qrCodeStickerInfo
+                )
                 onAddObjectClicked(qrCodeStickerInfo)
                 deviceState.value = deviceState.value.stateCopy(
                     deviceState.value.deviceState,
@@ -113,11 +133,19 @@ abstract class BaseAddObjectViewModel(
         }
     }
 
+    protected abstract fun getEssentialNameForQRCodeSticker(): String
 
-    protected abstract fun setQRStickerInfo(
-        device: InventarizedModel?,
+    private fun setQRStickerInfo(
+        device: InventarizedAndQRScannableModel,
         qrCodeStickerInfo: QRCodeStickerInfo
-    )
+    ) {
+        device.let {
+            qrCodeStickerInfo.qrCode = createQRCode(device)
+            qrCodeStickerInfo.essentialName = getEssentialNameForQRCodeSticker()
+            qrCodeStickerInfo.inventoryNumber = device.inventoryNumber
+            qrCodeStickerInfo.databaseObjectTypes = device.getDatabaseTableName()
+        }
+    }
 
     protected fun <T> insertPossibleObjectsInListIfSuccess(
         statusWithState: Resource<List<T>>,
@@ -132,9 +160,7 @@ abstract class BaseAddObjectViewModel(
                 )
             }
 
-            is Resource.Loading -> {
-
-            }
+            is Resource.Loading -> {}
 
             is Resource.Success -> {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of possible objects")

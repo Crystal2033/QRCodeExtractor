@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.factory
+package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavBackStackEntry

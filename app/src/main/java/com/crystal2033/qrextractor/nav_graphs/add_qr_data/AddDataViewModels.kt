@@ -10,7 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person.AddPersonViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.di.AddDataViewModelFactoryProvider
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
@@ -42,6 +42,7 @@ sealed class AddDataViewModels {
             )
         }
 
+
 //        @Composable
 //        inline fun <reified T : ViewModel> addPersonViewModel(
 //            userAndPlaceBundle: UserAndPlaceBundle
@@ -67,6 +68,20 @@ sealed class AddDataViewModels {
 
             return viewModel(
                 factory = AddChairViewModel.provideFactory(factory, userAndPlaceBundle)
+            )
+        }
+
+        @Composable
+        inline fun <reified T : ViewModel> addProjectorViewModel(
+            userAndPlaceBundle: UserAndPlaceBundle
+        ): T {
+            val factory = EntryPointAccessors.fromActivity(
+                LocalContext.current as Activity,
+                AddDataViewModelFactoryProvider::class.java
+            ).addProjectorViewModelFactory()
+
+            return viewModel(
+                factory = AddProjectorViewModel.provideFactory(factory, userAndPlaceBundle)
             )
         }
 

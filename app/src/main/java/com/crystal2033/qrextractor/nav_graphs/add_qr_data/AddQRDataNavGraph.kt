@@ -33,8 +33,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.AddChairView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.projector.AddProjectorView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.MenuView
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
@@ -49,6 +51,7 @@ import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.presentation.NotLoginLinkView
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addChairViewModel
+import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addProjectorViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.qrCodeDocumentViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.sharedAddDataMenuViewModel
 import com.crystal2033.qrextractor.ui.NavBottomBarConstants
@@ -276,12 +279,24 @@ fun createViewByAddType(
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
                             },
-                            snackbarHostState = snackbarHostState,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.CenterHorizontally)
+                            snackbarHostState = snackbarHostState
                         )
 
+                    }
+
+                    DatabaseObjectTypes.PROJECTOR -> {
+                        viewModel =
+                            addProjectorViewModel<AddProjectorViewModel>(
+                                userAndPlaceBundle = userWithPlaceBundle
+                            )
+                        AddProjectorView(
+                            viewModel = viewModel as AddProjectorViewModel,
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            },
+                            snackbarHostState = snackbarHostState
+                        )
                     }
 
                     DatabaseObjectTypes.KEYBOARD -> {
@@ -299,15 +314,11 @@ fun createViewByAddType(
                     DatabaseObjectTypes.DESK -> {
                         null
                     }
-
-
                     DatabaseObjectTypes.SYSTEM_UNIT -> {
                         null
                     }
 
-                    DatabaseObjectTypes.PROJECTOR -> {
-                        null
-                    }
+
                 }
                 Spacer(modifier = Modifier.height(40.dp))
                 Row(

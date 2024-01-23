@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.BaseDeviceState
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.BaseDeviceState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.AddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
@@ -32,8 +32,7 @@ fun <M : InventarizedModel> BaseViewForInventarizedDevice(
     deviceState: BaseDeviceState<M>,
     isNeedToShowCamera: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
-    snackbarHostState: SnackbarHostState,
-    modifier: Modifier = Modifier
+    snackbarHostState: SnackbarHostState
 ) {
     val spaceBetween = 15.dp
     LaunchedEffect(key1 = true) {
@@ -112,8 +111,6 @@ fun <M : InventarizedModel> BaseViewForInventarizedDevice(
             isEnabled = false,
             horizontalArrangement = Arrangement.Center
         )
-
-        //}
     } else {
         CameraXView(
             darkTheme = true,

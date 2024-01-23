@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair
+package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.projector
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,19 +14,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.BaseViewForInventarizedDevice
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
 
 @Composable
-fun AddChairView(
-    viewModel: AddChairViewModel,
+fun AddProjectorView(
+    viewModel: AddProjectorViewModel,
     isAllFieldsInsertedState: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
 
-    val chairState by remember {
-        viewModel.chairStateWithLoadingStatus
+    val projectorState by remember {
+        viewModel.projectorStateWithLoadingStatus
     }
 
     val isNeedToShowCamera = remember {
@@ -34,7 +34,6 @@ fun AddChairView(
     }
 
     isAllFieldsInsertedState.value = viewModel.isAllNeededFieldsInsertedCorrectly()
-
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -46,7 +45,7 @@ fun AddChairView(
         ) {
             BaseViewForInventarizedDevice(
                 viewModel = viewModel,
-                deviceState = chairState,
+                deviceState = projectorState,
                 isNeedToShowCamera = isNeedToShowCamera,
                 onNavigate = onNavigate,
                 snackbarHostState = snackbarHostState
@@ -57,7 +56,7 @@ fun AddChairView(
 
         }
 
-        if (chairState.isLoading) {
+        if (projectorState.isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
 

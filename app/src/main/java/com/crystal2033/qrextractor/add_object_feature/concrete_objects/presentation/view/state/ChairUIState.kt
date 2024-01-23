@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair
+package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
