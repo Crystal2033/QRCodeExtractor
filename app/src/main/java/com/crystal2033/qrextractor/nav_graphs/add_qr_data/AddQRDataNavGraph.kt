@@ -35,15 +35,18 @@ import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.AddChairView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.desk.AddDeskView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.projector.AddProjectorView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.system_unit.AddSystemUnitView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addDeskViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addProjectorViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addSystemUnitViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.qrCodeDocumentViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.sharedAddDataMenuViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.desk.AddDeskViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.system_unit.AddSystemUnitViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.MenuView
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
@@ -317,20 +320,29 @@ fun createViewByAddType(
                         )
                     }
 
-                    DatabaseObjectTypes.KEYBOARD -> {
-                        null
+
+                    DatabaseObjectTypes.SYSTEM_UNIT -> {
+                        viewModel =
+                            addSystemUnitViewModel(
+                                userAndPlaceBundle = userWithPlaceBundle
+                            )
+                        AddSystemUnitView(
+                            viewModel = viewModel as AddSystemUnitViewModel,
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            },
+                            snackbarHostState = snackbarHostState
+                        )
                     }
 
                     DatabaseObjectTypes.MONITOR -> {
                         null
                     }
-
-                    DatabaseObjectTypes.UNKNOWN -> {
+                    DatabaseObjectTypes.KEYBOARD -> {
                         null
                     }
-
-
-                    DatabaseObjectTypes.SYSTEM_UNIT -> {
+                    DatabaseObjectTypes.UNKNOWN -> {
                         null
                     }
 

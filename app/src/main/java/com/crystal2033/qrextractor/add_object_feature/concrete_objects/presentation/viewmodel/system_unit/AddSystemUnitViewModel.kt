@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair
+package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.system_unit
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.BaseDeviceState
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.ChairUIState
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.SystemUnitUIState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
-import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
+import com.crystal2033.qrextractor.core.remote_server.data.model.SystemUnit
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.chair.AddChairUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.system_unit.AddSystemUnitUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -23,31 +23,32 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class AddChairViewModel @AssistedInject constructor(
+class AddSystemUnitViewModel @AssistedInject constructor(
     @Assisted private val userAndPlaceBundle: UserAndPlaceBundle,
     @ApplicationContext private val context: Context,
     converters: Converters,
-    private val addChairUseCase: AddChairUseCase
+    private val addSystemUnitUseCase: AddSystemUnitUseCase
 ) : BaseAddObjectViewModel(context, converters, userAndPlaceBundle) {
 
 
-    private val _chairState = mutableStateOf(
-        Chair(
+    private val _systemUnitState = mutableStateOf(
+        SystemUnit(
             cabinetId = userAndPlaceBundle.cabinet.id
         )
     ) //work with this here is more convenient
 
-    private val _chairStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Chair>>(
-        ChairUIState(
-            _chairState, false
+    private val _systemUnitStateWithLoadingStatus = mutableStateOf<BaseDeviceState<SystemUnit>>(
+        SystemUnitUIState(
+            _systemUnitState, false
         )
     )
-    val chairStateWithLoadingStatus: State<BaseDeviceState<Chair>> = _chairStateWithLoadingStatus
+    val systemUnitStateWithLoadingStatus: State<BaseDeviceState<SystemUnit>> =
+        _systemUnitStateWithLoadingStatus
 
 
     @AssistedFactory
     interface Factory {
-        fun create(userAndPlaceBundle: UserAndPlaceBundle): AddChairViewModel
+        fun create(userAndPlaceBundle: UserAndPlaceBundle): AddSystemUnitViewModel
     }
 
     companion object {
@@ -62,15 +63,14 @@ class AddChairViewModel @AssistedInject constructor(
         }
     }
 
-
     override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
-        val chair = _chairState.value.toDTO()
+        val systemUnitDTO = _systemUnitState.value.toDTO()
 
         viewModelScope.launch {
-            addChairUseCase(chair).onEach { statusWithState ->
+            addSystemUnitUseCase(systemUnitDTO).onEach { statusWithState ->
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
-                    deviceState = _chairStateWithLoadingStatus,
+                    deviceState = _systemUnitStateWithLoadingStatus,
                     onAddObjectClicked,
                     QRCodeStickerInfo()
                 )
@@ -79,41 +79,41 @@ class AddChairViewModel @AssistedInject constructor(
     }
 
     override fun isAllNeededFieldsInsertedCorrectly(): Boolean {
-        return isAllNeededFieldsInsertedCorrectly(_chairState.value)
+        return isAllNeededFieldsInsertedCorrectly(_systemUnitState.value)
     }
 
     override fun setNewImage(image: Bitmap?) {
-        _chairState.value = Chair(
-            id = _chairState.value.id,
+        _systemUnitState.value = SystemUnit(
+            id = _systemUnitState.value.id,
             image = image,
-            inventoryNumber = _chairState.value.inventoryNumber,
-            name = _chairState.value.name,
-            cabinetId = _chairState.value.cabinetId
+            inventoryNumber = _systemUnitState.value.inventoryNumber,
+            name = _systemUnitState.value.name,
+            cabinetId = _systemUnitState.value.cabinetId
         )
     }
 
     override fun setNewName(name: String) {
-        _chairState.value = Chair(
-            id = _chairState.value.id,
-            image = _chairState.value.image,
-            inventoryNumber = _chairState.value.inventoryNumber,
+        _systemUnitState.value = SystemUnit(
+            id = _systemUnitState.value.id,
+            image = _systemUnitState.value.image,
+            inventoryNumber = _systemUnitState.value.inventoryNumber,
             name = name,
-            cabinetId = _chairState.value.cabinetId
+            cabinetId = _systemUnitState.value.cabinetId
         )
     }
 
     override fun setNewInventoryNumber(invNumber: String) {
-        _chairState.value = Chair(
-            id = _chairState.value.id,
-            image = _chairState.value.image,
+        _systemUnitState.value = SystemUnit(
+            id = _systemUnitState.value.id,
+            image = _systemUnitState.value.image,
             inventoryNumber = invNumber,
-            name = _chairState.value.name,
-            cabinetId = _chairState.value.cabinetId
+            name = _systemUnitState.value.name,
+            cabinetId = _systemUnitState.value.cabinetId
         )
     }
 
     override fun getEssentialNameForQRCodeSticker(): String {
-        return _chairState.value.name
+        return _systemUnitState.value.name
     }
 
 }

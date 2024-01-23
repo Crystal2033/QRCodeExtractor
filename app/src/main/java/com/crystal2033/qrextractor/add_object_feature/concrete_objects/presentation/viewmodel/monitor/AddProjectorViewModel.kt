@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair
+package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.monitor
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.BaseDeviceState
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.ChairUIState
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.ProjectorUIState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
-import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
+import com.crystal2033.qrextractor.core.remote_server.data.model.Projector
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.chair.AddChairUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.projector.AddProjectorUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -23,31 +23,32 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class AddChairViewModel @AssistedInject constructor(
+class AddProjectorViewModel @AssistedInject constructor(
     @Assisted private val userAndPlaceBundle: UserAndPlaceBundle,
     @ApplicationContext private val context: Context,
     converters: Converters,
-    private val addChairUseCase: AddChairUseCase
+    private val addProjectorUseCase: AddProjectorUseCase
 ) : BaseAddObjectViewModel(context, converters, userAndPlaceBundle) {
 
 
-    private val _chairState = mutableStateOf(
-        Chair(
+    private val _projectorState = mutableStateOf(
+        Projector(
             cabinetId = userAndPlaceBundle.cabinet.id
         )
     ) //work with this here is more convenient
 
-    private val _chairStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Chair>>(
-        ChairUIState(
-            _chairState, false
+    private val _projectorStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Projector>>(
+        ProjectorUIState(
+            _projectorState, false
         )
     )
-    val chairStateWithLoadingStatus: State<BaseDeviceState<Chair>> = _chairStateWithLoadingStatus
+    val projectorStateWithLoadingStatus: State<BaseDeviceState<Projector>> =
+        _projectorStateWithLoadingStatus
 
 
     @AssistedFactory
     interface Factory {
-        fun create(userAndPlaceBundle: UserAndPlaceBundle): AddChairViewModel
+        fun create(userAndPlaceBundle: UserAndPlaceBundle): AddProjectorViewModel
     }
 
     companion object {
@@ -62,58 +63,58 @@ class AddChairViewModel @AssistedInject constructor(
         }
     }
 
-
     override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
-        val chair = _chairState.value.toDTO()
+        val qrCodeStickerInfo = QRCodeStickerInfo()
+        val projectorDTO = _projectorState.value.toDTO()
 
         viewModelScope.launch {
-            addChairUseCase(chair).onEach { statusWithState ->
+            addProjectorUseCase(projectorDTO).onEach { statusWithState ->
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
-                    deviceState = _chairStateWithLoadingStatus,
+                    deviceState = _projectorStateWithLoadingStatus,
                     onAddObjectClicked,
-                    QRCodeStickerInfo()
+                    qrCodeStickerInfo
                 )
             }.launchIn(this)
         }
     }
 
     override fun isAllNeededFieldsInsertedCorrectly(): Boolean {
-        return isAllNeededFieldsInsertedCorrectly(_chairState.value)
+        return isAllNeededFieldsInsertedCorrectly(_projectorState.value)
     }
 
     override fun setNewImage(image: Bitmap?) {
-        _chairState.value = Chair(
-            id = _chairState.value.id,
+        _projectorState.value = Projector(
+            id = _projectorState.value.id,
             image = image,
-            inventoryNumber = _chairState.value.inventoryNumber,
-            name = _chairState.value.name,
-            cabinetId = _chairState.value.cabinetId
+            inventoryNumber = _projectorState.value.inventoryNumber,
+            name = _projectorState.value.name,
+            cabinetId = _projectorState.value.cabinetId
         )
     }
 
     override fun setNewName(name: String) {
-        _chairState.value = Chair(
-            id = _chairState.value.id,
-            image = _chairState.value.image,
-            inventoryNumber = _chairState.value.inventoryNumber,
+        _projectorState.value = Projector(
+            id = _projectorState.value.id,
+            image = _projectorState.value.image,
+            inventoryNumber = _projectorState.value.inventoryNumber,
             name = name,
-            cabinetId = _chairState.value.cabinetId
+            cabinetId = _projectorState.value.cabinetId
         )
     }
 
     override fun setNewInventoryNumber(invNumber: String) {
-        _chairState.value = Chair(
-            id = _chairState.value.id,
-            image = _chairState.value.image,
+        _projectorState.value = Projector(
+            id = _projectorState.value.id,
+            image = _projectorState.value.image,
             inventoryNumber = invNumber,
-            name = _chairState.value.name,
-            cabinetId = _chairState.value.cabinetId
+            name = _projectorState.value.name,
+            cabinetId = _projectorState.value.cabinetId
         )
     }
 
     override fun getEssentialNameForQRCodeSticker(): String {
-        return _chairState.value.name
+        return _projectorState.value.name
     }
 
 }

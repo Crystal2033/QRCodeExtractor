@@ -12,6 +12,7 @@ import androidx.navigation.NavController
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.desk.AddDeskViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.system_unit.AddSystemUnitViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.di.AddDataViewModelFactoryProvider
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
@@ -97,6 +98,20 @@ sealed class AddDataViewModels {
 
             return viewModel(
                 factory = AddProjectorViewModel.provideFactory(factory, userAndPlaceBundle)
+            )
+        }
+
+        @Composable
+        inline fun <reified T : ViewModel> addSystemUnitViewModel(
+            userAndPlaceBundle: UserAndPlaceBundle
+        ): T {
+            val factory = EntryPointAccessors.fromActivity(
+                LocalContext.current as Activity,
+                AddDataViewModelFactoryProvider::class.java
+            ).addSystemUnitViewModelFactory()
+
+            return viewModel(
+                factory = AddSystemUnitViewModel.provideFactory(factory, userAndPlaceBundle)
             )
         }
 
