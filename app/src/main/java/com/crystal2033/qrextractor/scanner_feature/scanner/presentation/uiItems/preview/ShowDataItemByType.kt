@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.crystal2033.qrextractor.core.model.Keyboard
 import com.crystal2033.qrextractor.core.model.Person
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
@@ -42,9 +41,9 @@ fun ShowDataItemByType(
                 PersonInfo(person = qrScannable)
             }
 
-            is Keyboard -> {
-                KeyboardItem(keyboard = qrScannable)
-            }
+//            is Keyboard -> {
+//                KeyboardItem(keyboard = qrScannable)
+//            }
         }
         qrScannable?.let {
             Button(

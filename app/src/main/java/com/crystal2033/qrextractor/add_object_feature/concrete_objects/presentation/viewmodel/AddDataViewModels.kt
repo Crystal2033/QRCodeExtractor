@@ -11,6 +11,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.desk.AddDeskViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.keyboard.AddKeyboardViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.monitor.AddMonitorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.system_unit.AddSystemUnitViewModel
@@ -127,6 +128,20 @@ sealed class AddDataViewModels {
 
             return viewModel(
                 factory = AddMonitorViewModel.provideFactory(factory, userAndPlaceBundle)
+            )
+        }
+
+        @Composable
+        inline fun <reified T : ViewModel> addKeyboardViewModel(
+            userAndPlaceBundle: UserAndPlaceBundle
+        ): T {
+            val factory = EntryPointAccessors.fromActivity(
+                LocalContext.current as Activity,
+                AddDataViewModelFactoryProvider::class.java
+            ).addKeyboardViewModelFactory()
+
+            return viewModel(
+                factory = AddKeyboardViewModel.provideFactory(factory, userAndPlaceBundle)
             )
         }
 

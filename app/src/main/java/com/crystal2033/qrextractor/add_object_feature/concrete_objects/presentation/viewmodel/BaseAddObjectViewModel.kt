@@ -34,7 +34,7 @@ abstract class BaseAddObjectViewModel(
 ) : ViewModel() {
     private val _eventFlow = Channel<UIAddNewObjectEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
-    fun createQRCode(qrScannableData: QRScannableData): ImageBitmap {
+    private fun createQRCode(qrScannableData: QRScannableData): ImageBitmap {
         val convertedJsonFromString = converter.toJsonFromQRScannableData(qrScannableData)
         val bitmap = QRCodeGenerator.encodeAsBitmap(convertedJsonFromString, 250, 250)
         return bitmap.asImageBitmap()

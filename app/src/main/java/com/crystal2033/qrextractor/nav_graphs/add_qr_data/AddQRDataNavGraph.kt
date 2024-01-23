@@ -34,11 +34,13 @@ import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.AddChairView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.desk.AddDeskView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.keyboard.AddKeyboardView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.monitor.AddMonitorView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.projector.AddProjectorView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.system_unit.AddSystemUnitView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addDeskViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addKeyboardViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addMonitorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addSystemUnitViewModel
@@ -47,6 +49,7 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.desk.AddDeskViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.keyboard.AddKeyboardViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.monitor.AddMonitorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.system_unit.AddSystemUnitViewModel
@@ -355,7 +358,18 @@ fun createViewByAddType(
                     }
 
                     DatabaseObjectTypes.KEYBOARD -> {
-                        null
+                        viewModel =
+                            addKeyboardViewModel(
+                                userAndPlaceBundle = userWithPlaceBundle
+                            )
+                        AddKeyboardView(
+                            viewModel = viewModel as AddKeyboardViewModel,
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            },
+                            snackbarHostState = snackbarHostState
+                        )
                     }
 
                     DatabaseObjectTypes.UNKNOWN -> {

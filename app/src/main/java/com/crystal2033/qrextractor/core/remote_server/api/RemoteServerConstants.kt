@@ -11,7 +11,7 @@ class RemoteServerConstants {
         public final const val PROJECTOR_URL: String = "$CABINET_URL/{cabinetId}/projectors"
         public final const val SYSTEM_UNIT_URL: String = "$CABINET_URL/{cabinetId}/system_units"
         public final const val MONITOR_UNIT_URL: String = "$CABINET_URL/{cabinetId}/monitors"
-        public final const val KEYBOARD_UNIT_URL: String = "$CABINET_URL/{cabinetId}/keyboards"
+        public final const val KEYBOARD_URL: String = "$CABINET_URL/{cabinetId}/keyboards"
     }
 
 }

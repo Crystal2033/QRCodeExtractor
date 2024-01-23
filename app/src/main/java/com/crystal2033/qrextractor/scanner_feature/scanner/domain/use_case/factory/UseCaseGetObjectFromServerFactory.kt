@@ -13,9 +13,9 @@ class UseCaseGetObjectFromServerFactory(
             applicationContext.getString(R.string.person_table_name) -> {
                 getObjectInfoUseCases.getPersonUseCase
             }
-            applicationContext.getString(R.string.keyboard_table_name) ->  {
-                getObjectInfoUseCases.getKeyboardUseCase
-            }
+//            applicationContext.getString(R.string.keyboard_table_name) ->  {
+//                getObjectInfoUseCases.getKeyboardUseCase
+//            }
 //            "monitor" -> {
 //
 //            }

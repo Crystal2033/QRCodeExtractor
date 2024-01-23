@@ -7,13 +7,6 @@ import com.crystal2033.qrextractor.auth_feature.domain.repository.UserRepository
 import com.crystal2033.qrextractor.auth_feature.domain.use_case.LoginUserUseCase
 import com.crystal2033.qrextractor.core.ApiInfo
 import com.crystal2033.qrextractor.core.localdb.AppDatabase
-import com.crystal2033.qrextractor.core.localdb.UserDao
-import com.crystal2033.qrextractor.scanner_feature.general.repository_impl.ScannedGroupRepositoryImpl
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.ScanKeyboardApi
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.repository.KeyboardRepositoryImpl
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.KeyboardRepository
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.repository.ScannedGroupCreatorRepository
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetKeyboardUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
