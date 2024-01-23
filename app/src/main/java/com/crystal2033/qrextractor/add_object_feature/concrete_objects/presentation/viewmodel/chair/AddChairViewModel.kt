@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.BaseDeviceState
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.ChairUIState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.chair.AddChairEvent
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
@@ -30,8 +32,16 @@ class AddChairViewModel @AssistedInject constructor(
 ) : BaseAddObjectViewModel(context, converters) {
 
 
-    private val _chairState = mutableStateOf(Chair())
-    val chairState: State<Chair> = _chairState
+    private val _chairState = mutableStateOf(Chair()) //work with this here is more convenient
+    //val chairState: State<Chair> = _chairState
+
+    private val _chairStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Chair>>(
+        ChairUIState(
+            _chairState, false
+        )
+    )
+    val chairStateWithLoadingStatus: State<BaseDeviceState<Chair>> = _chairStateWithLoadingStatus
+
 
     private val _userAndPlaceBundleState = mutableStateOf(userAndPlaceBundle)
     val userAndPlaceBundleState: State<UserAndPlaceBundle> = _userAndPlaceBundleState
@@ -114,13 +124,13 @@ class AddChairViewModel @AssistedInject constructor(
 
     override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
         val qrCodeStickerInfo = QRCodeStickerInfo()
-        val chair = chairState.value.toDTO()
+        val chair = _chairState.value.toDTO()
 
         viewModelScope.launch {
             addChairUseCase(chair).onEach { statusWithState ->
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
-                    deviceState = _chairState,
+                    deviceState = _chairStateWithLoadingStatus,
                     onAddObjectClicked,
                     qrCodeStickerInfo
                 )

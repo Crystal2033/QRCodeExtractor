@@ -169,6 +169,7 @@ fun NavGraphBuilder.addQRCodeGraph(
                     typeOfView = menuViewModel.chosenObjectClassState.value,
                     navBackStackEntry = it,
                     navController = navController,
+                    snackbarHostState = snackbarHostState,
                     userWithPlaceBundle = userWithPlaceBundle.value
                 ) { qrCodeStickerInfo ->
                     menuViewModel.onEvent(CreateQRCodeEvent.OnAddNewObjectInList(qrCodeStickerInfo))
@@ -226,6 +227,7 @@ fun NavGraphBuilder.addQRCodeGraph(
 fun createViewByAddType(
     typeOfView: DatabaseObjectTypes,
     navBackStackEntry: NavBackStackEntry,
+    snackbarHostState: SnackbarHostState,
     navController: NavController,
     userWithPlaceBundle: UserAndPlaceBundle,
     onAddObjectClicked: (QRCodeStickerInfo) -> Unit
@@ -262,11 +264,15 @@ fun createViewByAddType(
                         viewModel = addChairViewModel<AddChairViewModel>(
                             userAndPlaceBundle = userWithPlaceBundle
                         )
-                        AddChairView(viewModel = viewModel as AddChairViewModel,
+                        AddChairView(
+                            viewModel = viewModel as AddChairViewModel,
                             isAllFieldsInsertedState = isAddButtonEnabled,
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
-                            })
+                            },
+                            snackbarHostState = snackbarHostState
+                        )
+
                     }
 
                     DatabaseObjectTypes.KEYBOARD -> {

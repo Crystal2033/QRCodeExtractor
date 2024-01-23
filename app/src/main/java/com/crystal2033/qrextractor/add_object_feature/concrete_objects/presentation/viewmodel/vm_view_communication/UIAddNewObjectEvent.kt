@@ -2,4 +2,6 @@ package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presenta
 
 sealed class UIAddNewObjectEvent {
     data class Navigate(val route: String) : UIAddNewObjectEvent()
+
+    data class ShowSnackBar(val message: String) : UIAddNewObjectEvent()
 }

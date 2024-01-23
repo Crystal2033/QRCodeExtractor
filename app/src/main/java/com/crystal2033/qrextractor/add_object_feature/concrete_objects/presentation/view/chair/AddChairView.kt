@@ -5,16 +5,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.Text
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
@@ -29,7 +35,8 @@ import kotlinx.coroutines.flow.collectLatest
 fun AddChairView(
     viewModel: AddChairViewModel,
     isAllFieldsInsertedState: MutableState<Boolean>,
-    onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit
+    onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
 
     LaunchedEffect(key1 = true) {
@@ -38,14 +45,22 @@ fun AddChairView(
                 is UIAddNewObjectEvent.Navigate -> {
                     onNavigate(event)
                 }
+
+                is UIAddNewObjectEvent.ShowSnackBar -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.message,
+                        actionLabel = "Okay",
+                        duration = SnackbarDuration.Long
+                    )
+                }
             }
         }
     }
 
     val spaceBetween = 15.dp
 
-    val chairState = remember {
-        viewModel.chairState
+    val chairState by remember {
+        viewModel.chairStateWithLoadingStatus
     }
 
     val isNeedToShowCamera = remember {
@@ -55,11 +70,13 @@ fun AddChairView(
     isAllFieldsInsertedState.value = viewModel.isAllFieldInsertedCorrectly()
 
 
-    Box {
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
         if (!isNeedToShowCamera.value) {
             Row {
                 Column {
-                    chairState.value.image?.let { bitmap ->
+                    chairState.deviceState.value.image?.let { bitmap ->
                         Image(
                             bitmap = bitmap.asImageBitmap(),
                             contentDescription = "Picture",
@@ -79,7 +96,7 @@ fun AddChairView(
                 Column {
                     TextFieldView(
                         fieldHint = "Name",
-                        currentText = chairState.value.name,
+                        currentText = chairState.deviceState.value.name,
                         onValueChanged = {
                             viewModel.onEvent(AddChairEvent.OnNameChanged(it))
                         },
@@ -87,7 +104,7 @@ fun AddChairView(
                     Spacer(modifier = Modifier.height(spaceBetween))
                     TextFieldView(
                         fieldHint = "Inventory number",
-                        currentText = chairState.value.inventoryNumber,
+                        currentText = chairState.deviceState.value.inventoryNumber,
                         onValueChanged = {
                             viewModel.onEvent(AddChairEvent.OnInventoryNumberChanged(it))
                             //TODO: CHECK UNIQUE
@@ -124,6 +141,9 @@ fun AddChairView(
                 })
         }
 
+        if (chairState.isLoading) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
 
     }
 }

@@ -2,12 +2,14 @@ package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presenta
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.BaseDeviceState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.util.QRCodeGenerator
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
@@ -33,6 +35,8 @@ abstract class BaseAddObjectViewModel(
     }
 
     abstract fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit)
+
+
     protected fun sendUiEvent(event: UIAddNewObjectEvent) {
         viewModelScope.launch {
             _eventFlow.send(event)
@@ -41,18 +45,41 @@ abstract class BaseAddObjectViewModel(
 
     protected fun <M : InventarizedModel> makeActionWithResourceResult(
         statusWithState: Resource<M>,
-        deviceState: State<M>,
+        deviceState: MutableState<BaseDeviceState<M>>,
         onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
         qrCodeStickerInfo: QRCodeStickerInfo
     ) {
         when (statusWithState) {
-            is Resource.Error -> {}
-            is Resource.Loading -> {}
+            is Resource.Error -> {
+                deviceState.value = deviceState.value.stateCopy(
+                    deviceState.value.deviceState,
+                    false
+                )
+                sendUiEvent(
+                    UIAddNewObjectEvent.ShowSnackBar(
+                        statusWithState.message ?: "Unknown error"
+                    )
+                )
+            }
+
+            is Resource.Loading -> {
+                deviceState.value = deviceState.value.stateCopy(
+                    deviceState.value.deviceState,
+                    true
+                )
+            }
+
             is Resource.Success -> {
-                deviceState.value.id = statusWithState.data?.id ?: 0
+                deviceState.value.deviceState.value.id = statusWithState.data?.id ?: 0
                 setQRStickerInfo(statusWithState.data, qrCodeStickerInfo)
                 onAddObjectClicked(qrCodeStickerInfo)
+                deviceState.value = deviceState.value.stateCopy(
+                    deviceState.value.deviceState,
+                    false
+                )
+
                 sendUiEvent(UIAddNewObjectEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
+
             }
         }
     }
@@ -67,8 +94,18 @@ abstract class BaseAddObjectViewModel(
         listOfPossibleObjects: MutableList<T>
     ) {
         when (statusWithState) {
-            is Resource.Error -> {}
-            is Resource.Loading -> {}
+            is Resource.Error -> {
+                sendUiEvent(
+                    UIAddNewObjectEvent.ShowSnackBar(
+                        statusWithState.message ?: "Unknown error"
+                    )
+                )
+            }
+
+            is Resource.Loading -> {
+
+            }
+
             is Resource.Success -> {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of possible objects")
                 listOfPossibleObjects.clear()
