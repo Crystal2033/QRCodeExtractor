@@ -74,8 +74,8 @@ class CreateQRCodesViewModel @AssistedInject constructor(
     init {
         _menuListState.addAll(
             listOf(
-                DatabaseObjectTypes.PERSON,
-                DatabaseObjectTypes.KEYBOARD,
+//                DatabaseObjectTypes.PERSON,
+//                DatabaseObjectTypes.KEYBOARD,
                 DatabaseObjectTypes.DESK,
                 DatabaseObjectTypes.SYSTEM_UNIT,
                 DatabaseObjectTypes.MONITOR,

@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector
+package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.desk
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -8,12 +8,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.BaseDeviceState
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.ProjectorUIState
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.DeskUIState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
-import com.crystal2033.qrextractor.core.remote_server.data.model.Projector
+import com.crystal2033.qrextractor.core.remote_server.data.model.Desk
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.projector.AddProjectorUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.desk.AddDeskUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -23,32 +23,31 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class AddProjectorViewModel @AssistedInject constructor(
+class AddDeskViewModel @AssistedInject constructor(
     @Assisted private val userAndPlaceBundle: UserAndPlaceBundle,
     @ApplicationContext private val context: Context,
     converters: Converters,
-    private val addProjectorUseCase: AddProjectorUseCase
+    private val addDeskUseCase: AddDeskUseCase
 ) : BaseAddObjectViewModel(context, converters, userAndPlaceBundle) {
 
 
-    private val _projectorState = mutableStateOf(
-        Projector(
+    private val _deskState = mutableStateOf(
+        Desk(
             cabinetId = userAndPlaceBundle.cabinet.id
         )
     ) //work with this here is more convenient
 
-    private val _projectorStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Projector>>(
-        ProjectorUIState(
-            _projectorState, false
+    private val _deskStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Desk>>(
+        DeskUIState(
+            _deskState, false
         )
     )
-    val projectorStateWithLoadingStatus: State<BaseDeviceState<Projector>> =
-        _projectorStateWithLoadingStatus
+    val deskStateWithLoadingStatus: State<BaseDeviceState<Desk>> = _deskStateWithLoadingStatus
 
 
     @AssistedFactory
     interface Factory {
-        fun create(userAndPlaceBundle: UserAndPlaceBundle): AddProjectorViewModel
+        fun create(userAndPlaceBundle: UserAndPlaceBundle): AddDeskViewModel
     }
 
     companion object {
@@ -63,58 +62,58 @@ class AddProjectorViewModel @AssistedInject constructor(
         }
     }
 
+
     override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
-        val qrCodeStickerInfo = QRCodeStickerInfo()
-        val projectorDTO = _projectorState.value.toDTO()
+        val deskDTO = _deskState.value.toDTO()
 
         viewModelScope.launch {
-            addProjectorUseCase(projectorDTO).onEach { statusWithState ->
+            addDeskUseCase(deskDTO).onEach { statusWithState ->
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
-                    deviceState = _projectorStateWithLoadingStatus,
+                    deviceState = _deskStateWithLoadingStatus,
                     onAddObjectClicked,
-                    qrCodeStickerInfo
+                    QRCodeStickerInfo()
                 )
             }.launchIn(this)
         }
     }
 
     override fun isAllNeededFieldsInsertedCorrectly(): Boolean {
-        return isAllNeededFieldsInsertedCorrectly(_projectorState.value)
+        return isAllNeededFieldsInsertedCorrectly(_deskState.value)
     }
 
     override fun setNewImage(image: Bitmap?) {
-        _projectorState.value = Projector(
-            id = _projectorState.value.id,
+        _deskState.value = Desk(
+            id = _deskState.value.id,
             image = image,
-            inventoryNumber = _projectorState.value.inventoryNumber,
-            name = _projectorState.value.name,
-            cabinetId = _projectorState.value.cabinetId
+            inventoryNumber = _deskState.value.inventoryNumber,
+            name = _deskState.value.name,
+            cabinetId = _deskState.value.cabinetId
         )
     }
 
     override fun setNewName(name: String) {
-        _projectorState.value = Projector(
-            id = _projectorState.value.id,
-            image = _projectorState.value.image,
-            inventoryNumber = _projectorState.value.inventoryNumber,
+        _deskState.value = Desk(
+            id = _deskState.value.id,
+            image = _deskState.value.image,
+            inventoryNumber = _deskState.value.inventoryNumber,
             name = name,
-            cabinetId = _projectorState.value.cabinetId
+            cabinetId = _deskState.value.cabinetId
         )
     }
 
     override fun setNewInventoryNumber(invNumber: String) {
-        _projectorState.value = Projector(
-            id = _projectorState.value.id,
-            image = _projectorState.value.image,
+        _deskState.value = Desk(
+            id = _deskState.value.id,
+            image = _deskState.value.image,
             inventoryNumber = invNumber,
-            name = _projectorState.value.name,
-            cabinetId = _projectorState.value.cabinetId
+            name = _deskState.value.name,
+            cabinetId = _deskState.value.cabinetId
         )
     }
 
     override fun getEssentialNameForQRCodeSticker(): String {
-        return _projectorState.value.name
+        return _deskState.value.name
     }
 
 }

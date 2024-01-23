@@ -33,9 +33,16 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.AddChairView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.desk.AddDeskView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.projector.AddProjectorView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addChairViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addDeskViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addProjectorViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.qrCodeDocumentViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.sharedAddDataMenuViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.desk.AddDeskViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.MenuView
@@ -50,10 +57,6 @@ import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.presentation.NotLoginLinkView
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
-import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addChairViewModel
-import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addProjectorViewModel
-import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.qrCodeDocumentViewModel
-import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.sharedAddDataMenuViewModel
 import com.crystal2033.qrextractor.ui.NavBottomBarConstants
 
 fun NavGraphBuilder.addQRCodeGraph(
@@ -299,6 +302,21 @@ fun createViewByAddType(
                         )
                     }
 
+                    DatabaseObjectTypes.DESK -> {
+                        viewModel =
+                            addDeskViewModel(
+                                userAndPlaceBundle = userWithPlaceBundle
+                            )
+                        AddDeskView(
+                            viewModel = viewModel as AddDeskViewModel,
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            },
+                            snackbarHostState = snackbarHostState
+                        )
+                    }
+
                     DatabaseObjectTypes.KEYBOARD -> {
                         null
                     }
@@ -311,9 +329,7 @@ fun createViewByAddType(
                         null
                     }
 
-                    DatabaseObjectTypes.DESK -> {
-                        null
-                    }
+
                     DatabaseObjectTypes.SYSTEM_UNIT -> {
                         null
                     }

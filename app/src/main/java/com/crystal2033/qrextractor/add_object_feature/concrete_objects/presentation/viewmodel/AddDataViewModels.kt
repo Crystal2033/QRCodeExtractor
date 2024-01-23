@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.nav_graphs.add_qr_data
+package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel
 
 import android.app.Activity
 import androidx.compose.runtime.Composable
@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.desk.AddDeskViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.di.AddDataViewModelFactoryProvider
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
@@ -68,6 +69,20 @@ sealed class AddDataViewModels {
 
             return viewModel(
                 factory = AddChairViewModel.provideFactory(factory, userAndPlaceBundle)
+            )
+        }
+
+        @Composable
+        inline fun <reified T : ViewModel> addDeskViewModel(
+            userAndPlaceBundle: UserAndPlaceBundle
+        ): T {
+            val factory = EntryPointAccessors.fromActivity(
+                LocalContext.current as Activity,
+                AddDataViewModelFactoryProvider::class.java
+            ).addDeskViewModelFactory()
+
+            return viewModel(
+                factory = AddDeskViewModel.provideFactory(factory, userAndPlaceBundle)
             )
         }
 

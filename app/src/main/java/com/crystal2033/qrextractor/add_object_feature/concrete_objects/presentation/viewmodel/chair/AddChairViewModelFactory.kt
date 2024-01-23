@@ -6,7 +6,7 @@ import androidx.navigation.NavController
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddViewModelFactory
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
-import com.crystal2033.qrextractor.nav_graphs.add_qr_data.AddDataViewModels.Companion.addChairViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addChairViewModel
 
 class AddChairViewModelFactory : BaseAddViewModelFactory() {
     @Composable
@@ -15,6 +15,6 @@ class AddChairViewModelFactory : BaseAddViewModelFactory() {
         navBackStackEntry: NavBackStackEntry,
         navController: NavController
     ): BaseAddObjectViewModel {
-        return addChairViewModel<AddChairViewModel>(userAndPlaceBundle)
+        return addChairViewModel(userAndPlaceBundle)
     }
 }
