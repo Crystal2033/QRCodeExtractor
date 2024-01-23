@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.chair.AddChairEvent
 import com.crystal2033.qrextractor.core.camera_for_photos.CameraXView
 import com.crystal2033.qrextractor.ui.text_elements.TextFieldView
 import kotlinx.coroutines.flow.collectLatest

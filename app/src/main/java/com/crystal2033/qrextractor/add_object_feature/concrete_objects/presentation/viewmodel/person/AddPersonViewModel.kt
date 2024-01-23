@@ -19,6 +19,7 @@ import com.crystal2033.qrextractor.core.model.Department
 import com.crystal2033.qrextractor.core.model.Person
 import com.crystal2033.qrextractor.core.model.Title
 import com.crystal2033.qrextractor.core.model.WorkSpace
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
@@ -119,6 +120,18 @@ class AddPersonViewModel @AssistedInject constructor(
                 }
             }.launchIn(this)
         }
+    }
+
+    override fun setQRStickerInfo(
+        device: InventarizedModel?,
+        qrCodeStickerInfo: QRCodeStickerInfo
+    ) {
+//        person?.let {
+//            qrCodeStickerInfo.qrCode = createQRCode(person)
+//            qrCodeStickerInfo.essentialName = person.firstName + person.secondName
+//            qrCodeStickerInfo.inventoryNumber = "ASD"
+//            qrCodeStickerInfo.databaseObjectTypes = person.getDatabaseTableName()
+//        }
     }
 
     private fun setQRStickerInfo(person: Person?, qrCodeStickerInfo: QRCodeStickerInfo) {

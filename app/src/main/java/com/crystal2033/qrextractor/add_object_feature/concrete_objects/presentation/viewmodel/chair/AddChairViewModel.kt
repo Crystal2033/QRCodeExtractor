@@ -6,15 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.AddChairEvent
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.chair.AddChairEvent
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.chair.AddChairUseCase
-import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -94,29 +92,12 @@ class AddChairViewModel @AssistedInject constructor(
         }
     }
 
-
-    override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
-        val qrCodeStickerInfo = QRCodeStickerInfo()
-
-        val chair = chairState.value.toDTO()
-        viewModelScope.launch {
-            addChairUseCase(chair).onEach { statusWithState ->
-                when (statusWithState) {
-                    is Resource.Error -> {}
-                    is Resource.Loading -> {}
-                    is Resource.Success -> {
-                        chairState.value.id = statusWithState.data?.id ?: 0
-                        setQRStickerInfo(statusWithState.data, qrCodeStickerInfo)
-                        onAddObjectClicked(qrCodeStickerInfo)
-                        sendUiEvent(UIAddNewObjectEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
-                    }
-                }
-            }.launchIn(this)
-        }
-    }
-
-    private fun setQRStickerInfo(device: Chair?, qrCodeStickerInfo: QRCodeStickerInfo) {
-        device?.let {
+    override fun setQRStickerInfo(
+        device: InventarizedModel?,
+        qrCodeStickerInfo: QRCodeStickerInfo
+    ) {
+        device as Chair
+        device.let {
             qrCodeStickerInfo.qrCode = createQRCode(device)
             qrCodeStickerInfo.essentialName = device.name
             qrCodeStickerInfo.inventoryNumber = device.inventoryNumber
@@ -130,4 +111,21 @@ class AddChairViewModel @AssistedInject constructor(
                 _chairState.value.cabinetId != 0L &&
                 _chairState.value.inventoryNumber.isNotBlank()
     }
+
+    override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
+        val qrCodeStickerInfo = QRCodeStickerInfo()
+        val chair = chairState.value.toDTO()
+
+        viewModelScope.launch {
+            addChairUseCase(chair).onEach { statusWithState ->
+                makeActionWithResourceResult(
+                    statusWithState = statusWithState,
+                    deviceState = _chairState,
+                    onAddObjectClicked,
+                    qrCodeStickerInfo
+                )
+            }.launchIn(this)
+        }
+    }
+
 }

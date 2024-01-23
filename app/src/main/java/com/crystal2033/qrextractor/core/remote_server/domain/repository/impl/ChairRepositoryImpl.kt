@@ -13,6 +13,8 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServ
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import java.util.stream.Collectors
+import java.util.stream.Collectors.toList
 
 class ChairRepositoryImpl(
     private val chairAPI: ChairAPI,
@@ -34,7 +36,7 @@ class ChairRepositoryImpl(
             null,
             getRequestBodyAndConvertInModel = { chairResponse ->
                 val chairs =
-                    chairResponse.body()?.stream()?.map(ChairDTO::toModel)?.toList()
+                    chairResponse.body()?.stream()?.map(ChairDTO::toModel)?.collect(toList())
                 chairs ?: throw RemoteServerRequestException(
                     ExceptionAndErrorParsers.getErrorMessageFromResponse(chairResponse)
                 )

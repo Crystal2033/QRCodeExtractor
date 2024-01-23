@@ -10,7 +10,7 @@ data class SystemUnitDTO(
     override val inventoryNumber: String,
     override val name: String,
     override val cabinetId: Long
-) : InventarizedDTO<SystemUnit> {
+) : InventarizedDTO, ToModelMapper<SystemUnit> {
     override fun toModel(): SystemUnit {
         return SystemUnit(
             id,

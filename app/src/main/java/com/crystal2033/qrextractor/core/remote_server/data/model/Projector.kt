@@ -12,7 +12,7 @@ data class Projector(
     override var inventoryNumber: String,
     override var name: String,
     override var cabinetId: Long
-) : InventarizedModel<ProjectorDTO>, QRScannableData {
+) : InventarizedModel, ToDTOMapper<ProjectorDTO>, QRScannableData {
     override fun getDatabaseTableName(): DatabaseObjectTypes {
         return DatabaseObjectTypes.PROJECTOR
     }

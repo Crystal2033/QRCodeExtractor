@@ -13,6 +13,8 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServ
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import java.util.stream.Collectors
+import java.util.stream.Collectors.toList
 
 class DeskRepositoryImpl(
     private val deskAPI: DeskAPI,
@@ -34,7 +36,7 @@ class DeskRepositoryImpl(
             null,
             getRequestBodyAndConvertInModel = { deskResponse ->
                 val desks =
-                    deskResponse.body()?.stream()?.map(DeskDTO::toModel)?.toList()
+                    deskResponse.body()?.stream()?.map(DeskDTO::toModel)?.collect(toList())
                 desks ?: throw RemoteServerRequestException(
                     ExceptionAndErrorParsers.getErrorMessageFromResponse(deskResponse)
                 )

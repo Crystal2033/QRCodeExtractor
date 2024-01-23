@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.stream.Collectors
+import java.util.stream.Collectors.toList
 
 class CabinetRepositoryImpl(
     private val cabinetAPI: CabinetAPI,
@@ -43,7 +45,7 @@ class CabinetRepositoryImpl(
                 buildingId
             )
             val cabinets =
-                response.body()?.stream()?.map(CabinetDTO::toCabinet)?.toList()
+                response.body()?.stream()?.map(CabinetDTO::toCabinet)?.collect(toList())
             cabinets?.let {
                 return it
             } ?: throw RemoteServerRequestException(

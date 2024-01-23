@@ -12,7 +12,7 @@ data class SystemUnit(
     override var inventoryNumber: String,
     override var name: String,
     override var cabinetId: Long
-) : InventarizedModel<SystemUnitDTO>, QRScannableData {
+) : InventarizedModel, ToDTOMapper<SystemUnitDTO>, QRScannableData {
     override fun toDTO(): SystemUnitDTO {
         return SystemUnitDTO(
             id,

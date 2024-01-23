@@ -13,6 +13,8 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServ
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import java.util.stream.Collectors
+import java.util.stream.Collectors.toList
 
 class MonitorRepositoryImpl(
     private val monitorAPI: MonitorAPI,
@@ -36,7 +38,7 @@ class MonitorRepositoryImpl(
             null,
             getRequestBodyAndConvertInModel = { monitorResponse ->
                 val monitors =
-                    monitorResponse.body()?.stream()?.map(MonitorDTO::toModel)?.toList()
+                    monitorResponse.body()?.stream()?.map(MonitorDTO::toModel)?.collect(toList())
                 monitors ?: throw RemoteServerRequestException(
                     ExceptionAndErrorParsers.getErrorMessageFromResponse(monitorResponse)
                 )

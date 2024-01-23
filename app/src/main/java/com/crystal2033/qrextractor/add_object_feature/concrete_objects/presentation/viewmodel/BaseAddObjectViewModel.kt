@@ -12,7 +12,6 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.util.QRCodeGenerator
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
-import com.crystal2033.qrextractor.core.remote_server.data.dto.InventarizedDTO
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedModel
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
@@ -40,25 +39,28 @@ abstract class BaseAddObjectViewModel(
         }
     }
 
-//    protected fun makeActionWithResourceResult(
-//        statusWithState: Resource<M>,
-//        deviceState: State<M>,
-//        onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
-//        qrCodeStickerInfo: QRCodeStickerInfo
-//    ) {
-//        when (statusWithState) {
-//            is Resource.Error -> {}
-//            is Resource.Loading -> {}
-//            is Resource.Success -> {
-//                deviceState.value.id = statusWithState.data?.id ?: 0
-//                setQRStickerInfo(statusWithState.data, qrCodeStickerInfo)
-//                onAddObjectClicked(qrCodeStickerInfo)
-//                sendUiEvent(UIAddNewObjectEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
-//            }
-//        }
-//    }
+    protected fun <M : InventarizedModel> makeActionWithResourceResult(
+        statusWithState: Resource<M>,
+        deviceState: State<M>,
+        onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
+        qrCodeStickerInfo: QRCodeStickerInfo
+    ) {
+        when (statusWithState) {
+            is Resource.Error -> {}
+            is Resource.Loading -> {}
+            is Resource.Success -> {
+                deviceState.value.id = statusWithState.data?.id ?: 0
+                setQRStickerInfo(statusWithState.data, qrCodeStickerInfo)
+                onAddObjectClicked(qrCodeStickerInfo)
+                sendUiEvent(UIAddNewObjectEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
+            }
+        }
+    }
 
-    //protected abstract fun setQRStickerInfo(device: M?, qrCodeStickerInfo: QRCodeStickerInfo)
+    protected abstract fun setQRStickerInfo(
+        device: InventarizedModel?,
+        qrCodeStickerInfo: QRCodeStickerInfo
+    )
 
     protected fun <T> insertPossibleObjectsInListIfSuccess(
         statusWithState: Resource<List<T>>,

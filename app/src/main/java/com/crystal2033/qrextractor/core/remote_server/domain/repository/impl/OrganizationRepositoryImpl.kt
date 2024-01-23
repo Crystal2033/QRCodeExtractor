@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.stream.Collectors
+import java.util.stream.Collectors.toList
 
 class OrganizationRepositoryImpl(
     private val organizationAPI: OrganizationAPI,
@@ -35,7 +37,7 @@ class OrganizationRepositoryImpl(
         try {
             val response = organizationAPI.getAllOrganization()
             val organizations =
-                response.body()?.stream()?.map(OrganizationDTO::toOrganization)?.toList()
+                response.body()?.stream()?.map(OrganizationDTO::toOrganization)?.collect(toList())
             organizations?.let {
                 return it
             } ?: throw RemoteServerRequestException(

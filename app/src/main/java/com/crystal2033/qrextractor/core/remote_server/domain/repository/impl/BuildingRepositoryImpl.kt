@@ -15,6 +15,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.stream.Collector
+import java.util.stream.Collectors.toList
+import kotlin.streams.toList
 
 class BuildingRepositoryImpl(
     private val buildingAPI: BuildingAPI,
@@ -41,7 +44,7 @@ class BuildingRepositoryImpl(
                 branchId
             )
             val buildings =
-                response.body()?.stream()?.map(BuildingDTO::toBuilding)?.toList()
+                response.body()?.stream()?.map(BuildingDTO::toBuilding)?.collect(toList())
             buildings?.let {
                 return it
             } ?: throw RemoteServerRequestException(

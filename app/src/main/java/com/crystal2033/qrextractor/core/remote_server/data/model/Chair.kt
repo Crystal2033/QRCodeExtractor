@@ -12,7 +12,7 @@ data class Chair(
     override var inventoryNumber: String = "",
     override var name: String = "",
     override var cabinetId: Long = 0L
-) : InventarizedModel<ChairDTO>, QRScannableData {
+) : InventarizedModel, ToDTOMapper<ChairDTO>, QRScannableData {
     override fun toDTO(): ChairDTO {
         return ChairDTO(
             id,

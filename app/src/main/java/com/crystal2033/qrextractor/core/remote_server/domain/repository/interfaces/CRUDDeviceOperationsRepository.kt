@@ -15,9 +15,9 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-//[M]odel, [D]TO, [A]PI, re[T]urning result, [DT] -- is returning type from api function
-interface CRUDDeviceOperationsRepository<M : InventarizedModel<D>,
-        D : InventarizedDTO<M>, A> {
+//[M]odel, [D]TO, [A]PI, re[T]urning result, [AT] -- is returning type from api function
+interface CRUDDeviceOperationsRepository<M : InventarizedModel,
+        D : InventarizedDTO, A> {
     fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<M>>>
 
     fun getDeviceById(deviceId: Long): Flow<Resource<M>>

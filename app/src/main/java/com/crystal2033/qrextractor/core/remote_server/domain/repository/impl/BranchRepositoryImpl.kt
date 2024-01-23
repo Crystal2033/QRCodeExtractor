@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
+import java.util.stream.Collectors
+import java.util.stream.Collectors.toList
 
 class BranchRepositoryImpl(
     private val branchAPI: BranchAPI,
@@ -35,7 +37,7 @@ class BranchRepositoryImpl(
         try {
             val response = branchAPI.getAllBranchesByOrg(orgId)
             val branches =
-                response.body()?.stream()?.map(BranchDTO::toBranch)?.toList()
+                response.body()?.stream()?.map(BranchDTO::toBranch)?.collect(toList())
             branches?.let {
                 return it
             } ?: throw RemoteServerRequestException(

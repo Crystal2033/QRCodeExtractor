@@ -13,6 +13,7 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServ
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import java.util.stream.Collectors.toList
 
 class ProjectorRepositoryImpl(
     private val projectorAPI: ProjectorAPI,
@@ -36,7 +37,9 @@ class ProjectorRepositoryImpl(
             null,
             getRequestBodyAndConvertInModel = { projectorResponse ->
                 val projectors =
-                    projectorResponse.body()?.stream()?.map(ProjectorDTO::toModel)?.toList()
+                    projectorResponse.body()?.stream()?.map(ProjectorDTO::toModel)?.collect(
+                        toList()
+                    )
                 projectors ?: throw RemoteServerRequestException(
                     ExceptionAndErrorParsers.getErrorMessageFromResponse(projectorResponse)
                 )
