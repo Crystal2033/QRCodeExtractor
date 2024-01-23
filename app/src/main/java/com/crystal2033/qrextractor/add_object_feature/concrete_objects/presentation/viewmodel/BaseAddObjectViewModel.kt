@@ -1,20 +1,24 @@
 package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.BaseDeviceState
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.AddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.util.QRCodeGenerator
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedModel
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
@@ -24,7 +28,8 @@ import kotlinx.coroutines.launch
 
 abstract class BaseAddObjectViewModel(
     private val context: Context,
-    private val converter: Converters
+    private val converter: Converters,
+    private val userAndPlaceBundle: UserAndPlaceBundle
 ) : ViewModel() {
     private val _eventFlow = Channel<UIAddNewObjectEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
@@ -34,6 +39,9 @@ abstract class BaseAddObjectViewModel(
         return bitmap.asImageBitmap()
     }
 
+    private val _userAndPlaceBundleState = mutableStateOf(userAndPlaceBundle)
+    val userAndPlaceBundleState: State<UserAndPlaceBundle> = _userAndPlaceBundleState
+
     abstract fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit)
 
 
@@ -42,6 +50,27 @@ abstract class BaseAddObjectViewModel(
             _eventFlow.send(event)
         }
     }
+
+    protected abstract fun isAllNeededFieldsInsertedCorrectly(): Boolean
+    fun onEvent(event: AddNewObjectEvent) {
+        when (event) {
+            is AddNewObjectEvent.OnImageChanged -> {
+                setNewImage(event.image)
+            }
+
+            is AddNewObjectEvent.OnInventoryNumberChanged -> {
+                setNewInventoryNumber(event.inventoryNumber)
+            }
+
+            is AddNewObjectEvent.OnNameChanged -> {
+                setNewName(event.name)
+            }
+        }
+    }
+
+    protected abstract fun setNewImage(image: Bitmap?)
+    protected abstract fun setNewName(name: String)
+    protected abstract fun setNewInventoryNumber(invNumber: String)
 
     protected fun <M : InventarizedModel> makeActionWithResourceResult(
         statusWithState: Resource<M>,
@@ -83,6 +112,7 @@ abstract class BaseAddObjectViewModel(
             }
         }
     }
+
 
     protected abstract fun setQRStickerInfo(
         device: InventarizedModel?,

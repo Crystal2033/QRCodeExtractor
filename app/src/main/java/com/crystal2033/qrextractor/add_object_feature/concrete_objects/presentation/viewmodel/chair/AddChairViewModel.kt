@@ -1,6 +1,7 @@
 package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair
 
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,6 @@ import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.BaseDeviceState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.ChairUIState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.chair.AddChairEvent
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedModel
@@ -29,11 +29,10 @@ class AddChairViewModel @AssistedInject constructor(
     @ApplicationContext private val context: Context,
     converters: Converters,
     private val addChairUseCase: AddChairUseCase
-) : BaseAddObjectViewModel(context, converters) {
+) : BaseAddObjectViewModel(context, converters, userAndPlaceBundle) {
 
 
     private val _chairState = mutableStateOf(Chair()) //work with this here is more convenient
-    //val chairState: State<Chair> = _chairState
 
     private val _chairStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Chair>>(
         ChairUIState(
@@ -41,10 +40,6 @@ class AddChairViewModel @AssistedInject constructor(
         )
     )
     val chairStateWithLoadingStatus: State<BaseDeviceState<Chair>> = _chairStateWithLoadingStatus
-
-
-    private val _userAndPlaceBundleState = mutableStateOf(userAndPlaceBundle)
-    val userAndPlaceBundleState: State<UserAndPlaceBundle> = _userAndPlaceBundleState
 
 
     init {
@@ -56,39 +51,39 @@ class AddChairViewModel @AssistedInject constructor(
         fun create(userAndPlaceBundle: UserAndPlaceBundle): AddChairViewModel
     }
 
-    fun onEvent(event: AddChairEvent) {
-        when (event) {
-            is AddChairEvent.OnImageChanged -> {
-                _chairState.value = Chair(
-                    id = _chairState.value.id,
-                    image = event.image,
-                    inventoryNumber = _chairState.value.inventoryNumber,
-                    name = _chairState.value.name,
-                    cabinetId = _chairState.value.cabinetId
-                )
-            }
-
-            is AddChairEvent.OnInventoryNumberChanged -> {
-                _chairState.value = Chair(
-                    id = _chairState.value.id,
-                    image = _chairState.value.image,
-                    inventoryNumber = event.inventoryNumber,
-                    name = _chairState.value.name,
-                    cabinetId = _chairState.value.cabinetId
-                )
-            }
-
-            is AddChairEvent.OnNameChanged -> {
-                _chairState.value = Chair(
-                    id = _chairState.value.id,
-                    image = _chairState.value.image,
-                    inventoryNumber = _chairState.value.inventoryNumber,
-                    name = event.name,
-                    cabinetId = _chairState.value.cabinetId
-                )
-            }
-        }
-    }
+//    fun onEvent(event: AddChairEvent) {
+//        when (event) {
+//            is AddChairEvent.OnImageChanged -> {
+//                _chairState.value = Chair(
+//                    id = _chairState.value.id,
+//                    image = event.image,
+//                    inventoryNumber = _chairState.value.inventoryNumber,
+//                    name = _chairState.value.name,
+//                    cabinetId = _chairState.value.cabinetId
+//                )
+//            }
+//
+//            is AddChairEvent.OnInventoryNumberChanged -> {
+//                _chairState.value = Chair(
+//                    id = _chairState.value.id,
+//                    image = _chairState.value.image,
+//                    inventoryNumber = event.inventoryNumber,
+//                    name = _chairState.value.name,
+//                    cabinetId = _chairState.value.cabinetId
+//                )
+//            }
+//
+//            is AddChairEvent.OnNameChanged -> {
+//                _chairState.value = Chair(
+//                    id = _chairState.value.id,
+//                    image = _chairState.value.image,
+//                    inventoryNumber = _chairState.value.inventoryNumber,
+//                    name = event.name,
+//                    cabinetId = _chairState.value.cabinetId
+//                )
+//            }
+//        }
+//    }
 
     companion object {
         @Suppress("UNCHECKED_CAST")
@@ -116,10 +111,8 @@ class AddChairViewModel @AssistedInject constructor(
     }
 
     fun isAllFieldInsertedCorrectly(): Boolean {
-        return _chairState.value.image != null &&
-                _chairState.value.name.isNotBlank() &&
-                _chairState.value.cabinetId != 0L &&
-                _chairState.value.inventoryNumber.isNotBlank()
+        //Here you should write checks for specific fields
+        return isAllNeededFieldsInsertedCorrectly()
     }
 
     override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
@@ -136,6 +129,43 @@ class AddChairViewModel @AssistedInject constructor(
                 )
             }.launchIn(this)
         }
+    }
+
+    override fun isAllNeededFieldsInsertedCorrectly(): Boolean {
+        return _chairState.value.image != null &&
+                _chairState.value.name.isNotBlank() &&
+                _chairState.value.cabinetId != 0L &&
+                _chairState.value.inventoryNumber.isNotBlank()
+    }
+
+    override fun setNewImage(image: Bitmap?) {
+        _chairState.value = Chair(
+            id = _chairState.value.id,
+            image = image,
+            inventoryNumber = _chairState.value.inventoryNumber,
+            name = _chairState.value.name,
+            cabinetId = _chairState.value.cabinetId
+        )
+    }
+
+    override fun setNewName(name: String) {
+        _chairState.value = Chair(
+            id = _chairState.value.id,
+            image = _chairState.value.image,
+            inventoryNumber = _chairState.value.inventoryNumber,
+            name = name,
+            cabinetId = _chairState.value.cabinetId
+        )
+    }
+
+    override fun setNewInventoryNumber(invNumber: String) {
+        _chairState.value = Chair(
+            id = _chairState.value.id,
+            image = _chairState.value.image,
+            inventoryNumber = invNumber,
+            name = _chairState.value.name,
+            cabinetId = _chairState.value.cabinetId
+        )
     }
 
 }

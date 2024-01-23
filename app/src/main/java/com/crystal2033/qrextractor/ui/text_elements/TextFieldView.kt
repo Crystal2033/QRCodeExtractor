@@ -36,7 +36,7 @@ fun TextFieldView(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
     isPassword: Boolean = false,
     focusedColor: Color = Color.White,
-    unfocusedColor: Color = Color.Black,
+    unfocusedColor: Color = Color.Gray,
     isEnabled: Boolean = true
 
 

@@ -3,5 +3,8 @@ package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presenta
 import android.graphics.Bitmap
 
 sealed class AddNewObjectEvent {
-    //data class OnAddObjectInDatabaseClicked(val qrScannableData: QRScannableData) : AddNewObjectEvent()
+
+    data class OnNameChanged(val name: String) : AddNewObjectEvent()
+    data class OnInventoryNumberChanged(val inventoryNumber: String) : AddNewObjectEvent()
+    data class OnImageChanged(val image: Bitmap?) : AddNewObjectEvent()
 }

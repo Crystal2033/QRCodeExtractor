@@ -1,6 +1,7 @@
 package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.person
 
 import android.content.Context
+import android.graphics.Bitmap
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +40,7 @@ class AddPersonViewModel @AssistedInject constructor(
     private val converters: Converters,
     private val personGetterUseCases: PersonGetterUseCases
 
-) : BaseAddObjectViewModel(context, converters) {
+) : BaseAddObjectViewModel(context, converters, userAndPlaceBundle) {
     @AssistedFactory
     interface Factory {
         fun create(userAndPlaceBundle: UserAndPlaceBundle): AddPersonViewModel
@@ -93,9 +94,9 @@ class AddPersonViewModel @AssistedInject constructor(
     }
 
 
-    fun onEvent(event: AddNewObjectEvent) {
-
-    }
+//    fun onEvent(event: AddNewObjectEvent) {
+//
+//    }
 
 
     override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
@@ -120,6 +121,22 @@ class AddPersonViewModel @AssistedInject constructor(
                 }
             }.launchIn(this)
         }
+    }
+
+    override fun isAllNeededFieldsInsertedCorrectly(): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun setNewImage(image: Bitmap?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setNewName(name: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setNewInventoryNumber(invNumber: String) {
+        TODO("Not yet implemented")
     }
 
     override fun setQRStickerInfo(
