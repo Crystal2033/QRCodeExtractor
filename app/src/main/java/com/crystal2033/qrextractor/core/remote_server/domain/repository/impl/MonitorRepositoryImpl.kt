@@ -4,6 +4,7 @@ import android.content.Context
 import com.crystal2033.qrextractor.core.remote_server.api.MonitorAPI
 import com.crystal2033.qrextractor.core.remote_server.data.APIArgumentsFillers
 import com.crystal2033.qrextractor.core.remote_server.data.dto.MonitorDTO
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.data.model.Monitor
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.BundleID
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.MonitorRepository
@@ -22,7 +23,7 @@ class MonitorRepositoryImpl(
 ) : MonitorRepository {
 
 
-    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<Monitor>>> {
+    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<InventarizedAndQRScannableModel>>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -52,7 +53,7 @@ class MonitorRepositoryImpl(
         )
     }
 
-    override fun getDeviceById(deviceId: Long): Flow<Resource<Monitor>> {
+    override fun getDeviceById(deviceId: Long): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -81,7 +82,7 @@ class MonitorRepositoryImpl(
         )
     }
 
-    override fun addDevice(deviceDTO: MonitorDTO?): Flow<Resource<Monitor>> {
+    override fun addDevice(deviceDTO: MonitorDTO?): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,
@@ -112,7 +113,7 @@ class MonitorRepositoryImpl(
         )
     }
 
-    override fun updateDevice(deviceDTO: MonitorDTO): Flow<Resource<Monitor>> {
+    override fun updateDevice(deviceDTO: MonitorDTO): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,

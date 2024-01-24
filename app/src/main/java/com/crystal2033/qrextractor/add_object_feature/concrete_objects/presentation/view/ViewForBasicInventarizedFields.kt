@@ -27,9 +27,9 @@ import com.crystal2033.qrextractor.ui.text_elements.TextFieldView
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun <M : InventarizedModel> BaseViewForInventarizedDevice(
+fun BaseViewForInventarizedDevice(
     viewModel: BaseAddObjectViewModel,
-    deviceState: BaseDeviceState<M>,
+    deviceState: BaseDeviceState,
     isNeedToShowCamera: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
     snackbarHostState: SnackbarHostState

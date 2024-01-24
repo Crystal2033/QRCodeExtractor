@@ -5,6 +5,7 @@ import com.crystal2033.qrextractor.core.remote_server.api.ChairAPI
 import com.crystal2033.qrextractor.core.remote_server.data.APIArgumentsFillers
 import com.crystal2033.qrextractor.core.remote_server.data.dto.ChairDTO
 import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.BundleID
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.ChairRepository
 import com.crystal2033.qrextractor.core.util.Resource
@@ -20,7 +21,7 @@ class ChairRepositoryImpl(
     private val chairAPI: ChairAPI,
     @ApplicationContext private val context: Context
 ) : ChairRepository {
-    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<Chair>>> {
+    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<InventarizedAndQRScannableModel>>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -50,7 +51,7 @@ class ChairRepositoryImpl(
         )
     }
 
-    override fun getDeviceById(deviceId: Long): Flow<Resource<Chair>> {
+    override fun getDeviceById(deviceId: Long): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -79,7 +80,7 @@ class ChairRepositoryImpl(
         )
     }
 
-    override fun addDevice(deviceDTO: ChairDTO?): Flow<Resource<Chair>> {
+    override fun addDevice(deviceDTO: ChairDTO?): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,
@@ -110,7 +111,7 @@ class ChairRepositoryImpl(
         )
     }
 
-    override fun updateDevice(deviceDTO: ChairDTO): Flow<Resource<Chair>> {
+    override fun updateDevice(deviceDTO: ChairDTO): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,

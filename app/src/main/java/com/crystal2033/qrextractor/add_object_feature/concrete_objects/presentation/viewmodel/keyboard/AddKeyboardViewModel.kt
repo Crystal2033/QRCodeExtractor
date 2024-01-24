@@ -37,12 +37,12 @@ class AddKeyboardViewModel @AssistedInject constructor(
         )
     ) //work with this here is more convenient
 
-    private val _keyboardStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Keyboard>>(
+    private val _keyboardStateWithLoadingStatus = mutableStateOf<BaseDeviceState>(
         KeyboardUIState(
             _keyboardState, false
         )
     )
-    val keyboardStateWithLoadingStatus: State<BaseDeviceState<Keyboard>> =
+    val keyboardStateWithLoadingStatus: State<BaseDeviceState> =
         _keyboardStateWithLoadingStatus
 
 

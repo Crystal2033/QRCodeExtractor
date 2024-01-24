@@ -14,6 +14,8 @@ import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
@@ -68,7 +70,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
         }
     }
 
-    private lateinit var getDataFromQRCodeUseCase: GetScannableDataFromServerUseCase
+    private lateinit var getDataFromQRCodeUseCase: GetDeviceUseCaseInvoker
 
     ///States
     private val _previewDataFromQRState = mutableStateOf(ScannedDataState())
@@ -210,7 +212,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
         }
     }
 
-    private fun setPreviewObjectStateInfo(data: Resource<QRScannableData>) {
+    private fun setPreviewObjectStateInfo(data: Resource<InventarizedAndQRScannableModel>) {
         when (data) {
             is Resource.Loading -> {
                 setDataWithStatus(data, true)
@@ -240,7 +242,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
 //        }
 //    }
 
-    private fun setDataWithStatus(result: Resource<QRScannableData>, isLoading: Boolean) {
+    private fun setDataWithStatus(result: Resource<InventarizedAndQRScannableModel>, isLoading: Boolean) {
         _previewDataFromQRState.value = previewDataFromQRState.value.copy(
             scannedDataInfo = result.data,
             isLoading = isLoading

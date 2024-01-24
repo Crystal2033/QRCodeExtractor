@@ -7,6 +7,6 @@ import com.crystal2033.qrextractor.core.remote_server.data.dto.KeyboardDTO
 import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
 import com.crystal2033.qrextractor.core.remote_server.data.model.Keyboard
 
-interface KeyboardRepository : CRUDDeviceOperationsRepository<Keyboard, KeyboardDTO, KeyboardAPI> {
+interface KeyboardRepository : CRUDDeviceOperationsRepository<KeyboardDTO, KeyboardAPI> {
 
 }

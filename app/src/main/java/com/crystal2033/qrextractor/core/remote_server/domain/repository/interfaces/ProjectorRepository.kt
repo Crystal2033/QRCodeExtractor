@@ -7,5 +7,5 @@ import com.crystal2033.qrextractor.core.remote_server.data.dto.ProjectorDTO
 import com.crystal2033.qrextractor.core.remote_server.data.model.Desk
 import com.crystal2033.qrextractor.core.remote_server.data.model.Projector
 
-interface ProjectorRepository : CRUDDeviceOperationsRepository<Projector, ProjectorDTO, ProjectorAPI> {
+interface ProjectorRepository : CRUDDeviceOperationsRepository<ProjectorDTO, ProjectorAPI> {
 }

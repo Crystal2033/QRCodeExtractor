@@ -1,16 +1,16 @@
 package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state
 
 import androidx.compose.runtime.State
-import com.crystal2033.qrextractor.core.remote_server.data.model.Keyboard
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 
 data class KeyboardUIState(
-    override var deviceState: State<Keyboard>,
+    override var deviceState: State<InventarizedAndQRScannableModel>,
     override var isLoading: Boolean
-) : BaseDeviceState<Keyboard> {
+) : BaseDeviceState {
     override fun stateCopy(
-        deviceState: State<Keyboard>,
+        deviceState: State<InventarizedAndQRScannableModel>,
         isLoading: Boolean
-    ): BaseDeviceState<Keyboard> {
+    ): BaseDeviceState {
         return copy(deviceState = deviceState, isLoading = isLoading)
     }
 }

@@ -91,7 +91,7 @@ abstract class BaseAddObjectViewModel(
 
     protected fun <M : InventarizedAndQRScannableModel> makeActionWithResourceResult(
         statusWithState: Resource<M>,
-        deviceState: MutableState<BaseDeviceState<M>>,
+        deviceState: MutableState<BaseDeviceState>,
         onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
         qrCodeStickerInfo: QRCodeStickerInfo
     ) {

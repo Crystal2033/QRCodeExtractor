@@ -12,6 +12,7 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.chair.AddChairUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
@@ -37,12 +38,12 @@ class AddChairViewModel @AssistedInject constructor(
         )
     ) //work with this here is more convenient
 
-    private val _chairStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Chair>>(
+    private val _chairStateWithLoadingStatus = mutableStateOf<BaseDeviceState>(
         ChairUIState(
             _chairState, false
         )
     )
-    val chairStateWithLoadingStatus: State<BaseDeviceState<Chair>> = _chairStateWithLoadingStatus
+    val chairStateWithLoadingStatus: State<BaseDeviceState> = _chairStateWithLoadingStatus
 
 
     @AssistedFactory

@@ -37,12 +37,12 @@ class AddMonitorViewModel @AssistedInject constructor(
         )
     ) //work with this here is more convenient
 
-    private val _monitorStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Monitor>>(
+    private val _monitorStateWithLoadingStatus = mutableStateOf<BaseDeviceState>(
         MonitorUIState(
             _monitorState, false
         )
     )
-    val monitorStateWithLoadingStatus: State<BaseDeviceState<Monitor>> =
+    val monitorStateWithLoadingStatus: State<BaseDeviceState> =
         _monitorStateWithLoadingStatus
 
 

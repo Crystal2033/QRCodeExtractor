@@ -4,6 +4,7 @@ import android.content.Context
 import com.crystal2033.qrextractor.core.remote_server.api.SystemUnitAPI
 import com.crystal2033.qrextractor.core.remote_server.data.APIArgumentsFillers
 import com.crystal2033.qrextractor.core.remote_server.data.dto.SystemUnitDTO
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.data.model.SystemUnit
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.BundleID
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.SystemUnitRepository
@@ -21,7 +22,7 @@ class SystemUnitRepositoryImpl(
 ) : SystemUnitRepository {
 
 
-    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<SystemUnit>>> {
+    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<InventarizedAndQRScannableModel>>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -53,7 +54,7 @@ class SystemUnitRepositoryImpl(
         )
     }
 
-    override fun getDeviceById(deviceId: Long): Flow<Resource<SystemUnit>> {
+    override fun getDeviceById(deviceId: Long): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -82,7 +83,7 @@ class SystemUnitRepositoryImpl(
         )
     }
 
-    override fun addDevice(deviceDTO: SystemUnitDTO?): Flow<Resource<SystemUnit>> {
+    override fun addDevice(deviceDTO: SystemUnitDTO?): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,
@@ -113,7 +114,7 @@ class SystemUnitRepositoryImpl(
         )
     }
 
-    override fun updateDevice(deviceDTO: SystemUnitDTO): Flow<Resource<SystemUnit>> {
+    override fun updateDevice(deviceDTO: SystemUnitDTO): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,

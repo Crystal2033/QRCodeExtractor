@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.state.ObjectsListState
@@ -59,7 +61,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
         Log.i(LOG_TAG_NAMES.INFO_TAG, "CLEARED")
     }
 
-    private lateinit var getObjectInfoUseCase: GetScannableDataFromServerUseCase
+    private lateinit var getObjectInfoUseCase: GetDeviceUseCaseInvoker
 
     @AssistedFactory
     interface Factory {
@@ -110,7 +112,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
 
     }
 
-    private fun addResultInList(objectGetResult: Resource<QRScannableData>, id: Long) {
+    private fun addResultInList(objectGetResult: Resource<InventarizedAndQRScannableModel>, id: Long) {
         when (objectGetResult) {
             is Resource.Error -> {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "ERROR WITH ID: $id")

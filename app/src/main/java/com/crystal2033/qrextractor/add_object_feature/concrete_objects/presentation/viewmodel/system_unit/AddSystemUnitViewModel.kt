@@ -37,12 +37,12 @@ class AddSystemUnitViewModel @AssistedInject constructor(
         )
     ) //work with this here is more convenient
 
-    private val _systemUnitStateWithLoadingStatus = mutableStateOf<BaseDeviceState<SystemUnit>>(
+    private val _systemUnitStateWithLoadingStatus = mutableStateOf<BaseDeviceState>(
         SystemUnitUIState(
             _systemUnitState, false
         )
     )
-    val systemUnitStateWithLoadingStatus: State<BaseDeviceState<SystemUnit>> =
+    val systemUnitStateWithLoadingStatus: State<BaseDeviceState> =
         _systemUnitStateWithLoadingStatus
 
 

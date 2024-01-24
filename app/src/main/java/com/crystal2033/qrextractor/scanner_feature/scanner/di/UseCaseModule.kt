@@ -1,6 +1,7 @@
 package com.crystal2033.qrextractor.scanner_feature.scanner.di
 
 import android.content.Context
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.chair.GetChairUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.DataGetterUseCases
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.GetPersonUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetObjectFromServerFactory
@@ -27,10 +28,12 @@ object UseCaseModule {
     @Singleton
     fun provideQRCodeScannerUseCases(
         getPersonFromQRCodeUseCase: GetPersonUseCase,
+        getChairUseCase: GetChairUseCase
         //getKeyboardFromQRCodeUseCase: GetKeyboardUseCase
     ): DataGetterUseCases {
         return DataGetterUseCases(
             getPersonFromQRCodeUseCase,
+            getChairUseCase
             //getKeyboardFromQRCodeUseCase
         )
     }

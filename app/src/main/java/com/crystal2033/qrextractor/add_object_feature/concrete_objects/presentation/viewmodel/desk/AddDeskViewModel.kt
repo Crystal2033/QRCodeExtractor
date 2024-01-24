@@ -37,12 +37,12 @@ class AddDeskViewModel @AssistedInject constructor(
         )
     ) //work with this here is more convenient
 
-    private val _deskStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Desk>>(
+    private val _deskStateWithLoadingStatus = mutableStateOf<BaseDeviceState>(
         DeskUIState(
             _deskState, false
         )
     )
-    val deskStateWithLoadingStatus: State<BaseDeviceState<Desk>> = _deskStateWithLoadingStatus
+    val deskStateWithLoadingStatus: State<BaseDeviceState> = _deskStateWithLoadingStatus
 
 
     @AssistedFactory

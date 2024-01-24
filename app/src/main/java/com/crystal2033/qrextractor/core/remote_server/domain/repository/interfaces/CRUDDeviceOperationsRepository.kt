@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.remote_server.data.dto.InventarizedDTO
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.BundleID
 import com.crystal2033.qrextractor.core.util.Resource
@@ -16,15 +17,14 @@ import retrofit2.Response
 import java.io.IOException
 
 //[M]odel, [D]TO, [A]PI, re[T]urning result, [AT] -- is returning type from api function
-interface CRUDDeviceOperationsRepository<M : InventarizedModel,
-        D : InventarizedDTO, A> {
-    fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<M>>>
+interface CRUDDeviceOperationsRepository<D : InventarizedDTO, A> {
+    fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<InventarizedAndQRScannableModel>>>
 
-    fun getDeviceById(deviceId: Long): Flow<Resource<M>>
+    fun getDeviceById(deviceId: Long): Flow<Resource<InventarizedAndQRScannableModel>>
 
-    fun addDevice(deviceDTO: D?): Flow<Resource<M>>
+    fun addDevice(deviceDTO: D?): Flow<Resource<InventarizedAndQRScannableModel>>
 
-    fun updateDevice(deviceDTO: D): Flow<Resource<M>>
+    fun updateDevice(deviceDTO: D): Flow<Resource<InventarizedAndQRScannableModel>>
 
     fun deleteDevice(deviceId: Long): Flow<Resource<Unit>>
 

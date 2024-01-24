@@ -4,7 +4,7 @@ import android.content.Context
 import com.crystal2033.qrextractor.core.remote_server.api.DeskAPI
 import com.crystal2033.qrextractor.core.remote_server.data.APIArgumentsFillers
 import com.crystal2033.qrextractor.core.remote_server.data.dto.DeskDTO
-import com.crystal2033.qrextractor.core.remote_server.data.model.Desk
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.BundleID
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.DeskRepository
 import com.crystal2033.qrextractor.core.util.Resource
@@ -13,14 +13,13 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.exceptions.RemoteServ
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
-import java.util.stream.Collectors
 import java.util.stream.Collectors.toList
 
 class DeskRepositoryImpl(
     private val deskAPI: DeskAPI,
     @ApplicationContext private val context: Context
 ) : DeskRepository {
-    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<Desk>>> {
+    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<InventarizedAndQRScannableModel>>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -50,7 +49,7 @@ class DeskRepositoryImpl(
         )
     }
 
-    override fun getDeviceById(deviceId: Long): Flow<Resource<Desk>> {
+    override fun getDeviceById(deviceId: Long): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -79,7 +78,7 @@ class DeskRepositoryImpl(
         )
     }
 
-    override fun addDevice(deviceDTO: DeskDTO?): Flow<Resource<Desk>> {
+    override fun addDevice(deviceDTO: DeskDTO?): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,
@@ -110,7 +109,7 @@ class DeskRepositoryImpl(
         )
     }
 
-    override fun updateDevice(deviceDTO: DeskDTO): Flow<Resource<Desk>> {
+    override fun updateDevice(deviceDTO: DeskDTO): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,

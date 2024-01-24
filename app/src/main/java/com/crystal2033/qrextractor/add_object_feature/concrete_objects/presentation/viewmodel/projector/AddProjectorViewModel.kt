@@ -37,12 +37,12 @@ class AddProjectorViewModel @AssistedInject constructor(
         )
     ) //work with this here is more convenient
 
-    private val _projectorStateWithLoadingStatus = mutableStateOf<BaseDeviceState<Projector>>(
+    private val _projectorStateWithLoadingStatus = mutableStateOf<BaseDeviceState>(
         ProjectorUIState(
             _projectorState, false
         )
     )
-    val projectorStateWithLoadingStatus: State<BaseDeviceState<Projector>> =
+    val projectorStateWithLoadingStatus: State<BaseDeviceState> =
         _projectorStateWithLoadingStatus
 
 

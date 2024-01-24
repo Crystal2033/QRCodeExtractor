@@ -4,6 +4,7 @@ import android.content.Context
 import com.crystal2033.qrextractor.core.remote_server.api.KeyboardAPI
 import com.crystal2033.qrextractor.core.remote_server.data.APIArgumentsFillers
 import com.crystal2033.qrextractor.core.remote_server.data.dto.KeyboardDTO
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.data.model.Keyboard
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.BundleID
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.KeyboardRepository
@@ -19,7 +20,7 @@ class KeyboardRepositoryImpl(
     private val keyboardAPI: KeyboardAPI,
     @ApplicationContext private val context: Context
 ) : KeyboardRepository {
-    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<Keyboard>>> {
+    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<InventarizedAndQRScannableModel>>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -49,7 +50,7 @@ class KeyboardRepositoryImpl(
         )
     }
 
-    override fun getDeviceById(deviceId: Long): Flow<Resource<Keyboard>> {
+    override fun getDeviceById(deviceId: Long): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -78,7 +79,7 @@ class KeyboardRepositoryImpl(
         )
     }
 
-    override fun addDevice(deviceDTO: KeyboardDTO?): Flow<Resource<Keyboard>> {
+    override fun addDevice(deviceDTO: KeyboardDTO?): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,
@@ -109,7 +110,7 @@ class KeyboardRepositoryImpl(
         )
     }
 
-    override fun updateDevice(deviceDTO: KeyboardDTO): Flow<Resource<Keyboard>> {
+    override fun updateDevice(deviceDTO: KeyboardDTO): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,

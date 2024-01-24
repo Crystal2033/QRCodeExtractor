@@ -4,7 +4,7 @@ import android.content.Context
 import com.crystal2033.qrextractor.core.remote_server.api.ProjectorAPI
 import com.crystal2033.qrextractor.core.remote_server.data.APIArgumentsFillers
 import com.crystal2033.qrextractor.core.remote_server.data.dto.ProjectorDTO
-import com.crystal2033.qrextractor.core.remote_server.data.model.Projector
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.BundleID
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.ProjectorRepository
 import com.crystal2033.qrextractor.core.util.Resource
@@ -21,7 +21,7 @@ class ProjectorRepositoryImpl(
 ) : ProjectorRepository {
 
 
-    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<Projector>>> {
+    override fun getAllDevicesInCabinet(cabinetId: Long): Flow<Resource<List<InventarizedAndQRScannableModel>>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -53,7 +53,7 @@ class ProjectorRepositoryImpl(
         )
     }
 
-    override fun getDeviceById(deviceId: Long): Flow<Resource<Projector>> {
+    override fun getDeviceById(deviceId: Long): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             APIArgumentsFillers.NOT_NEEDED.value,
             APIArgumentsFillers.NOT_NEEDED.value,
@@ -82,7 +82,7 @@ class ProjectorRepositoryImpl(
         )
     }
 
-    override fun addDevice(deviceDTO: ProjectorDTO?): Flow<Resource<Projector>> {
+    override fun addDevice(deviceDTO: ProjectorDTO?): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,
@@ -113,7 +113,7 @@ class ProjectorRepositoryImpl(
         )
     }
 
-    override fun updateDevice(deviceDTO: ProjectorDTO): Flow<Resource<Projector>> {
+    override fun updateDevice(deviceDTO: ProjectorDTO): Flow<Resource<InventarizedAndQRScannableModel>> {
         val bundleOfIds = BundleID(
             orgId = APIArgumentsFillers.NOT_NEEDED.value,
             branchId = APIArgumentsFillers.NOT_NEEDED.value,
