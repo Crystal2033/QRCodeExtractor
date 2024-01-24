@@ -18,11 +18,9 @@ import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAnd
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetScannableDataFromServerUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetObjectFromServerFactory
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.state.ScannedDataState
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.QRScannerEvent
@@ -76,8 +74,9 @@ class QRCodeScannerViewModel @AssistedInject constructor(
     private val _previewDataFromQRState = mutableStateOf(ScannedDataState())
     val previewDataFromQRState: State<ScannedDataState> = _previewDataFromQRState
 
-    private val _listOfAddedScannables = mutableStateListOf<QRScannableData>()
-    val listOfAddedScannables: SnapshotStateList<QRScannableData> = _listOfAddedScannables
+    private val _listOfAddedScannables = mutableStateListOf<InventarizedAndQRScannableModel>()
+    val listOfAddedScannables: SnapshotStateList<InventarizedAndQRScannableModel> =
+        _listOfAddedScannables
     ///States
 
     private val _eventFlow = Channel<UIScannerEvent>()
@@ -149,7 +148,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
     }
 
     private fun onAddScannableIntoListClicked(
-        scannableObject: QRScannableData,
+        scannableObject: InventarizedAndQRScannableModel,
         isAddEvenDuplicate: Boolean
     ) {
         if (isAddEvenDuplicate) {
@@ -242,7 +241,10 @@ class QRCodeScannerViewModel @AssistedInject constructor(
 //        }
 //    }
 
-    private fun setDataWithStatus(result: Resource<InventarizedAndQRScannableModel>, isLoading: Boolean) {
+    private fun setDataWithStatus(
+        result: Resource<InventarizedAndQRScannableModel>,
+        isLoading: Boolean
+    ) {
         _previewDataFromQRState.value = previewDataFromQRState.value.copy(
             scannedDataInfo = result.data,
             isLoading = isLoading

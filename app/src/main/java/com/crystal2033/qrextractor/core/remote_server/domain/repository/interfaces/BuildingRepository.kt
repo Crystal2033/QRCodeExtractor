@@ -8,4 +8,6 @@ interface BuildingRepository {
     fun getBuildingsByOrgAndBranch(
         branchId: Long
     ): Flow<Resource<List<Building>>>
+
+    fun getBuildingById(buildingId: Long): Flow<Resource<Building>>
 }

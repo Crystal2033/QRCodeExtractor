@@ -11,4 +11,11 @@ interface BuildingAPI {
         @Path(value = "orgId") orgId: Long,
         @Path(value = "branchId") branchId: Long
     ): Response<List<BuildingDTO>>
+
+    @GET(value = "${RemoteServerConstants.BUILDING_URL}/{buildingId}")
+    suspend fun getBuildingById(
+        @Path(value = "orgId") orgId: Long,
+        @Path(value = "branchId") branchId: Long,
+        @Path(value = "buildingId") buildingId: Long
+    ): Response<BuildingDTO>
 }

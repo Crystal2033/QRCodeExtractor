@@ -8,4 +8,6 @@ interface CabinetRepository {
     fun getCabinetsByOrgBranchAndBuilding(
         buildingId: Long
     ): Flow<Resource<List<Cabinet>>>
+
+    fun getCabinetById(cabinetId: Long): Flow<Resource<Cabinet>>
 }

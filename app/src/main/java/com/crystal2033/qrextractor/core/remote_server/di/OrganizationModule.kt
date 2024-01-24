@@ -5,6 +5,7 @@ import com.crystal2033.qrextractor.core.ApiInfo
 import com.crystal2033.qrextractor.core.remote_server.api.OrganizationAPI
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.impl.OrganizationRepositoryImpl
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.OrganizationRepository
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetOrganizationUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetOrganizationsUseCase
 import dagger.Module
 import dagger.Provides
@@ -23,6 +24,12 @@ object OrganizationModule {
     @Singleton
     fun provideGetOrganizationsUseCase(organizationRepository: OrganizationRepository): GetOrganizationsUseCase {
         return GetOrganizationsUseCase(organizationRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetOrganizationUseCase(organizationRepository: OrganizationRepository): GetOrganizationUseCase {
+        return GetOrganizationUseCase(organizationRepository)
     }
 
     @Provides

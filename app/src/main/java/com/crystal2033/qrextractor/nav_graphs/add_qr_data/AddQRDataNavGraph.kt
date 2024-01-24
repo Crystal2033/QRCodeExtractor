@@ -119,7 +119,8 @@ fun NavGraphBuilder.addQRCodeGraph(
                         user = userState.value!!,
                         branch = placeChoiceViewModel.selectedBranch.value!!,
                         building = placeChoiceViewModel.selectedBuilding.value!!,
-                        cabinet = placeChoiceViewModel.selectedCabinet.value!!
+                        cabinet = placeChoiceViewModel.selectedCabinet.value!!,
+                        organization = placeChoiceViewModel.currentOrganization.value!!
                     )
                 )
             }
@@ -159,7 +160,8 @@ fun NavGraphBuilder.addQRCodeGraph(
                         user = userState.value!!,
                         branch = placeChoiceViewModel.selectedBranch.value!!,
                         building = placeChoiceViewModel.selectedBuilding.value!!,
-                        cabinet = placeChoiceViewModel.selectedCabinet.value!!
+                        cabinet = placeChoiceViewModel.selectedCabinet.value!!,
+                        organization = placeChoiceViewModel.currentOrganization.value!!
                     )
                 )
             }
@@ -184,7 +186,7 @@ fun NavGraphBuilder.addQRCodeGraph(
                     NavBottomBarConstants.HEIGHT_BOTTOM_BAR
                 )
             ) {
-                createViewByAddType(
+                CreateViewByAddType(
                     typeOfView = menuViewModel.chosenObjectClassState.value,
                     navBackStackEntry = it,
                     navController = navController,
@@ -211,7 +213,8 @@ fun NavGraphBuilder.addQRCodeGraph(
                         user = userState.value!!,
                         branch = placeChoiceViewModel.selectedBranch.value!!,
                         building = placeChoiceViewModel.selectedBuilding.value!!,
-                        cabinet = placeChoiceViewModel.selectedCabinet.value!!
+                        cabinet = placeChoiceViewModel.selectedCabinet.value!!,
+                        organization = placeChoiceViewModel.currentOrganization.value!!
                     )
                 )
             }
@@ -243,7 +246,7 @@ fun NavGraphBuilder.addQRCodeGraph(
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun createViewByAddType(
+fun CreateViewByAddType(
     typeOfView: DatabaseObjectTypes,
     navBackStackEntry: NavBackStackEntry,
     snackbarHostState: SnackbarHostState,

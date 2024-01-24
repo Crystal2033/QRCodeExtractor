@@ -17,9 +17,11 @@ import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.remote_server.data.model.Branch
 import com.crystal2033.qrextractor.core.remote_server.data.model.Building
 import com.crystal2033.qrextractor.core.remote_server.data.model.Cabinet
+import com.crystal2033.qrextractor.core.remote_server.data.model.Organization
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetBranchesUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetBuildingsUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetCabinetsUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetOrganizationUseCase
 import com.crystal2033.qrextractor.core.util.Resource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -36,6 +38,7 @@ class PlaceChoiceViewModel @AssistedInject constructor(
     private val getBranchesUseCase: GetBranchesUseCase,
     private val getBuildingsUseCase: GetBuildingsUseCase,
     private val getCabinetsUseCase: GetCabinetsUseCase,
+    private val getOrganizationUseCase: GetOrganizationUseCase,
     @Assisted private val user: User?,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -60,6 +63,9 @@ class PlaceChoiceViewModel @AssistedInject constructor(
 
     private val _selectedCabinet = mutableStateOf<Cabinet?>(null)
     val selectedCabinet: State<Cabinet?> = _selectedCabinet
+
+    private val _currentOrganization = mutableStateOf<Organization?>(null)
+    val currentOrganization: State<Organization?> = _currentOrganization
 
     init {
         loadBranchesFromServer()
@@ -110,6 +116,23 @@ class PlaceChoiceViewModel @AssistedInject constructor(
 
     fun isPlaceChosen(): Boolean {
         return _selectedBranch.value != null && _selectedBuilding.value != null && _selectedCabinet.value != null
+    }
+
+    private fun loadOrganizationById(): Job {
+        return viewModelScope.launch {
+            user?.let {
+                getOrganizationUseCase(user.organizationId).onEach { statusWithState ->
+                    when (statusWithState) {
+                        is Resource.Error -> {}
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            _currentOrganization.value = statusWithState.data
+                        }
+                    }
+                }.launchIn(this)
+            }
+
+        }
     }
 
     private fun loadBranchesFromServer(): Job {

@@ -11,13 +11,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.crystal2033.qrextractor.core.model.Person
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 
 @Composable
 fun ShowDataItemByType(
-    qrScannable: QRScannableData?,
+    qrScannable: InventarizedAndQRScannableModel?,
     modifier: Modifier = Modifier,
     onAddObjectIntoListClicked: () -> Unit
 ) {
@@ -32,20 +31,28 @@ fun ShowDataItemByType(
                 )
             )
     ) {
-        when (qrScannable) {
-            is Unknown -> {
-                UnknownItem(unknownDataInfo = qrScannable)
-            }
+        qrScannable?.let {
+            when (qrScannable) {
+                is Unknown -> {
+                    UnknownItem(unknownDataInfo = qrScannable)
+                }
 
-            is Person -> {
-                PersonInfo(person = qrScannable)
-            }
+                else -> {
+                    ScannedObjectPreview(
+                        device = qrScannable,
+                        cabinetName = "asd"
+                    )
+                }
+
+//            is Person -> {
+//                PersonInfo(person = qrScannable)
+//            }
 
 //            is Keyboard -> {
 //                KeyboardItem(keyboard = qrScannable)
 //            }
-        }
-        qrScannable?.let {
+            }
+
             Button(
                 modifier = Modifier.align(Alignment.TopEnd), onClick = onAddObjectIntoListClicked
             ) {

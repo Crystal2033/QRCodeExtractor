@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
-import java.util.stream.Collectors
 import java.util.stream.Collectors.toList
 
 class CabinetRepositoryImpl(
@@ -35,6 +34,17 @@ class CabinetRepositoryImpl(
         }
     }
 
+    override fun getCabinetById(cabinetId: Long): Flow<Resource<Cabinet>> = flow {
+        emit(Resource.Loading())
+        try {
+            val cabinet = tryToGetCabinet(cabinetId)
+            emit(Resource.Success(cabinet))
+        } catch (e: RemoteServerRequestException) {
+            Log.e("ERROR", e.message ?: "Unknown error")
+            emit(Resource.Error(message = e.message ?: "Unknown error"))
+        }
+    }
+
 
     private suspend fun tryToGetCabinets(buildingId: Long): List<Cabinet> {
         val message: String
@@ -47,6 +57,31 @@ class CabinetRepositoryImpl(
             val cabinets =
                 response.body()?.stream()?.map(CabinetDTO::toCabinet)?.collect(toList())
             cabinets?.let {
+                return it
+            } ?: throw RemoteServerRequestException(
+                ExceptionAndErrorParsers.getErrorMessageFromResponse(response)
+            )
+        } catch (e: HttpException) {
+            message = ExceptionAndErrorParsers.getErrorMessageFromException(e)
+            throw RemoteServerRequestException(message)
+        } catch (e: IOException) {
+            message = context.getString(R.string.server_connection_error)
+            throw RemoteServerRequestException(message)
+        }
+    }
+
+    private suspend fun tryToGetCabinet(cabinetId: Long): Cabinet {
+        val message: String
+        try {
+            val response = cabinetAPI.getCabinetById(
+                APIArgumentsFillers.NOT_NEEDED.value,
+                APIArgumentsFillers.NOT_NEEDED.value,
+                APIArgumentsFillers.NOT_NEEDED.value,
+                cabinetId
+            )
+            val cabinet =
+                response.body()?.toCabinet()
+            cabinet?.let {
                 return it
             } ?: throw RemoteServerRequestException(
                 ExceptionAndErrorParsers.getErrorMessageFromResponse(response)

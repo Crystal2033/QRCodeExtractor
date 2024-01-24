@@ -1,10 +1,10 @@
 package com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication
 
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 
 sealed class QRScannerEvent {
     data class OnAddObjectInList(
-        val scannableObject: QRScannableData,
+        val scannableObject: InventarizedAndQRScannableModel,
         val addEvenIfDuplicate: Boolean
     ) : QRScannerEvent()
 
