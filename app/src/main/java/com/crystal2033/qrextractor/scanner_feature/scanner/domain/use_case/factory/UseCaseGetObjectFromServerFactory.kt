@@ -6,13 +6,16 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.DataG
 
 class UseCaseGetObjectFromServerFactory(
     private val getObjectInfoUseCases: DataGetterUseCases,
-    private val applicationContext: Context
+    private val context: Context
 ) {
     fun createUseCase(dataTableName: String) : GetScannableDataFromServerUseCase {
         return when(dataTableName){
-            applicationContext.getString(R.string.person_table_name) -> {
+            context.getString(R.string.person_table_name) -> {
                 getObjectInfoUseCases.getPersonUseCase
             }
+//            context.getString(R.string.chair_table_name) -> {
+//                getObjectInfoUseCases.getChairUseCase
+//            }
 //            applicationContext.getString(R.string.keyboard_table_name) ->  {
 //                getObjectInfoUseCases.getKeyboardUseCase
 //            }

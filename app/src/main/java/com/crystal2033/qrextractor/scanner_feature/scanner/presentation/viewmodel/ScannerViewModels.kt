@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.nav_graphs.scanner
+package com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel
 
 import android.app.Activity
 import androidx.compose.runtime.Composable
@@ -13,10 +13,11 @@ import com.crystal2033.qrextractor.scanner_feature.general.di.ScannedDataViewMod
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.viewmodel.ScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.viewmodel.ScannedObjectsListViewModel
+import com.crystal2033.qrextractor.scanner_feature.scanner.di.QRCodeViewModelFactoryProvider
 import dagger.hilt.android.EntryPointAccessors
 
-sealed class ScannerViewModels{
-    companion object{
+sealed class ScannerViewModels {
+    companion object {
         @Composable
         inline fun <reified T : ViewModel> NavBackStackEntry.sharedScannedDataGroupsViewModel(
             navController: NavController,
@@ -35,6 +36,21 @@ sealed class ScannerViewModels{
             return viewModel(
                 viewModelStoreOwner = parentEntry,
                 factory = ScannedDataGroupsViewModel.provideFactory(factory, user)
+            )
+        }
+
+        @Composable
+        inline fun <reified T : ViewModel> NavBackStackEntry.qrCodeScannerViewModel(
+            user: User
+        ): T {
+
+            val factory = EntryPointAccessors.fromActivity(
+                LocalContext.current as Activity,
+                QRCodeViewModelFactoryProvider::class.java
+            ).qrCodeScannerViewModelFactory()
+
+            return viewModel(
+                factory = QRCodeScannerViewModel.provideFactory(factory, user)
             )
         }
 

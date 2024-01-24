@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
@@ -25,7 +26,9 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.state.Sc
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.QRScannerEvent
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.UIScannerEvent
 import com.google.gson.JsonSyntaxException
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -36,17 +39,33 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class QRCodeScannerViewModel @Inject constructor(
+
+class QRCodeScannerViewModel @AssistedInject constructor(
     private val converter: Converters,
+    @Assisted private val user: User,
     private val useCaseGetQRCodeFactory: UseCaseGetObjectFromServerFactory,
     private val insertScannedGroupInDBUseCase: InsertScannedGroupInDBUseCase,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(user: User): QRCodeScannerViewModel
+    }
+
     companion object {
         const val timeForDuplicateQRCodesResistInMs = 12000L
+
+        @Suppress("UNCHECKED_CAST")
+        fun provideFactory(
+            assistedFactory: Factory,
+            user: User
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(user) as T
+            }
+        }
     }
 
     private lateinit var getDataFromQRCodeUseCase: GetScannableDataFromServerUseCase
@@ -100,12 +119,11 @@ class QRCodeScannerViewModel @Inject constructor(
 
     private fun onAddScannedGroupClicked(groupName: String) {
         Log.i(LOG_TAG_NAMES.INFO_TAG, "Group name: $groupName")
-        val TEST_USER = User(1, "Paul",
-            "Kulikov", "login", 1)
+
         viewModelScope.launch {
             insertScannedGroupInDBUseCase(
                 qrScannableDataList = listOfAddedScannables.toList(),
-                user = TEST_USER,
+                user = user,
                 groupName = groupName
             ).onEach { result ->
 
@@ -126,7 +144,6 @@ class QRCodeScannerViewModel @Inject constructor(
         } catch (e: JsonSyntaxException) {
             showQRCodeFormatError(e)
         }
-
     }
 
     private fun onAddScannableIntoListClicked(

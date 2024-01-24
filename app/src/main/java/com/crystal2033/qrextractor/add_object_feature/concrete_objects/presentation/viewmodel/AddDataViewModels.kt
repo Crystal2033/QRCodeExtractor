@@ -46,21 +46,6 @@ sealed class AddDataViewModels {
             )
         }
 
-
-//        @Composable
-//        inline fun <reified T : ViewModel> addPersonViewModel(
-//            userAndPlaceBundle: UserAndPlaceBundle
-//        ): T {
-//            val factory = EntryPointAccessors.fromActivity(
-//                LocalContext.current as Activity,
-//                AddDataViewModelFactoryProvider::class.java
-//            ).addPersonViewModelFactory()
-//
-//            return viewModel(
-//                factory = AddPersonViewModel.provideFactory(factory, userAndPlaceBundle)
-//            )
-//        }
-
         @Composable
         inline fun <reified T : ViewModel> addChairViewModel(
             userAndPlaceBundle: UserAndPlaceBundle
