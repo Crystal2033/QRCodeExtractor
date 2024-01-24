@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.core.remote_server.domain.use_case
+package com.crystal2033.qrextractor.core.remote_server.domain.use_case.branch
 
 import com.crystal2033.qrextractor.core.remote_server.data.model.Branch
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.BranchRepository

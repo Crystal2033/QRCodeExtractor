@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,12 +27,17 @@ import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAnd
 @Composable
 fun ScannedObjectPreview(
     device: InventarizedAndQRScannableModel,
-    cabinetName: String
+    cabinetName: String,
+    organizationName: String,
+    buildingAddress: String,
+    branchName: String
 ) {
     Surface(
         color = Color(0xff1c1b1f)
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             Text(
                 text = device.getDatabaseTableName().name.uppercase(),
                 color = Color.DarkGray,
@@ -73,10 +80,35 @@ fun ScannedObjectPreview(
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
-                    FieldNameAndValue(
-                        "Cabinet",
-                        cabinetName
-                    )
+                    Column(
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        FieldNameAndValue(
+                            "Organization",
+                            organizationName
+                        )
+                        FieldNameAndValue(
+                            "Branch",
+                            branchName
+                        )
+                        FieldNameAndValue(
+                            "Building",
+                            buildingAddress
+                        )
+                        FieldNameAndValue(
+                            "Cabinet",
+                            cabinetName
+                        )
+//                        Row(
+//                            verticalAlignment = Alignment.CenterVertically,
+//                            horizontalArrangement = Arrangement.Center
+//                        ) {
+//
+//                        }
+                    }
+
+
                 }
 
             }

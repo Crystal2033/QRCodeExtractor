@@ -5,7 +5,8 @@ import com.crystal2033.qrextractor.core.ApiInfo
 import com.crystal2033.qrextractor.core.remote_server.api.BuildingAPI
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.impl.BuildingRepositoryImpl
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.BuildingRepository
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetBuildingsUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.building.GetBuildingUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.building.GetBuildingsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +24,12 @@ object BuildingModule {
     @Singleton
     fun provideGetBuildingsUseCase(buildingRepository: BuildingRepository): GetBuildingsUseCase {
         return GetBuildingsUseCase(buildingRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetBuildingUseCase(buildingRepository: BuildingRepository): GetBuildingUseCase {
+        return GetBuildingUseCase(buildingRepository)
     }
 
     @Provides

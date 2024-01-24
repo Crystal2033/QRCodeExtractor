@@ -5,8 +5,8 @@ import com.crystal2033.qrextractor.core.ApiInfo
 import com.crystal2033.qrextractor.core.remote_server.api.OrganizationAPI
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.impl.OrganizationRepositoryImpl
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.OrganizationRepository
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetOrganizationUseCase
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetOrganizationsUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.organization.GetOrganizationUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.organization.GetOrganizationsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

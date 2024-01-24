@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.core.remote_server.domain.use_case
+package com.crystal2033.qrextractor.core.remote_server.domain.use_case.organization
 
 import com.crystal2033.qrextractor.core.remote_server.data.model.Organization
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.OrganizationRepository

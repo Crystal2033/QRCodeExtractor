@@ -12,13 +12,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 
 @Composable
 fun ShowDataItemByType(
     qrScannable: InventarizedAndQRScannableModel?,
     modifier: Modifier = Modifier,
-    onAddObjectIntoListClicked: () -> Unit
+    onAddObjectIntoListClicked: () -> Unit,
+    userAndPlaceBundle: UserAndPlaceBundle,
 ) {
     Box(
         modifier = Modifier
@@ -40,17 +42,12 @@ fun ShowDataItemByType(
                 else -> {
                     ScannedObjectPreview(
                         device = qrScannable,
-                        cabinetName = "asd"
+                        organizationName = userAndPlaceBundle.organization.name,
+                        branchName = userAndPlaceBundle.branch.name,
+                        buildingAddress = userAndPlaceBundle.building.address,
+                        cabinetName = userAndPlaceBundle.cabinet.name,
                     )
                 }
-
-//            is Person -> {
-//                PersonInfo(person = qrScannable)
-//            }
-
-//            is Keyboard -> {
-//                KeyboardItem(keyboard = qrScannable)
-//            }
             }
 
             Button(

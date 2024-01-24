@@ -14,8 +14,13 @@ import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
+import com.crystal2033.qrextractor.core.remote_server.data.model.Building
+import com.crystal2033.qrextractor.core.remote_server.data.model.Cabinet
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
+import com.crystal2033.qrextractor.core.remote_server.data.model.Organization
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetPlaceUseCases
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
@@ -44,6 +49,7 @@ import kotlinx.coroutines.launch
 class QRCodeScannerViewModel @AssistedInject constructor(
     private val converter: Converters,
     @Assisted private val user: User,
+    private val getPlaceUseCases: GetPlaceUseCases,
     private val useCaseGetQRCodeFactory: UseCaseGetObjectFromServerFactory,
     private val insertScannedGroupInDBUseCase: InsertScannedGroupInDBUseCase,
     @ApplicationContext private val context: Context
@@ -77,6 +83,15 @@ class QRCodeScannerViewModel @AssistedInject constructor(
     private val _listOfAddedScannables = mutableStateListOf<InventarizedAndQRScannableModel>()
     val listOfAddedScannables: SnapshotStateList<InventarizedAndQRScannableModel> =
         _listOfAddedScannables
+
+    private val _userAndPlaceBundle = mutableStateOf(
+        UserAndPlaceBundle(
+            user = user
+        )
+    )
+    val userAndPlaceBundle: State<UserAndPlaceBundle> = _userAndPlaceBundle
+
+
     ///States
 
     private val _eventFlow = Channel<UIScannerEvent>()
@@ -222,8 +237,118 @@ class QRCodeScannerViewModel @AssistedInject constructor(
             }
 
             is Resource.Success -> {
+                setPlaceByDeviceAndUser(data.data)
                 setDataWithStatus(data, false)
             }
+        }
+    }
+
+
+    private fun setBuildingByCabinet(resourceCabinet: Resource<Cabinet>) {
+        when (resourceCabinet) {
+            is Resource.Error -> {}
+            is Resource.Loading -> {}
+            is Resource.Success -> {
+                CoroutineScope(Dispatchers.Default).launch {
+                    getPlaceUseCases.getBuildingUseCase(resourceCabinet.data!!.buildingId).onEach {
+
+                        when (it) {
+                            is Resource.Error -> {}
+                            is Resource.Loading -> {}
+                            is Resource.Success -> {
+                                _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
+                                    user = user,
+                                    branch = userAndPlaceBundle.value.branch,
+                                    building = it.data!!,
+                                    cabinet = userAndPlaceBundle.value.cabinet,
+                                    organization = userAndPlaceBundle.value.organization,
+                                )
+                                setBranchByBuilding(it)
+                            }
+                        }
+
+
+                    }.launchIn(this)
+                }
+            }
+        }
+    }
+
+    private fun setBranchByBuilding(
+        resourceBuilding: Resource<Building>
+    ) {
+        when (resourceBuilding) {
+            is Resource.Error -> {}
+            is Resource.Loading -> {}
+            is Resource.Success -> {
+                CoroutineScope(Dispatchers.Default).launch {
+                    getPlaceUseCases.getBranchUseCase(resourceBuilding.data!!.branchId).onEach {
+                        when (it) {
+                            is Resource.Error -> {}
+                            is Resource.Loading -> {}
+                            is Resource.Success -> {
+                                _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
+                                    user = user,
+                                    branch = it.data!!,
+                                    building = userAndPlaceBundle.value.building,
+                                    cabinet = userAndPlaceBundle.value.cabinet,
+                                    organization = userAndPlaceBundle.value.organization,
+                                )
+                            }
+                        }
+
+
+                    }.launchIn(this)
+                }
+            }
+        }
+    }
+
+    private fun setOrganization(resourceOrganization: Resource<Organization>) {
+        when (resourceOrganization) {
+            is Resource.Error -> {}
+            is Resource.Loading -> {}
+            is Resource.Success -> {
+                _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
+                    user = user,
+                    branch = userAndPlaceBundle.value.branch,
+                    building = userAndPlaceBundle.value.building,
+                    cabinet = userAndPlaceBundle.value.cabinet,
+                    organization = resourceOrganization.data!!
+                )
+            }
+        }
+    }
+
+    private fun setCabinet(resourceCabinet: Resource<Cabinet>) {
+        when (resourceCabinet) {
+            is Resource.Error -> {}
+            is Resource.Loading -> {}
+            is Resource.Success -> {
+                _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
+                    user = userAndPlaceBundle.value.user,
+                    branch = userAndPlaceBundle.value.branch,
+                    building = userAndPlaceBundle.value.building,
+                    cabinet = resourceCabinet.data!!,
+                    organization = userAndPlaceBundle.value.organization
+                )
+            }
+        }
+    }
+
+    private fun setPlaceByDeviceAndUser(data: InventarizedAndQRScannableModel?) {
+        data?.let {
+            CoroutineScope(Dispatchers.Default).launch {
+                getPlaceUseCases.getOrganizationUseCase(user.organizationId).onEach {
+                    setOrganization(it)
+                }.launchIn(this)
+
+                getPlaceUseCases.getCabinetUseCase(data.cabinetId).onEach {
+                    setCabinet(it)
+                    setBuildingByCabinet(it)
+                }.launchIn(this)
+            }
+
         }
     }
 

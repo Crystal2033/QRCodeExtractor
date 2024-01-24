@@ -18,10 +18,10 @@ import com.crystal2033.qrextractor.core.remote_server.data.model.Branch
 import com.crystal2033.qrextractor.core.remote_server.data.model.Building
 import com.crystal2033.qrextractor.core.remote_server.data.model.Cabinet
 import com.crystal2033.qrextractor.core.remote_server.data.model.Organization
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetBranchesUseCase
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetBuildingsUseCase
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetCabinetsUseCase
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetOrganizationUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.branch.GetBranchesUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.building.GetBuildingsUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.cabinet.GetCabinetsUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.organization.GetOrganizationUseCase
 import com.crystal2033.qrextractor.core.util.Resource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -68,6 +68,7 @@ class PlaceChoiceViewModel @AssistedInject constructor(
     val currentOrganization: State<Organization?> = _currentOrganization
 
     init {
+        loadOrganizationById()
         loadBranchesFromServer()
     }
 

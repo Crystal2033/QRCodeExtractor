@@ -5,7 +5,8 @@ import com.crystal2033.qrextractor.core.ApiInfo
 import com.crystal2033.qrextractor.core.remote_server.api.BranchAPI
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.impl.BranchRepositoryImpl
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.BranchRepository
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetBranchesUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.branch.GetBranchUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.branch.GetBranchesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +24,12 @@ object BranchModule {
     @Singleton
     fun provideGetBranchesUseCase(branchRepository: BranchRepository): GetBranchesUseCase {
         return GetBranchesUseCase(branchRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetBranchUseCase(branchRepository: BranchRepository): GetBranchUseCase {
+        return GetBranchUseCase(branchRepository)
     }
 
     @Provides

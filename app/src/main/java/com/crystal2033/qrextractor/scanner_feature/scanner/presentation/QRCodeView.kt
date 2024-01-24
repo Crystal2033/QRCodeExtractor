@@ -221,6 +221,7 @@ fun QRCodeView(
                     scannedObject.value.scannedDataInfo?.let { scannedData ->
                         ShowDataItemByType(
                             qrScannable = scannedData,
+                            userAndPlaceBundle = viewModel.userAndPlaceBundle.value,
                             onAddObjectIntoListClicked = {
                                 viewModel.onEvent(
                                     QRScannerEvent.OnAddObjectInList(

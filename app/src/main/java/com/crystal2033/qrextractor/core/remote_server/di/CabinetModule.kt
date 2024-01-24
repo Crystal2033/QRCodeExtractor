@@ -5,7 +5,8 @@ import com.crystal2033.qrextractor.core.ApiInfo
 import com.crystal2033.qrextractor.core.remote_server.api.CabinetAPI
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.impl.CabinetRepositoryImpl
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.interfaces.CabinetRepository
-import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetCabinetsUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.cabinet.GetCabinetUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.cabinet.GetCabinetsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +24,12 @@ object CabinetModule {
     @Singleton
     fun provideGetCabinetsUseCase(cabinetRepository: CabinetRepository): GetCabinetsUseCase {
         return GetCabinetsUseCase(cabinetRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetCabinetUseCase(cabinetRepository: CabinetRepository): GetCabinetUseCase {
+        return GetCabinetUseCase(cabinetRepository)
     }
 
     @Provides

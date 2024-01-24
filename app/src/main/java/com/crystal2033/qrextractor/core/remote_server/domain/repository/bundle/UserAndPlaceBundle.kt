@@ -8,9 +8,9 @@ import com.crystal2033.qrextractor.core.remote_server.data.model.Organization
 
 data class UserAndPlaceBundle(
     val user: User,
-    val branch: Branch,
-    val building: Building,
-    val cabinet: Cabinet,
-    val organization: Organization
+    val branch: Branch = Branch(),
+    val building: Building = Building(),
+    val cabinet: Cabinet = Cabinet(),
+    val organization: Organization = Organization()
 ) {
 }
