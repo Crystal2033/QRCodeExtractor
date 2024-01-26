@@ -56,13 +56,16 @@ sealed class ScannerViewModels {
         }
 
         @Composable
-        inline fun <reified T : ViewModel> scannedObjectsListInGroupViewModel(
-            scannedGroup: ScannedGroup
+        inline fun <reified T : ViewModel> NavBackStackEntry.sharedScannedObjectsListInGroupViewModel(
+            scannedGroup: ScannedGroup,
+            navController: NavController,
+            userAndPlaceBundle: UserAndPlaceBundle
         ): T {
-//            val navGraphRoute = destination.parent?.route ?: return viewModel()
-//            val parentEntry = remember(this) {
-//                navController.getBackStackEntry(navGraphRoute)
-//            }
+
+            val navGraphRoute = destination.parent?.route ?: return viewModel()
+            val parentEntry = remember(this) {
+                navController.getBackStackEntry(navGraphRoute)
+            }
 
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
@@ -70,7 +73,12 @@ sealed class ScannerViewModels {
             ).scannedObjectsListViewModelFactory()
 
             return viewModel(
-                factory = ScannedObjectsListViewModel.provideFactory(factory, scannedGroup)
+                viewModelStoreOwner = parentEntry,
+                factory = ScannedObjectsListViewModel.provideFactory(
+                    factory,
+                    scannedGroup,
+                    userAndPlaceBundle
+                )
             )
         }
     }

@@ -63,7 +63,10 @@ class AddKeyboardViewModel @AssistedInject constructor(
         }
     }
 
-    override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
+    override fun addObjectInDatabaseClicked(
+        onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
+        afterUpdateAction: () -> Unit
+    ) {
         val keyboardDTO = _keyboardState.value.toDTO()
 
         viewModelScope.launch {
@@ -71,8 +74,8 @@ class AddKeyboardViewModel @AssistedInject constructor(
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
                     deviceState = _keyboardStateWithLoadingStatus,
-                    onAddObjectClicked,
-                    QRCodeStickerInfo()
+                    onAddObjectClicked = onAddObjectClicked,
+                    qrCodeStickerInfo = QRCodeStickerInfo()
                 )
             }.launchIn(this)
         }

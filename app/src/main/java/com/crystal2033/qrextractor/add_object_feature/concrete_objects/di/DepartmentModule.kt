@@ -5,7 +5,6 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.data.repo
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.domain.repository.person.DepartmentRepository
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.domain.use_case.person.GetDepartmentsUseCase
 import com.crystal2033.qrextractor.core.ApiInfo
-import com.crystal2033.qrextractor.scanner_feature.scanner.data.remote.api.ScanPersonApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,19 +20,19 @@ object DepartmentModule {
 
     @Provides
     @Singleton
-    fun provideDepartmentUseCase(departmentRepository: DepartmentRepository) : GetDepartmentsUseCase{
+    fun provideDepartmentUseCase(departmentRepository: DepartmentRepository): GetDepartmentsUseCase {
         return GetDepartmentsUseCase(departmentRepository)
     }
 
     @Provides
     @Singleton
-    fun providesDepartmentRepositoryImpl(departmentApi: DepartmentApi) : DepartmentRepository{
+    fun providesDepartmentRepositoryImpl(departmentApi: DepartmentApi): DepartmentRepository {
         return DepartmentRepositoryImpl(departmentApi)
     }
 
     @Provides
     @Singleton
-    fun provideDepartmentApi(okHttpClient: OkHttpClient): DepartmentApi{
+    fun provideDepartmentApi(okHttpClient: OkHttpClient): DepartmentApi {
         return Retrofit.Builder()
             .baseUrl(ApiInfo.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -41,7 +40,6 @@ object DepartmentModule {
             .build()
             .create(DepartmentApi::class.java)
     }
-
 
 
 }

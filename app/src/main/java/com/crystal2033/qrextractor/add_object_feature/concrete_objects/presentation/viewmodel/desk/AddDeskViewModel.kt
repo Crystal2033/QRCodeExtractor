@@ -63,7 +63,10 @@ class AddDeskViewModel @AssistedInject constructor(
     }
 
 
-    override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
+    override fun addObjectInDatabaseClicked(
+        onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
+        afterUpdateAction: () -> Unit
+    ) {
         val deskDTO = _deskState.value.toDTO()
 
         viewModelScope.launch {
@@ -71,8 +74,8 @@ class AddDeskViewModel @AssistedInject constructor(
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
                     deviceState = _deskStateWithLoadingStatus,
-                    onAddObjectClicked,
-                    QRCodeStickerInfo()
+                    onAddObjectClicked = onAddObjectClicked,
+                    qrCodeStickerInfo = QRCodeStickerInfo()
                 )
             }.launchIn(this)
         }

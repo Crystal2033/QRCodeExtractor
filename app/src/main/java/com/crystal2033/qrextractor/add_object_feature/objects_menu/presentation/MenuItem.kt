@@ -36,10 +36,6 @@ fun MenuItem(
 
 fun getGoodNameByDatabaseObjectType(item: DatabaseObjectTypes): String {
     return when (item) {
-        DatabaseObjectTypes.PERSON -> {
-            "Person"
-        }
-
         DatabaseObjectTypes.KEYBOARD -> {
             "Keyboard"
         }

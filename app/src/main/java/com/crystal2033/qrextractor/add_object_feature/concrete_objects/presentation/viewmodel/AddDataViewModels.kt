@@ -19,6 +19,8 @@ import com.crystal2033.qrextractor.add_object_feature.general.di.AddDataViewMode
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.viewmodel.DocumentWithQRCodesViewModel
+import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import dagger.hilt.android.EntryPointAccessors
 
@@ -48,7 +50,8 @@ sealed class AddDataViewModels {
 
         @Composable
         inline fun <reified T : ViewModel> addChairViewModel(
-            userAndPlaceBundle: UserAndPlaceBundle
+            userAndPlaceBundle: UserAndPlaceBundle,
+            chairForUpdate : InventarizedAndQRScannableModel?
         ): T {
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
@@ -56,7 +59,7 @@ sealed class AddDataViewModels {
             ).addChairViewModelFactory()
 
             return viewModel(
-                factory = AddChairViewModel.provideFactory(factory, userAndPlaceBundle)
+                factory = AddChairViewModel.provideFactory(factory, userAndPlaceBundle, chairForUpdate)
             )
         }
 

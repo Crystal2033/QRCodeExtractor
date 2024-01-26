@@ -10,6 +10,8 @@
     <string name="scanner_route">scanner</string>
     <string name="list_of_groups_route">list_of_groups</string>
     <string name="list_of_scanned_objects">list_of_scanned_objects</string>
+    <string name="modify_concrete_object">modify_concrete_object</string>
+
 
     <string name="profile_route">profile</string>
     <string name="login_route">login</string>

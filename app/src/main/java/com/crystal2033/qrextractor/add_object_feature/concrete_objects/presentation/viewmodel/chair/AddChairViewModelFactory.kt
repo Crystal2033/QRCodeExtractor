@@ -7,14 +7,15 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddViewModelFactory
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addChairViewModel
+import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 
-class AddChairViewModelFactory : BaseAddViewModelFactory() {
+class AddChairViewModelFactory {
     @Composable
-    override fun createAddObjectViewModel(
+    fun createAddObjectViewModel(
         userAndPlaceBundle: UserAndPlaceBundle,
-        navBackStackEntry: NavBackStackEntry,
-        navController: NavController
+        deviceForUpdate : InventarizedAndQRScannableModel?
     ): BaseAddObjectViewModel {
-        return addChairViewModel(userAndPlaceBundle)
+        return addChairViewModel(userAndPlaceBundle, deviceForUpdate)
     }
 }

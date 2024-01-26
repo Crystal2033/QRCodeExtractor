@@ -14,16 +14,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 
 @Composable
 fun StartObjectInfo(
-    image: ImageBitmap,
-    text: String,
+    scannedObject: InventarizedAndQRScannableModel,
     modifier: Modifier = Modifier,
     onObjectClicked: () -> Unit
 ) {
@@ -33,22 +33,25 @@ fun StartObjectInfo(
             .clickable {
                 onObjectClicked()
             },
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Image(
-            bitmap = image,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(50.dp)
-                .clip(RectangleShape)
-                .align(Alignment.CenterVertically),
+        scannedObject.image?.let { image ->
+            Image(
+                bitmap = image.asImageBitmap(),
+                contentDescription = "Image of object",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(RectangleShape)
+                    .align(Alignment.CenterVertically),
 
-            )
+                )
+        }
+
         Spacer(modifier = Modifier.width(20.dp))
         Text(
-            text = text,
+            text = scannedObject.name,
             color = Color.LightGray,
             modifier = Modifier.align(Alignment.CenterVertically),
             fontSize = 15.sp

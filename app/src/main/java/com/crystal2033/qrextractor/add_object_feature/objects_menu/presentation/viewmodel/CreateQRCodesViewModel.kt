@@ -54,7 +54,7 @@ class CreateQRCodesViewModel @AssistedInject constructor(
     private val _listOfAddedQRCodes = mutableStateListOf<QRCodeStickerInfo>()
     val listOfAddedQRCodes: SnapshotStateList<QRCodeStickerInfo> = _listOfAddedQRCodes
 
-    private val _chosenObjectClassState = mutableStateOf(DatabaseObjectTypes.PERSON)
+    private val _chosenObjectClassState = mutableStateOf(DatabaseObjectTypes.UNKNOWN)
     val chosenObjectClassState: State<DatabaseObjectTypes> = _chosenObjectClassState
 
     private val _branchName = mutableStateOf(userWithPlaceBundle.branch.name)
@@ -74,7 +74,6 @@ class CreateQRCodesViewModel @AssistedInject constructor(
     init {
         _menuListState.addAll(
             listOf(
-//                DatabaseObjectTypes.PERSON,
                 DatabaseObjectTypes.KEYBOARD,
                 DatabaseObjectTypes.DESK,
                 DatabaseObjectTypes.SYSTEM_UNIT,

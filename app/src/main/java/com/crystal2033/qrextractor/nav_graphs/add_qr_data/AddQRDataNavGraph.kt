@@ -271,22 +271,11 @@ fun CreateViewByAddType(
 
             ) {
                 when (typeOfView) {
-                    DatabaseObjectTypes.PERSON -> {
-//                        viewModel = addPersonViewModel<AddPersonViewModel>(
-//                            userAndPlaceBundle = userWithPlaceBundle
-//                        )
-//                        AddPersonView(
-//                            viewModel = viewModel as AddPersonViewModel,
-//                            isAllFieldsInsertedState = isAddButtonEnabled,
-//                            onNavigate = { navEvent ->
-//                                navController.navigate(navEvent.route)
-//                            }
-//                        )
-                    }
 
                     DatabaseObjectTypes.CHAIR -> {
                         viewModel = addChairViewModel<AddChairViewModel>(
-                            userAndPlaceBundle = userWithPlaceBundle
+                            userAndPlaceBundle = userWithPlaceBundle,
+                            chairForUpdate = null
                         )
                         AddChairView(
                             viewModel = viewModel as AddChairViewModel,
@@ -391,7 +380,8 @@ fun CreateViewByAddType(
                 ) {
                     Button(enabled = isAddButtonEnabled.value,
                         onClick = {
-                            viewModel.addObjectInDatabaseClicked(onAddObjectClicked)
+                            viewModel.addObjectInDatabaseClicked(
+                                onAddObjectClicked = onAddObjectClicked)
                         }) {
                         Text(text = "Add")
                     }

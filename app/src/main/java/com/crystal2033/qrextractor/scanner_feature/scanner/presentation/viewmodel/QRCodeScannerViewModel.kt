@@ -251,13 +251,12 @@ class QRCodeScannerViewModel @AssistedInject constructor(
             is Resource.Success -> {
                 CoroutineScope(Dispatchers.Default).launch {
                     getPlaceUseCases.getBuildingUseCase(resourceCabinet.data!!.buildingId).onEach {
-
                         when (it) {
                             is Resource.Error -> {}
                             is Resource.Loading -> {}
                             is Resource.Success -> {
                                 _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
-                                    user = user,
+                                    user = userAndPlaceBundle.value.user,
                                     branch = userAndPlaceBundle.value.branch,
                                     building = it.data!!,
                                     cabinet = userAndPlaceBundle.value.cabinet,
@@ -266,8 +265,6 @@ class QRCodeScannerViewModel @AssistedInject constructor(
                                 setBranchByBuilding(it)
                             }
                         }
-
-
                     }.launchIn(this)
                 }
             }
@@ -288,7 +285,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
                             is Resource.Loading -> {}
                             is Resource.Success -> {
                                 _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
-                                    user = user,
+                                    user = userAndPlaceBundle.value.user,
                                     branch = it.data!!,
                                     building = userAndPlaceBundle.value.building,
                                     cabinet = userAndPlaceBundle.value.cabinet,
@@ -310,7 +307,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
             is Resource.Loading -> {}
             is Resource.Success -> {
                 _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
-                    user = user,
+                    user = userAndPlaceBundle.value.user,
                     branch = userAndPlaceBundle.value.branch,
                     building = userAndPlaceBundle.value.building,
                     cabinet = userAndPlaceBundle.value.cabinet,
@@ -339,7 +336,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
     private fun setPlaceByDeviceAndUser(data: InventarizedAndQRScannableModel?) {
         data?.let {
             CoroutineScope(Dispatchers.Default).launch {
-                getPlaceUseCases.getOrganizationUseCase(user.organizationId).onEach {
+                getPlaceUseCases.getOrganizationUseCase(_userAndPlaceBundle.value.user.organizationId).onEach {
                     setOrganization(it)
                 }.launchIn(this)
 

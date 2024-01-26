@@ -31,6 +31,7 @@ abstract class BaseAddObjectViewModel(
     private val context: Context,
     private val converter: Converters,
     private val userAndPlaceBundle: UserAndPlaceBundle
+
 ) : ViewModel() {
     private val _eventFlow = Channel<UIAddNewObjectEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
@@ -40,10 +41,12 @@ abstract class BaseAddObjectViewModel(
         return bitmap.asImageBitmap()
     }
 
-    private val _userAndPlaceBundleState = mutableStateOf(userAndPlaceBundle)
-    val userAndPlaceBundleState: State<UserAndPlaceBundle> = _userAndPlaceBundleState
+    private val _userAndPlaceBundle = mutableStateOf(userAndPlaceBundle)
+    val userAndPlaceBundleState: State<UserAndPlaceBundle> = _userAndPlaceBundle
 
-    abstract fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit)
+    abstract fun addObjectInDatabaseClicked(
+        onAddObjectClicked: (QRCodeStickerInfo) -> Unit = {},
+        afterUpdateAction: () -> Unit = {})
 
 
     protected fun sendUiEvent(event: UIAddNewObjectEvent) {
@@ -92,8 +95,9 @@ abstract class BaseAddObjectViewModel(
     protected fun <M : InventarizedAndQRScannableModel> makeActionWithResourceResult(
         statusWithState: Resource<M>,
         deviceState: MutableState<BaseDeviceState>,
-        onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
-        qrCodeStickerInfo: QRCodeStickerInfo
+        onAddObjectClicked: (QRCodeStickerInfo) -> Unit = {},
+        afterUpdateAction: () -> Unit = {},
+        qrCodeStickerInfo: QRCodeStickerInfo? = null
     ) {
         when (statusWithState) {
             is Resource.Error -> {
@@ -117,17 +121,29 @@ abstract class BaseAddObjectViewModel(
 
             is Resource.Success -> {
                 deviceState.value.deviceState.value.id = statusWithState.data?.id ?: 0
-                setQRStickerInfo(
-                    statusWithState.data as InventarizedAndQRScannableModel,
-                    qrCodeStickerInfo
-                )
-                onAddObjectClicked(qrCodeStickerInfo)
+
+                // Not need for update
+                qrCodeStickerInfo?.let { existingQRCodeSticker ->
+                    setQRStickerInfo(
+                        statusWithState.data as InventarizedAndQRScannableModel,
+                        existingQRCodeSticker
+                    )
+                    onAddObjectClicked(existingQRCodeSticker)
+                } ?: afterUpdateAction()
+
+                // Not need for update
+
                 deviceState.value = deviceState.value.stateCopy(
                     deviceState.value.deviceState,
                     false
                 )
+                Log.i(LOG_TAG_NAMES.INFO_TAG, "UPDATE")
 
-                sendUiEvent(UIAddNewObjectEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
+                qrCodeStickerInfo?.let {
+                    sendUiEvent(UIAddNewObjectEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
+                }
+                    ?: sendUiEvent(UIAddNewObjectEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects)))
+
 
             }
         }

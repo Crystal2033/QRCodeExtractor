@@ -63,7 +63,10 @@ class AddProjectorViewModel @AssistedInject constructor(
         }
     }
 
-    override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
+    override fun addObjectInDatabaseClicked(
+        onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
+        afterUpdateAction: () -> Unit
+    ) {
         val qrCodeStickerInfo = QRCodeStickerInfo()
         val projectorDTO = _projectorState.value.toDTO()
 
@@ -72,8 +75,8 @@ class AddProjectorViewModel @AssistedInject constructor(
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
                     deviceState = _projectorStateWithLoadingStatus,
-                    onAddObjectClicked,
-                    qrCodeStickerInfo
+                    onAddObjectClicked = onAddObjectClicked,
+                    qrCodeStickerInfo = QRCodeStickerInfo()
                 )
             }.launchIn(this)
         }

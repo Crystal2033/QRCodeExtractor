@@ -63,7 +63,10 @@ class AddMonitorViewModel @AssistedInject constructor(
         }
     }
 
-    override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
+    override fun addObjectInDatabaseClicked(
+        onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
+        afterUpdateAction: () -> Unit
+    ) {
         val monitorDTO = _monitorState.value.toDTO()
 
         viewModelScope.launch {
@@ -71,8 +74,8 @@ class AddMonitorViewModel @AssistedInject constructor(
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
                     deviceState = _monitorStateWithLoadingStatus,
-                    onAddObjectClicked,
-                    QRCodeStickerInfo()
+                    onAddObjectClicked = onAddObjectClicked,
+                    qrCodeStickerInfo = QRCodeStickerInfo()
                 )
             }.launchIn(this)
         }

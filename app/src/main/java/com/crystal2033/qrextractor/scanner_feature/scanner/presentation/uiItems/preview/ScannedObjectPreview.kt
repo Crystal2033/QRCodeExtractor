@@ -1,5 +1,7 @@
 package com.crystal2033.qrextractor.scanner_feature.scanner.presentation.uiItems.preview
 
+import FieldNameAndValue
+import ShowId
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -32,7 +32,8 @@ fun BaseViewForInventarizedDevice(
     deviceState: BaseDeviceState,
     isNeedToShowCamera: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    isForUpdate: Boolean = false
 ) {
     val spaceBetween = 15.dp
     LaunchedEffect(key1 = true) {
@@ -88,6 +89,7 @@ fun BaseViewForInventarizedDevice(
                 viewModel.onEvent(AddNewObjectEvent.OnInventoryNumberChanged(it))
                 //TODO: CHECK UNIQUE. Can make this call inside BaseAddObjectViewModel
             },
+            isEnabled = !isForUpdate,
             horizontalArrangement = Arrangement.Center
         )
         Spacer(modifier = Modifier.height(spaceBetween))

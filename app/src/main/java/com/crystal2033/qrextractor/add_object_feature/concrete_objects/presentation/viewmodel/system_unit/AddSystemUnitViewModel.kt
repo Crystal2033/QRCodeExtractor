@@ -63,7 +63,10 @@ class AddSystemUnitViewModel @AssistedInject constructor(
         }
     }
 
-    override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
+    override fun addObjectInDatabaseClicked(
+        onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
+        afterUpdateAction: () -> Unit
+    ) {
         val systemUnitDTO = _systemUnitState.value.toDTO()
 
         viewModelScope.launch {
@@ -71,8 +74,8 @@ class AddSystemUnitViewModel @AssistedInject constructor(
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
                     deviceState = _systemUnitStateWithLoadingStatus,
-                    onAddObjectClicked,
-                    QRCodeStickerInfo()
+                    onAddObjectClicked = onAddObjectClicked,
+                    qrCodeStickerInfo = QRCodeStickerInfo()
                 )
             }.launchIn(this)
         }

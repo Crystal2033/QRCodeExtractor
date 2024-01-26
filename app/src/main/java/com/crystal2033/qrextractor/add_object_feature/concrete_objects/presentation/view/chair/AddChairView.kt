@@ -22,7 +22,8 @@ fun AddChairView(
     viewModel: AddChairViewModel,
     isAllFieldsInsertedState: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    isForUpdate: Boolean = false
 ) {
 
     val chairState by remember {
@@ -49,7 +50,8 @@ fun AddChairView(
                 deviceState = chairState,
                 isNeedToShowCamera = isNeedToShowCamera,
                 onNavigate = onNavigate,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                isForUpdate = isForUpdate
             )
 //            if (!isNeedToShowCamera.value) {
 //                //Here is specific for device fields

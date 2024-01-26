@@ -2,6 +2,7 @@ package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presenta
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,10 +12,12 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.ChairUIState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.chair.AddChairUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.chair.UpdateChairUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -28,12 +31,15 @@ class AddChairViewModel @AssistedInject constructor(
     @Assisted private val userAndPlaceBundle: UserAndPlaceBundle,
     @ApplicationContext private val context: Context,
     converters: Converters,
-    private val addChairUseCase: AddChairUseCase
+    private val addChairUseCase: AddChairUseCase,
+    @Assisted private val chairForUpdate: InventarizedAndQRScannableModel?,
+    private val updateChairUseCase: UpdateChairUseCase,
+    //private val getPlaceUseCases: GetPlaceUseCases// FOR UPDATE
 ) : BaseAddObjectViewModel(context, converters, userAndPlaceBundle) {
 
 
     private val _chairState = mutableStateOf(
-        Chair(
+        chairForUpdate ?: Chair(
             cabinetId = userAndPlaceBundle.cabinet.id
         )
     ) //work with this here is more convenient
@@ -48,32 +54,48 @@ class AddChairViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(userAndPlaceBundle: UserAndPlaceBundle): AddChairViewModel
+        fun create(
+            userAndPlaceBundle: UserAndPlaceBundle,
+            deviceForUpdate: InventarizedAndQRScannableModel?
+        ): AddChairViewModel
     }
 
     companion object {
         @Suppress("UNCHECKED_CAST")
         fun provideFactory(
             assistedFactory: Factory,
-            userAndPlaceBundle: UserAndPlaceBundle
+            userAndPlaceBundle: UserAndPlaceBundle,
+            chairForUpdate: InventarizedAndQRScannableModel?
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(userAndPlaceBundle) as T
+                return assistedFactory.create(userAndPlaceBundle, chairForUpdate) as T
             }
         }
     }
 
 
-    override fun addObjectInDatabaseClicked(onAddObjectClicked: (QRCodeStickerInfo) -> Unit) {
-        val chair = _chairState.value.toDTO()
+    override fun addObjectInDatabaseClicked(
+        onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
+        afterUpdateAction: () -> Unit
+    ) {
+        val chair = (_chairState.value as Chair).toDTO()
 
         viewModelScope.launch {
-            addChairUseCase(chair).onEach { statusWithState ->
+            chairForUpdate?.let {
+                Log.i(LOG_TAG_NAMES.INFO_TAG, "UPDATE API")
+                updateChairUseCase(chair).onEach { statusWithState ->
+                    makeActionWithResourceResult(
+                        statusWithState = statusWithState,
+                        deviceState = _chairStateWithLoadingStatus, //onEvent.refresh
+                        afterUpdateAction = afterUpdateAction,
+                    )
+                }.launchIn(this)
+            } ?: addChairUseCase(chair).onEach { statusWithState ->
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
                     deviceState = _chairStateWithLoadingStatus,
-                    onAddObjectClicked,
-                    QRCodeStickerInfo()
+                    onAddObjectClicked = onAddObjectClicked,
+                    qrCodeStickerInfo = QRCodeStickerInfo()
                 )
             }.launchIn(this)
         }

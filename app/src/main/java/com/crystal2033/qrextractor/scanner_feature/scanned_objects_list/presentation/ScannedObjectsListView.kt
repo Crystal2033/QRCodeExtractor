@@ -39,8 +39,8 @@ fun ScannedObjectsListView(
     onNavigate: (UIScannedObjectsListEvent.Navigate) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
-    val listOfObjectsState by remember {
-        mutableStateOf(viewModel.objectsListState)
+    val listOfObjectsState = remember {
+        viewModel.objectsListState
     }
 
 
@@ -65,8 +65,8 @@ fun ScannedObjectsListView(
     Scaffold {
         Box(modifier = Modifier.fillMaxSize()) {
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                listOfObjectsState.value.listOfObjects?.groupBy { it.javaClass.kotlin }
-                    ?.forEach { (objectClass, correspondingObjects) ->
+                listOfObjectsState.value.listOfObjects.groupBy { it.javaClass.kotlin }
+                    .forEach { (objectClass, correspondingObjects) ->
                         stickyHeader {
                             ShowHeaderClassName(
                                 className = objectClass.simpleName ?: "Unknown class"
