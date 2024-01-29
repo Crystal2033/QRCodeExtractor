@@ -16,13 +16,17 @@ import androidx.compose.ui.Modifier
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.BaseViewForInventarizedDevice
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.monitor.AddMonitorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 
 @Composable
 fun AddMonitorView(
     viewModel: AddMonitorViewModel,
+    userAndPlaceBundle: UserAndPlaceBundle,
     isAllFieldsInsertedState: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    onChangePlaceClicked: () -> Unit,
+    isForUpdate: Boolean = false
 ) {
 
     val monitorState by remember {
@@ -45,10 +49,13 @@ fun AddMonitorView(
         ) {
             BaseViewForInventarizedDevice(
                 viewModel = viewModel,
+                userAndPlaceBundle = userAndPlaceBundle,
                 deviceState = monitorState,
                 isNeedToShowCamera = isNeedToShowCamera,
                 onNavigate = onNavigate,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                isForUpdate = isForUpdate,
+                onChangePlaceClicked = onChangePlaceClicked
             )
 //            if (!isNeedToShowCamera.value) {
 //                //Here is specific for device fields

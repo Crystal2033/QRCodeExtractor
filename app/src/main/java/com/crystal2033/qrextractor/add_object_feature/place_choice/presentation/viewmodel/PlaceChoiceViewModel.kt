@@ -9,7 +9,6 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.vm_view_communication.PlaceChoiceEvent
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.vm_view_communication.UIPlaceChoiceEvent
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
@@ -39,6 +38,7 @@ class PlaceChoiceViewModel @AssistedInject constructor(
     private val getBuildingsUseCase: GetBuildingsUseCase,
     private val getCabinetsUseCase: GetCabinetsUseCase,
     private val getOrganizationUseCase: GetOrganizationUseCase,
+    @Assisted private val startNextRoute: String,
     @Assisted private val user: User?,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -66,6 +66,9 @@ class PlaceChoiceViewModel @AssistedInject constructor(
 
     private val _currentOrganization = mutableStateOf<Organization?>(null)
     val currentOrganization: State<Organization?> = _currentOrganization
+
+    private val _nextRouteDestination = mutableStateOf(startNextRoute)
+    //val nextRouteDestination: State<String> = _nextRouteDestination
 
     init {
         loadOrganizationById()
@@ -100,10 +103,30 @@ class PlaceChoiceViewModel @AssistedInject constructor(
             }
 
             is PlaceChoiceEvent.OnContinueClicked -> {
-                sendUiEvent(UIPlaceChoiceEvent.Navigate(context.resources.getString(R.string.menu_add_route)))
+                if (_nextRouteDestination.value.isEmpty()) {
+                    sendUiEvent(UIPlaceChoiceEvent.PopBack)
+                } else {
+                    sendUiEvent(UIPlaceChoiceEvent.Navigate(_nextRouteDestination.value))
+                }
+
             }
 
+            is PlaceChoiceEvent.OnLoadAllData -> {
+                _selectedBranch.value =
+                    _listOfBranches.find { branch -> branch.id == event.branchId }
+                loadBuildingsByBranchFromServer(event.branchId) {
+                    _selectedBuilding.value =
+                        _listOfBuildings.find { building -> building.id == event.buildingId }
+                }
+                loadCabinetsByBuildingFromServer(event.buildingId) {
+                    _selectedCabinet.value =
+                        _listOfCabinets.find { cabinet -> cabinet.id == event.cabinetId }
+                }
+            }
 
+            is PlaceChoiceEvent.OnNextRouteDestinationChanged -> {
+                _nextRouteDestination.value = event.nextRoute
+            }
         }
     }
 
@@ -143,24 +166,37 @@ class PlaceChoiceViewModel @AssistedInject constructor(
                     insertPossibleObjectsInListIfSuccess(statusWithState, _listOfBranches)
                 }.launchIn(this)
             }
-
         }
     }
 
-    private fun loadBuildingsByBranchFromServer(branchId: Long): Job {
+    private fun loadBuildingsByBranchFromServer(
+        branchId: Long,
+        actionAfterInsert: () -> Unit = {}
+    ): Job {
 
         return viewModelScope.launch {
             getBuildingsUseCase(branchId).onEach { statusWithState ->
-                insertPossibleObjectsInListIfSuccess(statusWithState, _listOfBuildings)
+                insertPossibleObjectsInListIfSuccess(
+                    statusWithState,
+                    _listOfBuildings,
+                    actionAfterInsert
+                )
             }.launchIn(this)
         }
     }
 
-    private fun loadCabinetsByBuildingFromServer(buildingId: Long): Job {
+    private fun loadCabinetsByBuildingFromServer(
+        buildingId: Long,
+        actionAfterInsert: () -> Unit = {}
+    ): Job {
 
         return viewModelScope.launch {
             getCabinetsUseCase(buildingId).onEach { statusWithState ->
-                insertPossibleObjectsInListIfSuccess(statusWithState, _listOfCabinets)
+                insertPossibleObjectsInListIfSuccess(
+                    statusWithState,
+                    _listOfCabinets,
+                    actionAfterInsert
+                )
             }.launchIn(this)
         }
     }
@@ -168,7 +204,8 @@ class PlaceChoiceViewModel @AssistedInject constructor(
 
     private fun <T> insertPossibleObjectsInListIfSuccess(
         statusWithState: Resource<List<T>>,
-        listOfPossibleObjects: MutableList<T>
+        listOfPossibleObjects: MutableList<T>,
+        actionAfterInsert: () -> Unit = {}
     ) {
         when (statusWithState) {
             is Resource.Error -> {}
@@ -177,6 +214,7 @@ class PlaceChoiceViewModel @AssistedInject constructor(
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of possible objects")
                 listOfPossibleObjects.clear()
                 listOfPossibleObjects.addAll(statusWithState.data ?: emptyList())
+                actionAfterInsert()
                 for (currentObj in listOfPossibleObjects) {
                     Log.i(LOG_TAG_NAMES.INFO_TAG, "Possible object: ${currentObj.toString()}")
                 }
@@ -186,17 +224,18 @@ class PlaceChoiceViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(user: User?): PlaceChoiceViewModel
+        fun create(user: User?, startNextRoute: String): PlaceChoiceViewModel
     }
 
     companion object {
         @Suppress("UNCHECKED_CAST")
         fun provideFactory(
             assistedFactory: Factory,
-            user: User?
+            user: User?,
+            startNextRoute: String
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(user) as T
+                return assistedFactory.create(user, startNextRoute) as T
             }
         }
     }

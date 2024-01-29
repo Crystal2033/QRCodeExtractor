@@ -1,20 +1,17 @@
 package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
-import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddViewModelFactory
-import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels.Companion.addProjectorViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 
-class AddProjectorViewModelFactory : BaseAddViewModelFactory() {
+class AddProjectorViewModelFactory {
     @Composable
-    override fun createAddObjectViewModel(
+    fun createAddObjectViewModel(
         userAndPlaceBundle: UserAndPlaceBundle,
-        navBackStackEntry: NavBackStackEntry,
-        navController: NavController
+        deviceForUpdate: InventarizedAndQRScannableModel?
     ): BaseAddObjectViewModel {
-        return addProjectorViewModel(userAndPlaceBundle)
+        return addProjectorViewModel(userAndPlaceBundle, deviceForUpdate)
     }
 }

@@ -2,4 +2,5 @@ package com.crystal2033.qrextractor.add_object_feature.place_choice.presentation
 
 sealed class UIPlaceChoiceEvent {
     data class Navigate(val route: String) : UIPlaceChoiceEvent()
+    data object PopBack : UIPlaceChoiceEvent()
 }

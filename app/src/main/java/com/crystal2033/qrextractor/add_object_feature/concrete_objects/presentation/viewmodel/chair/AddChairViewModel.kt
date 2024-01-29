@@ -34,7 +34,6 @@ class AddChairViewModel @AssistedInject constructor(
     private val addChairUseCase: AddChairUseCase,
     @Assisted private val chairForUpdate: InventarizedAndQRScannableModel?,
     private val updateChairUseCase: UpdateChairUseCase,
-    //private val getPlaceUseCases: GetPlaceUseCases// FOR UPDATE
 ) : BaseAddObjectViewModel(context, converters, userAndPlaceBundle) {
 
 
@@ -78,19 +77,19 @@ class AddChairViewModel @AssistedInject constructor(
         onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
         afterUpdateAction: () -> Unit
     ) {
-        val chair = (_chairState.value as Chair).toDTO()
+        val chairDTO = (_chairState.value as Chair).toDTO()
 
         viewModelScope.launch {
             chairForUpdate?.let {
                 Log.i(LOG_TAG_NAMES.INFO_TAG, "UPDATE API")
-                updateChairUseCase(chair).onEach { statusWithState ->
+                updateChairUseCase(chairDTO).onEach { statusWithState ->
                     makeActionWithResourceResult(
                         statusWithState = statusWithState,
-                        deviceState = _chairStateWithLoadingStatus, //onEvent.refresh
+                        deviceState = _chairStateWithLoadingStatus,
                         afterUpdateAction = afterUpdateAction,
                     )
                 }.launchIn(this)
-            } ?: addChairUseCase(chair).onEach { statusWithState ->
+            } ?: addChairUseCase(chairDTO).onEach { statusWithState ->
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
                     deviceState = _chairStateWithLoadingStatus,
@@ -122,6 +121,16 @@ class AddChairViewModel @AssistedInject constructor(
             inventoryNumber = _chairState.value.inventoryNumber,
             name = name,
             cabinetId = _chairState.value.cabinetId
+        )
+    }
+
+    override fun setNewCabinetId(cabinetId: Long) {
+        _chairState.value = Chair(
+            id = _chairState.value.id,
+            image = _chairState.value.image,
+            inventoryNumber = _chairState.value.inventoryNumber,
+            name = _chairState.value.name,
+            cabinetId = cabinetId
         )
     }
 

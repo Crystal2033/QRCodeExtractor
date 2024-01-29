@@ -38,13 +38,16 @@ import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.CreateQRCodeEvent
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.vm_view_communication.UICreateQRCodeEvent
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MenuView(
+    userAndPlaceBundle: UserAndPlaceBundle,
     viewModel: CreateQRCodesViewModel,
+    onChangePlaceClicked: () -> Unit,
     onNavigate: (UICreateQRCodeEvent.Navigate) -> Unit
 ) {
 
@@ -80,7 +83,7 @@ fun MenuView(
                         fontSize = 13.sp,
                         modifier = Modifier
                             .clickable {
-                                viewModel.onEvent(CreateQRCodeEvent.OnChangePlaceClicked)
+                                onChangePlaceClicked()
                             }
                             .align(Alignment.CenterHorizontally)
                     )
@@ -90,17 +93,26 @@ fun MenuView(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
-                        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Text(text = "Branch", fontSize = 13.sp, color = Color.LightGray)
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = viewModel.branchName.value, fontSize = 15.sp)
                         }
-                        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Text(text = "Address", fontSize = 13.sp, color = Color.LightGray)
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = viewModel.buildingAddress.value, fontSize = 15.sp)
                         }
-                        Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                             Text(text = "Cabinet", fontSize = 13.sp, color = Color.LightGray)
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = viewModel.cabinetName.value, fontSize = 15.sp)

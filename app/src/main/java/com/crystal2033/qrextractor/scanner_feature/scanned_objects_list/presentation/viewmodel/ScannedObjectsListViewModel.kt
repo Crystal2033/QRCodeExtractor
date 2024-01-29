@@ -132,6 +132,10 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
             is ScannedObjectsListEvent.Refresh -> {
                 refresh()
             }
+
+            is ScannedObjectsListEvent.OnPlaceUpdate -> {
+                _userAndPlaceBundle.value = event.userAndPlaceBundle
+            }
         }
 
     }

@@ -22,14 +22,22 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun PlaceChoiceView(
     viewModel: PlaceChoiceViewModel,
-    onNavigate: (UIPlaceChoiceEvent.Navigate) -> Unit
+    actionBeforeNavigate: () -> Unit,
+    onNavigate: (UIPlaceChoiceEvent.Navigate) -> Unit,
+    onPopBack: () -> Unit
 ) {
 
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
                 is UIPlaceChoiceEvent.Navigate -> {
+                    actionBeforeNavigate()
                     onNavigate(event)
+                }
+
+                UIPlaceChoiceEvent.PopBack -> {
+                    actionBeforeNavigate()
+                    onPopBack()
                 }
             }
 

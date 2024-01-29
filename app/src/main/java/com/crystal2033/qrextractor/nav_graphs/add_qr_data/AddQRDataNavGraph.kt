@@ -53,6 +53,7 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.monitor.AddMonitorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.system_unit.AddSystemUnitViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.AddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.MenuView
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
@@ -60,11 +61,16 @@ import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.PlaceChoiceView
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.viewmodel.PlaceChoiceViewModel
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.viewmodel.PlaceViewModelCreator.Companion.sharedPlaceChoiceViewModel
+import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.vm_view_communication.PlaceChoiceEvent
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.QRCodeStickersView
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.viewmodel.DocumentWithQRCodesViewModel
 import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.presentation.NotLoginLinkView
+import com.crystal2033.qrextractor.core.remote_server.data.model.Branch
+import com.crystal2033.qrextractor.core.remote_server.data.model.Building
+import com.crystal2033.qrextractor.core.remote_server.data.model.Cabinet
+import com.crystal2033.qrextractor.core.remote_server.data.model.Organization
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.ui.NavBottomBarConstants
 
@@ -75,19 +81,25 @@ fun NavGraphBuilder.addQRCodeGraph(
     userState: State<User?>
 ) {
     navigation(
-        startDestination = context.resources.getString(R.string.place_choice),
+        startDestination = context.resources.getString(R.string.place_choice_add),
         route = context.resources.getString(R.string.add_data_head_graph_route)
     ) {
 
-        composable(context.resources.getString(R.string.place_choice)) {
-            if (userState.value == null) {
-                NotLoginLinkView(navController)
-            } else {
+        composable(context.resources.getString(R.string.place_choice_add)) {
+
+            userState.value?.let { user ->
                 val placeChoiceViewModel =
                     it.sharedPlaceChoiceViewModel<PlaceChoiceViewModel>(
                         navController = navController,
-                        user = userState.value
+                        user = user,
+                        startNextRoute = context.resources.getString(R.string.menu_add_route)
                     )
+
+                val menuViewModel = it.sharedAddDataMenuViewModel<CreateQRCodesViewModel>(
+                    navController = navController,
+                    userWithPlaceBundle = UserAndPlaceBundle(user = user)
+                )
+
                 Column(
                     modifier = Modifier.padding(
                         0.dp,
@@ -98,19 +110,39 @@ fun NavGraphBuilder.addQRCodeGraph(
                 ) {
                     PlaceChoiceView(
                         viewModel = placeChoiceViewModel,
+                        actionBeforeNavigate = {
+                            menuViewModel.onEvent(
+                                CreateQRCodeEvent.ChangePlaceField(
+                                    UserAndPlaceBundle(
+                                        user = user,
+                                        branch = placeChoiceViewModel.selectedBranch.value
+                                            ?: Branch(),
+                                        building = placeChoiceViewModel.selectedBuilding.value
+                                            ?: Building(),
+                                        cabinet = placeChoiceViewModel.selectedCabinet.value
+                                            ?: Cabinet(),
+                                        organization = placeChoiceViewModel.currentOrganization.value
+                                            ?: Organization()
+                                    )
+                                )
+                            )
+                        },
                         onNavigate = { eventRoute ->
                             navController.navigate(eventRoute.route)
+                        },
+                        onPopBack = {
+                            navController.popBackStack()
                         })
                 }
-            }
 
-
+            } ?: NotLoginLinkView(navController)
         }
         composable(context.resources.getString(R.string.menu_add_route)) {
             val placeChoiceViewModel =
                 it.sharedPlaceChoiceViewModel<PlaceChoiceViewModel>(
                     navController = navController,
-                    user = userState.value
+                    user = userState.value,
+                    startNextRoute = context.resources.getString(R.string.menu_add_route)
                 )
 
             val userWithPlaceBundle = remember {
@@ -138,9 +170,18 @@ fun NavGraphBuilder.addQRCodeGraph(
                 )
             ) {
                 MenuView(
+                    userAndPlaceBundle = userWithPlaceBundle.value,
                     viewModel = menuViewModel,
                     onNavigate = { navigateEvent ->
                         navController.navigate(navigateEvent.route)
+                    },
+                    onChangePlaceClicked = {
+                        placeChoiceViewModel.onEvent(
+                            PlaceChoiceEvent.OnNextRouteDestinationChanged(
+                                ""
+                            )
+                        )
+                        menuViewModel.onEvent(CreateQRCodeEvent.OnChangePlaceClicked)
                     }
                 )
             }
@@ -170,14 +211,7 @@ fun NavGraphBuilder.addQRCodeGraph(
                 navController = navController,
                 userWithPlaceBundle = userWithPlaceBundle.value
             )
-//            val baseAddViewModelFactory: BaseAddViewModelFactory =
-//                createConcreteAddViewModelFactory(menuViewModel.chosenObjectClassState.value)
-//
-//            val addViewModel1 = baseAddViewModelFactory.createAddObjectViewModel(
-//                user = user,
-//                navBackStackEntry = it,
-//                navController = navController
-//            )
+
             Column(
                 modifier = Modifier.padding(
                     0.dp,
@@ -191,7 +225,15 @@ fun NavGraphBuilder.addQRCodeGraph(
                     navBackStackEntry = it,
                     navController = navController,
                     snackbarHostState = snackbarHostState,
-                    userWithPlaceBundle = userWithPlaceBundle.value
+                    userWithPlaceBundle = userWithPlaceBundle.value,
+                    onChangePlaceClicked = {
+                        placeChoiceViewModel.onEvent(
+                            PlaceChoiceEvent.OnNextRouteDestinationChanged(
+                                ""
+                            )
+                        )
+                        navController.navigate(context.resources.getString(R.string.place_choice_add))
+                    }
                 ) { qrCodeStickerInfo ->
                     menuViewModel.onEvent(CreateQRCodeEvent.OnAddNewObjectInList(qrCodeStickerInfo))
                 }
@@ -252,8 +294,10 @@ fun CreateViewByAddType(
     snackbarHostState: SnackbarHostState,
     navController: NavController,
     userWithPlaceBundle: UserAndPlaceBundle,
-    onAddObjectClicked: (QRCodeStickerInfo) -> Unit
-) {
+    onChangePlaceClicked: () -> Unit,
+    onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
+
+    ) {
     val context = LocalContext.current
     val isAddButtonEnabled = remember {
         mutableStateOf(false)
@@ -279,11 +323,13 @@ fun CreateViewByAddType(
                         )
                         AddChairView(
                             viewModel = viewModel as AddChairViewModel,
+                            userAndPlaceBundle = userWithPlaceBundle,
                             isAllFieldsInsertedState = isAddButtonEnabled,
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
                             },
-                            snackbarHostState = snackbarHostState
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = onChangePlaceClicked,
                         )
 
                     }
@@ -291,30 +337,36 @@ fun CreateViewByAddType(
                     DatabaseObjectTypes.PROJECTOR -> {
                         viewModel =
                             addProjectorViewModel<AddProjectorViewModel>(
-                                userAndPlaceBundle = userWithPlaceBundle
+                                userAndPlaceBundle = userWithPlaceBundle,
+                                projectorForUpdate = null
                             )
                         AddProjectorView(
                             viewModel = viewModel as AddProjectorViewModel,
+                            userAndPlaceBundle = userWithPlaceBundle,
                             isAllFieldsInsertedState = isAddButtonEnabled,
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
                             },
-                            snackbarHostState = snackbarHostState
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = onChangePlaceClicked,
                         )
                     }
 
                     DatabaseObjectTypes.DESK -> {
                         viewModel =
                             addDeskViewModel(
-                                userAndPlaceBundle = userWithPlaceBundle
+                                userAndPlaceBundle = userWithPlaceBundle,
+                                deskForUpdate = null
                             )
                         AddDeskView(
                             viewModel = viewModel as AddDeskViewModel,
+                            userAndPlaceBundle = userWithPlaceBundle,
                             isAllFieldsInsertedState = isAddButtonEnabled,
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
                             },
-                            snackbarHostState = snackbarHostState
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = onChangePlaceClicked,
                         )
                     }
 
@@ -322,45 +374,54 @@ fun CreateViewByAddType(
                     DatabaseObjectTypes.SYSTEM_UNIT -> {
                         viewModel =
                             addSystemUnitViewModel(
-                                userAndPlaceBundle = userWithPlaceBundle
+                                userAndPlaceBundle = userWithPlaceBundle,
+                                systemUnitForUpdate = null
                             )
                         AddSystemUnitView(
                             viewModel = viewModel as AddSystemUnitViewModel,
+                            userAndPlaceBundle = userWithPlaceBundle,
                             isAllFieldsInsertedState = isAddButtonEnabled,
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
                             },
-                            snackbarHostState = snackbarHostState
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = onChangePlaceClicked,
                         )
                     }
 
                     DatabaseObjectTypes.MONITOR -> {
                         viewModel =
                             addMonitorViewModel(
-                                userAndPlaceBundle = userWithPlaceBundle
+                                userAndPlaceBundle = userWithPlaceBundle,
+                                monitorForUpdate = null
                             )
                         AddMonitorView(
                             viewModel = viewModel as AddMonitorViewModel,
+                            userAndPlaceBundle = userWithPlaceBundle,
                             isAllFieldsInsertedState = isAddButtonEnabled,
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
                             },
-                            snackbarHostState = snackbarHostState
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = onChangePlaceClicked,
                         )
                     }
 
                     DatabaseObjectTypes.KEYBOARD -> {
                         viewModel =
                             addKeyboardViewModel(
-                                userAndPlaceBundle = userWithPlaceBundle
+                                userAndPlaceBundle = userWithPlaceBundle,
+                                keyboardForUpdate = null
                             )
                         AddKeyboardView(
                             viewModel = viewModel as AddKeyboardViewModel,
+                            userAndPlaceBundle = userWithPlaceBundle,
                             isAllFieldsInsertedState = isAddButtonEnabled,
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
                             },
-                            snackbarHostState = snackbarHostState
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = onChangePlaceClicked,
                         )
                     }
 
@@ -380,8 +441,10 @@ fun CreateViewByAddType(
                 ) {
                     Button(enabled = isAddButtonEnabled.value,
                         onClick = {
+                            viewModel.onEvent(AddNewObjectEvent.OnCabinetChanged(userWithPlaceBundle.cabinet.id))
                             viewModel.addObjectInDatabaseClicked(
-                                onAddObjectClicked = onAddObjectClicked)
+                                onAddObjectClicked = onAddObjectClicked
+                            )
                         }) {
                         Text(text = "Add")
                     }

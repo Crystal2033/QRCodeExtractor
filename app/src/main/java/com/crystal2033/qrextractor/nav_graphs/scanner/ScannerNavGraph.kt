@@ -15,15 +15,24 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
+import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.PlaceChoiceView
+import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.viewmodel.PlaceChoiceViewModel
+import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.viewmodel.PlaceViewModelCreator.Companion.sharedPlaceChoiceViewModel
+import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.vm_view_communication.PlaceChoiceEvent
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.presentation.NotLoginLinkView
+import com.crystal2033.qrextractor.core.remote_server.data.model.Branch
+import com.crystal2033.qrextractor.core.remote_server.data.model.Building
+import com.crystal2033.qrextractor.core.remote_server.data.model.Cabinet
+import com.crystal2033.qrextractor.core.remote_server.data.model.Organization
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.ScannedGroupsView
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.viewmodel.ScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.scanner_feature.modify_concrete_object.presentation.CreateViewByModifyType
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.ScannedObjectsListView
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.viewmodel.ScannedObjectsListViewModel
+import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.vm_view_communication.ScannedObjectsListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.QRCodeView
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel.QRCodeScannerViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmodel.ScannerViewModels.Companion.qrCodeScannerViewModel
@@ -135,6 +144,78 @@ fun NavGraphBuilder.scannerGraph(
                 "WE ARE FROM SCANNED OBJECTS size= ${viewModel.objectsListState.value.listOfObjects.size}"
             )
         }
+        composable(context.resources.getString(R.string.place_choice_update)) {
+            if (userState.value == null) {
+                NotLoginLinkView(navController)
+            } else {
+                val placeChoiceViewModel =
+                    it.sharedPlaceChoiceViewModel<PlaceChoiceViewModel>(
+                        navController = navController,
+                        user = userState.value
+                    )
+
+                val viewModelFromGroups =
+                    it.sharedScannedDataGroupsViewModel<ScannedDataGroupsViewModel>(
+                        navController = navController,
+                        user = userState.value
+                    )
+
+                val userAndPlaceBundle = remember {
+                    mutableStateOf(
+                        UserAndPlaceBundle(
+                            user = userState.value!!,
+                            branch = placeChoiceViewModel.selectedBranch.value ?: Branch(),
+                            building = placeChoiceViewModel.selectedBuilding.value ?: Building(),
+                            cabinet = placeChoiceViewModel.selectedCabinet.value ?: Cabinet(),
+                            organization = placeChoiceViewModel.currentOrganization.value
+                                ?: Organization()
+                        )
+                    )
+                }
+
+                val scannedListViewModel =
+                    it.sharedScannedObjectsListInGroupViewModel<ScannedObjectsListViewModel>(
+                        scannedGroup = viewModelFromGroups.chosenGroup.value,
+                        navController = navController,
+                        userAndPlaceBundle = userAndPlaceBundle.value
+                    )
+
+                Column(
+                    modifier = Modifier.padding(
+                        0.dp,
+                        0.dp,
+                        0.dp,
+                        NavBottomBarConstants.HEIGHT_BOTTOM_BAR
+                    )
+                ) {
+                    PlaceChoiceView(
+                        viewModel = placeChoiceViewModel,
+                        actionBeforeNavigate = {
+                            scannedListViewModel.onEvent(
+                                ScannedObjectsListEvent.OnPlaceUpdate(
+                                    UserAndPlaceBundle(
+                                        user = userState.value!!,
+                                        branch = placeChoiceViewModel.selectedBranch.value
+                                            ?: Branch(),
+                                        building = placeChoiceViewModel.selectedBuilding.value
+                                            ?: Building(),
+                                        cabinet = placeChoiceViewModel.selectedCabinet.value
+                                            ?: Cabinet(),
+                                        organization = placeChoiceViewModel.currentOrganization.value
+                                            ?: Organization()
+                                    )
+                                )
+                            )
+                        },
+                        onNavigate = { eventRoute ->
+                            navController.navigate(eventRoute.route)
+                        },
+                        onPopBack = {
+                            navController.popBackStack()
+                        })
+                }
+            }
+        }
         composable(context.resources.getString(R.string.modify_concrete_object)) {
             val viewModelFromGroups =
                 it.sharedScannedDataGroupsViewModel<ScannedDataGroupsViewModel>(
@@ -142,10 +223,22 @@ fun NavGraphBuilder.scannerGraph(
                     user = userState.value
                 )
 
+            val placeChoiceViewModel =
+                it.sharedPlaceChoiceViewModel<PlaceChoiceViewModel>(
+                    navController = navController,
+                    user = userState.value
+                )
+
+
             val userAndPlaceBundle = remember {
                 mutableStateOf(
                     UserAndPlaceBundle(
                         user = userState.value!!,
+                        branch = placeChoiceViewModel.selectedBranch.value ?: Branch(),
+                        building = placeChoiceViewModel.selectedBuilding.value ?: Building(),
+                        cabinet = placeChoiceViewModel.selectedCabinet.value ?: Cabinet(),
+                        organization = placeChoiceViewModel.currentOrganization.value
+                            ?: Organization()
                     )
                 )
             }
@@ -157,7 +250,6 @@ fun NavGraphBuilder.scannerGraph(
                     userAndPlaceBundle = userAndPlaceBundle.value
                 )
 
-
             Column(
                 modifier = Modifier.padding(
                     0.dp,
@@ -168,12 +260,24 @@ fun NavGraphBuilder.scannerGraph(
             ) {
                 CreateViewByModifyType(
                     scannedObjectsListViewModel = scannedListViewModel,
-                    typeOfView = scannedListViewModel.chosenObjectClassState.value,
                     navBackStackEntry = it,
                     snackbarHostState = snackbarHostState,
                     navController = navController,
-                    userWithPlaceBundle = scannedListViewModel.userAndPlaceBundleState,
-                    deviceForUpdate = scannedListViewModel.chosenDeviceState.value!!
+                    onChangePlaceClicked = {
+                        placeChoiceViewModel.onEvent(
+                            PlaceChoiceEvent.OnLoadAllData(
+                                branchId = scannedListViewModel.userAndPlaceBundleState.value.branch.id,
+                                buildingId = scannedListViewModel.userAndPlaceBundleState.value.building.id,
+                                cabinetId = scannedListViewModel.userAndPlaceBundleState.value.cabinet.id
+                            )
+                        )
+                        placeChoiceViewModel.onEvent(
+                            PlaceChoiceEvent.OnNextRouteDestinationChanged(
+                                ""
+                            )
+                        )
+                        navController.navigate(context.resources.getString(R.string.place_choice_update))
+                    }
                 )
             }
         }

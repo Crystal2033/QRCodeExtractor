@@ -16,7 +16,8 @@ sealed class PlaceViewModelCreator {
         @Composable
         inline fun <reified T : ViewModel> NavBackStackEntry.sharedPlaceChoiceViewModel(
             navController: NavController,
-            user: User?
+            user: User?,
+            startNextRoute: String=""
         ): T {
             val navGraphRoute = destination.parent?.route ?: return viewModel()
             val parentEntry = remember(this) {
@@ -30,7 +31,7 @@ sealed class PlaceViewModelCreator {
 
             return viewModel(
                 viewModelStoreOwner = parentEntry,
-                factory = PlaceChoiceViewModel.provideFactory(factory, user)
+                factory = PlaceChoiceViewModel.provideFactory(factory, user, startNextRoute)
             )
         }
     }

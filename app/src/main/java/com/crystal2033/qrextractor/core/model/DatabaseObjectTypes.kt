@@ -9,7 +9,6 @@ import com.crystal2033.qrextractor.R
 в Composable функции ScannedDataItems.
  */
 enum class DatabaseObjectTypes(private val dataTableStringID: Int) {
-    //PERSON(R.string.person_table_name),
     KEYBOARD(R.string.keyboard_table_name),
     MONITOR(R.string.monitor_table_name),
     DESK(R.string.desk_table_name),

@@ -16,13 +16,17 @@ import androidx.compose.ui.Modifier
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.BaseViewForInventarizedDevice
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.system_unit.AddSystemUnitViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 
 @Composable
 fun AddSystemUnitView(
     viewModel: AddSystemUnitViewModel,
+    userAndPlaceBundle: UserAndPlaceBundle,
     isAllFieldsInsertedState: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    onChangePlaceClicked: () -> Unit,
+    isForUpdate: Boolean = false
 ) {
 
     val systemUnitState by remember {
@@ -46,10 +50,13 @@ fun AddSystemUnitView(
         ) {
             BaseViewForInventarizedDevice(
                 viewModel = viewModel,
+                userAndPlaceBundle = userAndPlaceBundle,
                 deviceState = systemUnitState,
                 isNeedToShowCamera = isNeedToShowCamera,
                 onNavigate = onNavigate,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                isForUpdate = isForUpdate,
+                onChangePlaceClicked = onChangePlaceClicked
             )
 //            if (!isNeedToShowCamera.value) {
 //                //Here is specific for device fields

@@ -1,7 +1,9 @@
 package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -14,26 +16,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.BaseDeviceState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.AddNewObjectEvent
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.UIAddNewObjectEvent
+import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.getGoodNameByDatabaseObjectType
 import com.crystal2033.qrextractor.core.camera_for_photos.CameraXView
-import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedModel
+import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.ui.text_elements.TextFieldView
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun BaseViewForInventarizedDevice(
     viewModel: BaseAddObjectViewModel,
+    userAndPlaceBundle: UserAndPlaceBundle? = null,
     deviceState: BaseDeviceState,
     isNeedToShowCamera: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
     snackbarHostState: SnackbarHostState,
-    isForUpdate: Boolean = false
+    isForUpdate: Boolean = false,
+    onChangePlaceClicked: () -> Unit = {}
 ) {
     val spaceBetween = 15.dp
     LaunchedEffect(key1 = true) {
@@ -72,7 +79,16 @@ fun BaseViewForInventarizedDevice(
             Text(text = "Add picture")
         }
         Spacer(modifier = Modifier.height(3 * spaceBetween))
-
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = getGoodNameByDatabaseObjectType(deviceState.deviceState.value.getDatabaseTableName()),
+                color = Color.LightGray,
+                fontSize = 18.sp
+            )
+        }
+        Spacer(modifier = Modifier.height(spaceBetween))
         TextFieldView(
             fieldHint = "Name",
             currentText = deviceState.deviceState.value.name,
@@ -93,23 +109,32 @@ fun BaseViewForInventarizedDevice(
             horizontalArrangement = Arrangement.Center
         )
         Spacer(modifier = Modifier.height(spaceBetween))
+
+        Text(text = "Change place",
+            fontSize = 20.sp,
+            color = Color.Cyan,
+            modifier = Modifier.clickable {
+                onChangePlaceClicked()
+            })
+        Spacer(modifier = Modifier.height(spaceBetween))
+
         TextFieldView(
             fieldHint = "Branch",
-            currentText = viewModel.userAndPlaceBundleState.value.branch.name,
+            currentText = userAndPlaceBundle?.branch?.name ?: "",
             isEnabled = false,
             horizontalArrangement = Arrangement.Center
         )
         Spacer(modifier = Modifier.height(spaceBetween))
         TextFieldView(
             fieldHint = "Building address",
-            currentText = viewModel.userAndPlaceBundleState.value.building.address,
+            currentText = userAndPlaceBundle?.building?.address ?: "",
             isEnabled = false,
             horizontalArrangement = Arrangement.Center
         )
         Spacer(modifier = Modifier.height(spaceBetween))
         TextFieldView(
             fieldHint = "Cabinet",
-            currentText = viewModel.userAndPlaceBundleState.value.cabinet.name,
+            currentText = userAndPlaceBundle?.cabinet?.name ?: "",
             isEnabled = false,
             horizontalArrangement = Arrangement.Center
         )

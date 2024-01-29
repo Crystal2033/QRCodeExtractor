@@ -17,7 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,13 +28,21 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.chair.AddChairView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.desk.AddDeskView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.keyboard.AddKeyboardView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.monitor.AddMonitorView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.projector.AddProjectorView
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.system_unit.AddSystemUnitView
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.AddDataViewModels
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.chair.AddChairViewModel
-import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.desk.AddDeskViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.keyboard.AddKeyboardViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.monitor.AddMonitorViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.projector.AddProjectorViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.system_unit.AddSystemUnitViewModel
+import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.AddNewObjectEvent
 import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
-import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
-import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.viewmodel.ScannedObjectsListViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.vm_view_communication.ScannedObjectsListEvent
 
@@ -43,17 +51,26 @@ import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presenta
 @Composable
 fun CreateViewByModifyType(
     scannedObjectsListViewModel: ScannedObjectsListViewModel,
-    typeOfView: DatabaseObjectTypes,
     navBackStackEntry: NavBackStackEntry,
     snackbarHostState: SnackbarHostState,
     navController: NavController,
-    userWithPlaceBundle: State<UserAndPlaceBundle>,
-    deviceForUpdate: InventarizedAndQRScannableModel,
-    onAddObjectClicked: (QRCodeStickerInfo) -> Unit = {}
+    onChangePlaceClicked: () -> Unit
 ) {
     val context = LocalContext.current
     val isAddButtonEnabled = remember {
         mutableStateOf(false)
+    }
+
+    val typeOfView by remember {
+        scannedObjectsListViewModel.chosenObjectClassState
+    }
+
+    val deviceForUpdate by remember {
+        scannedObjectsListViewModel.chosenDeviceState
+    }
+
+    val userAndPlaceBundle by remember {
+        scannedObjectsListViewModel.userAndPlaceBundleState
     }
 
     lateinit var viewModel: BaseAddObjectViewModel
@@ -70,97 +87,128 @@ fun CreateViewByModifyType(
                 when (typeOfView) {
 
                     DatabaseObjectTypes.CHAIR -> {
-
                         viewModel = AddDataViewModels.addChairViewModel<AddChairViewModel>(
-                            userAndPlaceBundle = userWithPlaceBundle.value,
+                            userAndPlaceBundle = userAndPlaceBundle,
                             chairForUpdate = deviceForUpdate
                         )
                         AddChairView(
                             viewModel = viewModel as AddChairViewModel,
+                            userAndPlaceBundle = userAndPlaceBundle,
                             isAllFieldsInsertedState = isAddButtonEnabled,
                             onNavigate = { navEvent ->
                                 navController.navigate(navEvent.route)
                             },
                             snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = onChangePlaceClicked,
                             isForUpdate = true
                         )
 
                     }
 
                     DatabaseObjectTypes.PROJECTOR -> {
-//                        viewModel =
-//                            AddDataViewModels.addProjectorViewModel<AddProjectorViewModel>(
-//                                userAndPlaceBundle = userWithPlaceBundle
-//                            )
-//                        AddProjectorView(
-//                            viewModel = viewModel as AddProjectorViewModel,
-//                            isAllFieldsInsertedState = isAddButtonEnabled,
-//                            onNavigate = { navEvent ->
-//                                navController.navigate(navEvent.route)
-//                            },
-//                            snackbarHostState = snackbarHostState
-//                        )
+                        viewModel =
+                            AddDataViewModels.addProjectorViewModel<AddProjectorViewModel>(
+                                userAndPlaceBundle = userAndPlaceBundle,
+                                projectorForUpdate = deviceForUpdate
+                            )
+                        AddProjectorView(
+                            viewModel = viewModel as AddProjectorViewModel,
+                            userAndPlaceBundle = userAndPlaceBundle,
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            },
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = {
+                                onChangePlaceClicked()
+                            },
+                            isForUpdate = true
+                        )
                     }
 
                     DatabaseObjectTypes.DESK -> {
-//                        viewModel =
-//                            AddDataViewModels.addDeskViewModel(
-//                                userAndPlaceBundle = userWithPlaceBundle
-//                            )
-//                        AddDeskView(
-//                            viewModel = viewModel as AddDeskViewModel,
-//                            isAllFieldsInsertedState = isAddButtonEnabled,
-//                            onNavigate = { navEvent ->
-//                                navController.navigate(navEvent.route)
-//                            },
-//                            snackbarHostState = snackbarHostState
-//                        )
+                        viewModel =
+                            AddDataViewModels.addDeskViewModel(
+                                userAndPlaceBundle = userAndPlaceBundle,
+                                deskForUpdate = deviceForUpdate
+                            )
+                        AddDeskView(
+                            viewModel = viewModel as AddDeskViewModel,
+                            userAndPlaceBundle = userAndPlaceBundle,
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            },
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = {
+                                onChangePlaceClicked()
+                            },
+                            isForUpdate = true
+                        )
                     }
 
 
                     DatabaseObjectTypes.SYSTEM_UNIT -> {
-//                        viewModel =
-//                            AddDataViewModels.addSystemUnitViewModel(
-//                                userAndPlaceBundle = userWithPlaceBundle
-//                            )
-//                        AddSystemUnitView(
-//                            viewModel = viewModel as AddSystemUnitViewModel,
-//                            isAllFieldsInsertedState = isAddButtonEnabled,
-//                            onNavigate = { navEvent ->
-//                                navController.navigate(navEvent.route)
-//                            },
-//                            snackbarHostState = snackbarHostState
-//                        )
+                        viewModel =
+                            AddDataViewModels.addSystemUnitViewModel(
+                                userAndPlaceBundle = userAndPlaceBundle,
+                                systemUnitForUpdate = deviceForUpdate
+                            )
+                        AddSystemUnitView(
+                            viewModel = viewModel as AddSystemUnitViewModel,
+                            userAndPlaceBundle = userAndPlaceBundle,
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            },
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = {
+                                onChangePlaceClicked()
+                            },
+                            isForUpdate = true
+                        )
                     }
 
                     DatabaseObjectTypes.MONITOR -> {
-//                        viewModel =
-//                            AddDataViewModels.addMonitorViewModel(
-//                                userAndPlaceBundle = userWithPlaceBundle
-//                            )
-//                        AddMonitorView(
-//                            viewModel = viewModel as AddMonitorViewModel,
-//                            isAllFieldsInsertedState = isAddButtonEnabled,
-//                            onNavigate = { navEvent ->
-//                                navController.navigate(navEvent.route)
-//                            },
-//                            snackbarHostState = snackbarHostState
-//                        )
+                        viewModel =
+                            AddDataViewModels.addMonitorViewModel(
+                                userAndPlaceBundle = userAndPlaceBundle,
+                                monitorForUpdate = deviceForUpdate
+                            )
+                        AddMonitorView(
+                            viewModel = viewModel as AddMonitorViewModel,
+                            userAndPlaceBundle = userAndPlaceBundle,
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            },
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = {
+                                onChangePlaceClicked()
+                            },
+                            isForUpdate = true
+                        )
                     }
 
                     DatabaseObjectTypes.KEYBOARD -> {
-//                        viewModel =
-//                            AddDataViewModels.addKeyboardViewModel(
-//                                userAndPlaceBundle = userWithPlaceBundle
-//                            )
-//                        AddKeyboardView(
-//                            viewModel = viewModel as AddKeyboardViewModel,
-//                            isAllFieldsInsertedState = isAddButtonEnabled,
-//                            onNavigate = { navEvent ->
-//                                navController.navigate(navEvent.route)
-//                            },
-//                            snackbarHostState = snackbarHostState
-//                        )
+                        viewModel =
+                            AddDataViewModels.addKeyboardViewModel(
+                                userAndPlaceBundle = userAndPlaceBundle,
+                                keyboardForUpdate = deviceForUpdate
+                            )
+                        AddKeyboardView(
+                            viewModel = viewModel as AddKeyboardViewModel,
+                            userAndPlaceBundle = userAndPlaceBundle,
+                            isAllFieldsInsertedState = isAddButtonEnabled,
+                            onNavigate = { navEvent ->
+                                navController.navigate(navEvent.route)
+                            },
+                            snackbarHostState = snackbarHostState,
+                            onChangePlaceClicked = {
+                                onChangePlaceClicked()
+                            },
+                            isForUpdate = true
+                        )
                     }
 
                     DatabaseObjectTypes.UNKNOWN -> {
@@ -179,6 +227,7 @@ fun CreateViewByModifyType(
                 ) {
                     Button(enabled = isAddButtonEnabled.value,
                         onClick = {
+                            viewModel.onEvent(AddNewObjectEvent.OnCabinetChanged(userAndPlaceBundle.cabinet.id))
                             viewModel.addObjectInDatabaseClicked(
                                 afterUpdateAction = {
                                     scannedObjectsListViewModel.onEvent(ScannedObjectsListEvent.Refresh)

@@ -11,13 +11,14 @@
     <string name="list_of_groups_route">list_of_groups</string>
     <string name="list_of_scanned_objects">list_of_scanned_objects</string>
     <string name="modify_concrete_object">modify_concrete_object</string>
+    <string name="place_choice_update">branch_and_building_choice_in_update</string>
 
 
     <string name="profile_route">profile</string>
     <string name="login_route">login</string>
 
 
-    <string name="place_choice">branch_and_building_choice</string>
+    <string name="place_choice_add">branch_and_building_choice_in_add</string>
     <string name="menu_add_route">add_menu</string>
     <string name="add_concrete_class">add_concrete_object</string>
     <string name="qr_codes_list">qr_codes_list</string>

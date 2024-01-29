@@ -19,7 +19,6 @@ import com.crystal2033.qrextractor.add_object_feature.general.di.AddDataViewMode
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.viewmodel.CreateQRCodesViewModel
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.viewmodel.DocumentWithQRCodesViewModel
-import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import dagger.hilt.android.EntryPointAccessors
@@ -51,7 +50,7 @@ sealed class AddDataViewModels {
         @Composable
         inline fun <reified T : ViewModel> addChairViewModel(
             userAndPlaceBundle: UserAndPlaceBundle,
-            chairForUpdate : InventarizedAndQRScannableModel?
+            chairForUpdate: InventarizedAndQRScannableModel?
         ): T {
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
@@ -59,13 +58,18 @@ sealed class AddDataViewModels {
             ).addChairViewModelFactory()
 
             return viewModel(
-                factory = AddChairViewModel.provideFactory(factory, userAndPlaceBundle, chairForUpdate)
+                factory = AddChairViewModel.provideFactory(
+                    factory,
+                    userAndPlaceBundle,
+                    chairForUpdate
+                )
             )
         }
 
         @Composable
         inline fun <reified T : ViewModel> addDeskViewModel(
-            userAndPlaceBundle: UserAndPlaceBundle
+            userAndPlaceBundle: UserAndPlaceBundle,
+            deskForUpdate: InventarizedAndQRScannableModel?
         ): T {
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
@@ -73,13 +77,18 @@ sealed class AddDataViewModels {
             ).addDeskViewModelFactory()
 
             return viewModel(
-                factory = AddDeskViewModel.provideFactory(factory, userAndPlaceBundle)
+                factory = AddDeskViewModel.provideFactory(
+                    factory,
+                    userAndPlaceBundle,
+                    deskForUpdate
+                )
             )
         }
 
         @Composable
         inline fun <reified T : ViewModel> addProjectorViewModel(
-            userAndPlaceBundle: UserAndPlaceBundle
+            userAndPlaceBundle: UserAndPlaceBundle,
+            projectorForUpdate: InventarizedAndQRScannableModel?
         ): T {
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
@@ -87,13 +96,18 @@ sealed class AddDataViewModels {
             ).addProjectorViewModelFactory()
 
             return viewModel(
-                factory = AddProjectorViewModel.provideFactory(factory, userAndPlaceBundle)
+                factory = AddProjectorViewModel.provideFactory(
+                    factory,
+                    userAndPlaceBundle,
+                    projectorForUpdate
+                )
             )
         }
 
         @Composable
         inline fun <reified T : ViewModel> addSystemUnitViewModel(
-            userAndPlaceBundle: UserAndPlaceBundle
+            userAndPlaceBundle: UserAndPlaceBundle,
+            systemUnitForUpdate: InventarizedAndQRScannableModel?
         ): T {
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
@@ -101,13 +115,18 @@ sealed class AddDataViewModels {
             ).addSystemUnitViewModelFactory()
 
             return viewModel(
-                factory = AddSystemUnitViewModel.provideFactory(factory, userAndPlaceBundle)
+                factory = AddSystemUnitViewModel.provideFactory(
+                    factory,
+                    userAndPlaceBundle,
+                    systemUnitForUpdate
+                )
             )
         }
 
         @Composable
         inline fun <reified T : ViewModel> addMonitorViewModel(
-            userAndPlaceBundle: UserAndPlaceBundle
+            userAndPlaceBundle: UserAndPlaceBundle,
+            monitorForUpdate: InventarizedAndQRScannableModel?
         ): T {
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
@@ -115,13 +134,18 @@ sealed class AddDataViewModels {
             ).addMonitorViewModelFactory()
 
             return viewModel(
-                factory = AddMonitorViewModel.provideFactory(factory, userAndPlaceBundle)
+                factory = AddMonitorViewModel.provideFactory(
+                    factory,
+                    userAndPlaceBundle,
+                    monitorForUpdate
+                )
             )
         }
 
         @Composable
         inline fun <reified T : ViewModel> addKeyboardViewModel(
-            userAndPlaceBundle: UserAndPlaceBundle
+            userAndPlaceBundle: UserAndPlaceBundle,
+            keyboardForUpdate: InventarizedAndQRScannableModel?
         ): T {
             val factory = EntryPointAccessors.fromActivity(
                 LocalContext.current as Activity,
@@ -129,7 +153,11 @@ sealed class AddDataViewModels {
             ).addKeyboardViewModelFactory()
 
             return viewModel(
-                factory = AddKeyboardViewModel.provideFactory(factory, userAndPlaceBundle)
+                factory = AddKeyboardViewModel.provideFactory(
+                    factory,
+                    userAndPlaceBundle,
+                    keyboardForUpdate
+                )
             )
         }
 

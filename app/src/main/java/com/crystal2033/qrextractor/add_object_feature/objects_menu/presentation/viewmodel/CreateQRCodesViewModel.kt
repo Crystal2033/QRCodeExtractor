@@ -106,11 +106,16 @@ class CreateQRCodesViewModel @AssistedInject constructor(
             is CreateQRCodeEvent.OnChangePlaceClicked -> {
                 sendUiEvent(
                     UICreateQRCodeEvent.Navigate(
-                        context.resources.getString(R.string.place_choice)
+                        context.resources.getString(R.string.place_choice_add)
                     )
                 )
             }
 
+            is CreateQRCodeEvent.ChangePlaceField -> {
+                _branchName.value = event.userAndPlaceBundle.branch.name
+                _buildingAddress.value = event.userAndPlaceBundle.building.address
+                _cabinetName.value = event.userAndPlaceBundle.cabinet.name
+            }
         }
     }
 

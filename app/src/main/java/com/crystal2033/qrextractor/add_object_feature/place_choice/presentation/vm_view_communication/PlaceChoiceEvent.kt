@@ -6,5 +6,10 @@ sealed class PlaceChoiceEvent {
 
     data class OnCabinetChanged(val chosenId: Long) : PlaceChoiceEvent()
 
+    data class OnLoadAllData(val branchId: Long, val buildingId: Long, val cabinetId: Long) :
+        PlaceChoiceEvent()
+
     data object OnContinueClicked : PlaceChoiceEvent()
+
+    data class OnNextRouteDestinationChanged(val nextRoute : String) : PlaceChoiceEvent()
 }

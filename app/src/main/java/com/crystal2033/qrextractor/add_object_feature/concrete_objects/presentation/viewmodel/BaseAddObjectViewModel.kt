@@ -40,9 +40,9 @@ abstract class BaseAddObjectViewModel(
         val bitmap = QRCodeGenerator.encodeAsBitmap(convertedJsonFromString, 250, 250)
         return bitmap.asImageBitmap()
     }
-
-    private val _userAndPlaceBundle = mutableStateOf(userAndPlaceBundle)
-    val userAndPlaceBundleState: State<UserAndPlaceBundle> = _userAndPlaceBundle
+//
+//    private val _userAndPlaceBundle = mutableStateOf(userAndPlaceBundle)
+//    val userAndPlaceBundleState: State<UserAndPlaceBundle> = _userAndPlaceBundle
 
     abstract fun addObjectInDatabaseClicked(
         onAddObjectClicked: (QRCodeStickerInfo) -> Unit = {},
@@ -85,11 +85,17 @@ abstract class BaseAddObjectViewModel(
             is AddNewObjectEvent.OnNameChanged -> {
                 setNewName(event.name)
             }
+
+            is AddNewObjectEvent.OnCabinetChanged -> {
+                setNewCabinetId(event.cabinetId)
+            }
         }
     }
 
     protected abstract fun setNewImage(image: Bitmap?)
     protected abstract fun setNewName(name: String)
+
+    protected abstract fun setNewCabinetId(cabinetId: Long)
     protected abstract fun setNewInventoryNumber(invNumber: String)
 
     protected fun <M : InventarizedAndQRScannableModel> makeActionWithResourceResult(

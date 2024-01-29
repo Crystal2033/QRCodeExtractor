@@ -2,6 +2,7 @@ package com.crystal2033.qrextractor.add_object_feature.concrete_objects.presenta
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -11,9 +12,12 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.DeskUIState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
+import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.remote_server.data.model.Desk
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.desk.AddDeskUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.desk.UpdateDeskUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -27,12 +31,14 @@ class AddDeskViewModel @AssistedInject constructor(
     @Assisted private val userAndPlaceBundle: UserAndPlaceBundle,
     @ApplicationContext private val context: Context,
     converters: Converters,
-    private val addDeskUseCase: AddDeskUseCase
+    private val addDeskUseCase: AddDeskUseCase,
+    @Assisted private val deskForUpdate: InventarizedAndQRScannableModel?,
+    private val updateDeskUseCase: UpdateDeskUseCase
 ) : BaseAddObjectViewModel(context, converters, userAndPlaceBundle) {
 
 
     private val _deskState = mutableStateOf(
-        Desk(
+        deskForUpdate ?: Desk(
             cabinetId = userAndPlaceBundle.cabinet.id
         )
     ) //work with this here is more convenient
@@ -47,17 +53,21 @@ class AddDeskViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(userAndPlaceBundle: UserAndPlaceBundle): AddDeskViewModel
+        fun create(
+            userAndPlaceBundle: UserAndPlaceBundle,
+            deviceForUpdate: InventarizedAndQRScannableModel?
+        ): AddDeskViewModel
     }
 
     companion object {
         @Suppress("UNCHECKED_CAST")
         fun provideFactory(
             assistedFactory: Factory,
-            userAndPlaceBundle: UserAndPlaceBundle
+            userAndPlaceBundle: UserAndPlaceBundle,
+            deviceForUpdate: InventarizedAndQRScannableModel?
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(userAndPlaceBundle) as T
+                return assistedFactory.create(userAndPlaceBundle, deviceForUpdate) as T
             }
         }
     }
@@ -67,10 +77,19 @@ class AddDeskViewModel @AssistedInject constructor(
         onAddObjectClicked: (QRCodeStickerInfo) -> Unit,
         afterUpdateAction: () -> Unit
     ) {
-        val deskDTO = _deskState.value.toDTO()
+        val desk = (_deskState.value as Desk).toDTO()
 
         viewModelScope.launch {
-            addDeskUseCase(deskDTO).onEach { statusWithState ->
+            deskForUpdate?.let {
+                Log.i(LOG_TAG_NAMES.INFO_TAG, "UPDATE API")
+                updateDeskUseCase(desk).onEach { statusWithState ->
+                    makeActionWithResourceResult(
+                        statusWithState = statusWithState,
+                        deviceState = _deskStateWithLoadingStatus,
+                        afterUpdateAction = afterUpdateAction,
+                    )
+                }.launchIn(this)
+            } ?: addDeskUseCase(desk).onEach { statusWithState ->
                 makeActionWithResourceResult(
                     statusWithState = statusWithState,
                     deviceState = _deskStateWithLoadingStatus,
@@ -102,6 +121,16 @@ class AddDeskViewModel @AssistedInject constructor(
             inventoryNumber = _deskState.value.inventoryNumber,
             name = name,
             cabinetId = _deskState.value.cabinetId
+        )
+    }
+
+    override fun setNewCabinetId(cabinetId: Long) {
+        _deskState.value = Desk(
+            id = _deskState.value.id,
+            image = _deskState.value.image,
+            inventoryNumber = _deskState.value.inventoryNumber,
+            name = _deskState.value.name,
+            cabinetId = cabinetId
         )
     }
 

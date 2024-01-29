@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.getGoodNameByDatabaseObjectType
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 
 @Composable
@@ -41,7 +42,7 @@ fun ScannedObjectPreview(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = device.getDatabaseTableName().name.uppercase(),
+                text = getGoodNameByDatabaseObjectType(device.getDatabaseTableName()),
                 color = Color.DarkGray,
                 fontWeight = FontWeight.Bold
             )
