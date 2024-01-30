@@ -1,6 +1,7 @@
 package com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication
 
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 
 sealed class QRScannerEvent {
     data class OnAddObjectInList(
@@ -15,4 +16,7 @@ sealed class QRScannerEvent {
     data object ClearListOfScannedObjects : QRScannerEvent()
 
     data object OnGoToScannedGroupsWindow : QRScannerEvent()
+
+    data class OnDeleteDeviceFromServerClicked(val qrScannableData: QRScannableData) :
+        QRScannerEvent()
 }

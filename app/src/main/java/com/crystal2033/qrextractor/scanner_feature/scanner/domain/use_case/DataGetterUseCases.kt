@@ -8,12 +8,10 @@ import com.crystal2033.qrextractor.core.remote_server.domain.use_case.projector.
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.system_unit.GetSystemUnitUseCase
 
 data class DataGetterUseCases(
-    //val getPersonUseCase: GetPersonUseCase,
     val getChairUseCase: GetChairUseCase,
     val getDeskUseCase: GetDeskUseCase,
     val getProjectorUseCase: GetProjectorUseCase,
     val getMonitorUseCase: GetMonitorUseCase,
     val getSystemUnitUseCase: GetSystemUnitUseCase,
     val getKeyboardUseCase: GetKeyboardUseCase
-    //val getKeyboardUseCase: GetKeyboardUseCase
 )

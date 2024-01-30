@@ -51,8 +51,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.scanner_feature.scanner.StaticConverters
-import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.dialog_window.DialogMessage
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.dialog_window.DialogInsertName
+import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.dialog_window.DialogMessage
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.state.DialogWindowInfoState
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.uiItems.preview.ShowDataItemByType
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.util.QRCodeAnalyzer
@@ -73,9 +73,9 @@ fun QRCodeView(
     snackbarHostState: SnackbarHostState
 ) {
 
-    val scannedObject by remember {
-        mutableStateOf(viewModel.previewDataFromQRState)
-    } // or just  val scannedObject = viewModel.previewDataFromQRState.value??3
+    val scannedObject = remember {
+        viewModel.previewDataFromQRState
+    } // or just  val scannedObject = viewModel.previewDataFromQRState.value??
 
     val chosenListOfScannedObjects = remember {
         viewModel.listOfAddedScannables
@@ -112,10 +112,10 @@ fun QRCodeView(
             hasCameraPermission = granted
         })
 
-    ObserveAsEvents(flow = viewModel.eventFlow, launcher){ event ->
+    ObserveAsEvents(flow = viewModel.eventFlow, launcher) { event ->
         when (event) {
             is UIScannerEvent.ShowSnackBar -> {
-                 snackbarHostState.showSnackbar(
+                snackbarHostState.showSnackbar(
                     message = event.message,
                     actionLabel = "Okay",
                     duration = SnackbarDuration.Long
@@ -163,82 +163,6 @@ fun QRCodeView(
                     placeholderInTextField = "Group name",
                 )
             }
-
-
-            Column(
-                modifier = Modifier
-                    .padding(15.dp)
-                    .offset(0.dp, 55.dp)
-                    .fillMaxSize()
-            )
-
-            {
-                Spacer(Modifier.size(30.dp))
-                if (hasCameraPermission) {
-                    AndroidView(
-                        modifier = Modifier
-                            .size(400.dp)
-                            .align(Alignment.CenterHorizontally),
-                        factory = { context ->
-                            val previewView = PreviewView(context)
-                            val preview = Preview.Builder().build()
-                            val selector = CameraSelector.Builder()
-                                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                                .build()
-                            preview.setSurfaceProvider(previewView.surfaceProvider)
-
-                            val resolutionSelector = ResolutionSelector.Builder()
-                                .setResolutionStrategy(ResolutionStrategy.HIGHEST_AVAILABLE_STRATEGY)
-                                .build()
-
-                            val imageAnalysis = ImageAnalysis.Builder()
-                                .setResolutionSelector(resolutionSelector)
-                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                                .build()
-
-                            imageAnalysis.setAnalyzer(
-                                ContextCompat.getMainExecutor(context),
-                                QRCodeAnalyzer { scannedString ->
-                                    viewModel.onEvent(QRScannerEvent.OnScanQRCode(scannedString))
-                                }
-
-                            )
-                            try {
-                                cameraProviderFuture.get().bindToLifecycle(
-                                    lifecycleOwner,
-                                    selector,
-                                    preview,
-                                    imageAnalysis
-                                )
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-
-                            previewView
-                        },
-                    )
-                    Spacer(modifier = Modifier.size(60.dp))
-                    scannedObject.value.scannedDataInfo?.let { scannedData ->
-                        ShowDataItemByType(
-                            qrScannable = scannedData,
-                            userAndPlaceBundle = viewModel.userAndPlaceBundle.value,
-                            onAddObjectIntoListClicked = {
-                                viewModel.onEvent(
-                                    QRScannerEvent.OnAddObjectInList(
-                                        scannedData,
-                                        false
-                                    )
-                                )
-                            }
-                        )
-                    }
-                }
-            }
-
-            if (scannedObject.value.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-
 
             IconButton(
                 modifier = Modifier
@@ -301,6 +225,85 @@ fun QRCodeView(
             }
 
 
+            Column(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .offset(0.dp, 55.dp)
+                    .fillMaxSize()
+            ) {
+                Spacer(Modifier.size(30.dp))
+                if (hasCameraPermission) {
+                    AndroidView(
+                        modifier = Modifier
+                            .size(400.dp)
+                            .align(Alignment.CenterHorizontally),
+                        factory = { context ->
+                            val previewView = PreviewView(context)
+                            val preview = Preview.Builder().build()
+                            val selector = CameraSelector.Builder()
+                                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                                .build()
+                            preview.setSurfaceProvider(previewView.surfaceProvider)
+
+                            val resolutionSelector = ResolutionSelector.Builder()
+                                .setResolutionStrategy(ResolutionStrategy.HIGHEST_AVAILABLE_STRATEGY)
+                                .build()
+
+                            val imageAnalysis = ImageAnalysis.Builder()
+                                .setResolutionSelector(resolutionSelector)
+                                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                                .build()
+
+                            imageAnalysis.setAnalyzer(
+                                ContextCompat.getMainExecutor(context),
+                                QRCodeAnalyzer { scannedString ->
+                                    viewModel.onEvent(QRScannerEvent.OnScanQRCode(scannedString))
+                                }
+
+                            )
+                            try {
+                                cameraProviderFuture.get().bindToLifecycle(
+                                    lifecycleOwner,
+                                    selector,
+                                    preview,
+                                    imageAnalysis
+                                )
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+
+                            previewView
+                        },
+                    )
+                    Spacer(modifier = Modifier.size(60.dp))
+                    scannedObject.value.scannedDataInfo?.let { scannedData ->
+                        ShowDataItemByType(
+                            qrScannable = scannedData,
+                            userAndPlaceBundle = viewModel.userAndPlaceBundle.value,
+                            onAddObjectIntoListClicked = {
+                                viewModel.onEvent(
+                                    QRScannerEvent.OnAddObjectInList(
+                                        scannedData,
+                                        false
+                                    )
+                                )
+                            },
+                            onDeleteDevice = { deviceForRemoving ->
+                                viewModel.onEvent(
+                                    QRScannerEvent.OnDeleteDeviceFromServerClicked(
+                                        deviceForRemoving
+                                    )
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+
+            if (scannedObject.value.isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            }
+
         }
     }
 
@@ -308,15 +311,17 @@ fun QRCodeView(
 }
 
 @Composable
-private fun <T> ObserveAsEvents(flow : Flow<T>,
-                                cameraLauncher: ManagedActivityResultLauncher<String, Boolean>,
-                                onEvent: suspend (T) -> Unit) {
+private fun <T> ObserveAsEvents(
+    flow: Flow<T>,
+    cameraLauncher: ManagedActivityResultLauncher<String, Boolean>,
+    onEvent: suspend (T) -> Unit
+) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(flow, lifecycleOwner.lifecycle){
+    LaunchedEffect(flow, lifecycleOwner.lifecycle) {
         cameraLauncher.launch(Manifest.permission.CAMERA)
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-            withContext(Dispatchers.Main.immediate){
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            withContext(Dispatchers.Main.immediate) {
                 flow.collectLatest(onEvent)
             }
         }

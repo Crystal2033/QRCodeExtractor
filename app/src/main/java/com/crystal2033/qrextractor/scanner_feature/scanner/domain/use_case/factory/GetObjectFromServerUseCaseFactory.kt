@@ -5,7 +5,7 @@ import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.DataGetterUseCases
 
-class UseCaseGetObjectFromServerFactory(
+class GetObjectFromServerUseCaseFactory(
     private val getObjectInfoUseCases: DataGetterUseCases,
     private val context: Context
 ) {

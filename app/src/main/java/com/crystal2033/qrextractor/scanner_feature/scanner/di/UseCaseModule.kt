@@ -5,15 +5,23 @@ import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetPlaceUs
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.branch.GetBranchUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.building.GetBuildingUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.cabinet.GetCabinetUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.chair.DeleteChairUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.chair.GetChairUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.desk.DeleteDeskUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.desk.GetDeskUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.keyboard.DeleteKeyboardUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.keyboard.GetKeyboardUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.monitor.DeleteMonitorUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.monitor.GetMonitorUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.organization.GetOrganizationUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.projector.DeleteProjectorUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.projector.GetProjectorUseCase
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.system_unit.DeleteSystemUnitUseCase
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.system_unit.GetSystemUnitUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.DataGetterUseCases
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetObjectFromServerFactory
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.DeleteObjectOnServerUseCases
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.DeleteObjectOnServerUseCaseFactory
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetObjectFromServerUseCaseFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,8 +37,8 @@ object UseCaseModule {
     fun provideQRCodeScannerUseCasesFactory(
         qrCodeScannerUseCases: DataGetterUseCases,
         @ApplicationContext context: Context
-    ): UseCaseGetObjectFromServerFactory {
-        return UseCaseGetObjectFromServerFactory(qrCodeScannerUseCases, context)
+    ): GetObjectFromServerUseCaseFactory {
+        return GetObjectFromServerUseCaseFactory(qrCodeScannerUseCases, context)
     }
 
     @Provides
@@ -68,4 +76,35 @@ object UseCaseModule {
             getKeyboardUseCase
         )
     }
+
+    @Provides
+    @Singleton
+    fun provideDeleteDeviceOnServerUserCases(
+        deleteChairUseCase: DeleteChairUseCase,
+        deleteDeskUseCase: DeleteDeskUseCase,
+        deleteKeyboardUseCase: DeleteKeyboardUseCase,
+        deleteProjectorUseCase: DeleteProjectorUseCase,
+        deleteSystemUnitUseCase: DeleteSystemUnitUseCase,
+        deleteMonitorUseCase: DeleteMonitorUseCase
+    ): DeleteObjectOnServerUseCases {
+        return DeleteObjectOnServerUseCases(
+            deleteChairUseCase,
+            deleteDeskUseCase,
+            deleteKeyboardUseCase,
+            deleteProjectorUseCase,
+            deleteSystemUnitUseCase,
+            deleteMonitorUseCase
+        )
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideDeleteDeviceOnServerUseCasesFactory(
+        deleteDeviceOnServerUseCases: DeleteObjectOnServerUseCases,
+        @ApplicationContext context: Context
+    ): DeleteObjectOnServerUseCaseFactory {
+        return DeleteObjectOnServerUseCaseFactory(deleteDeviceOnServerUseCases, context)
+    }
+
 }

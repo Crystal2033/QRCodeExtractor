@@ -3,6 +3,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmod
 import android.content.Context
 import android.util.Log
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Dangerous
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
@@ -19,14 +20,17 @@ import com.crystal2033.qrextractor.core.remote_server.data.model.Cabinet
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.data.model.Organization
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
+import com.crystal2033.qrextractor.core.remote_server.domain.use_case.DeleteDeviceUseCaseInvoker
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetPlaceUseCases
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetObjectFromServerFactory
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.DeleteObjectOnServerUseCaseFactory
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetObjectFromServerUseCaseFactory
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.state.ScannedDataState
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.QRScannerEvent
 import com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communication.UIScannerEvent
@@ -50,8 +54,9 @@ class QRCodeScannerViewModel @AssistedInject constructor(
     private val converter: Converters,
     @Assisted private val user: User,
     private val getPlaceUseCases: GetPlaceUseCases,
-    private val useCaseGetQRCodeFactory: UseCaseGetObjectFromServerFactory,
+    private val useCaseGetQRCodeFactory: GetObjectFromServerUseCaseFactory,
     private val insertScannedGroupInDBUseCase: InsertScannedGroupInDBUseCase,
+    private val deleteDeviceOnServerUseCases: DeleteObjectOnServerUseCaseFactory,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -75,6 +80,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
     }
 
     private lateinit var getDataFromQRCodeUseCase: GetDeviceUseCaseInvoker
+    private lateinit var deleteDeviceOnServerUseCase: DeleteDeviceUseCaseInvoker
 
     ///States
     private val _previewDataFromQRState = mutableStateOf(ScannedDataState())
@@ -129,9 +135,43 @@ class QRCodeScannerViewModel @AssistedInject constructor(
                 sendUiEvent(UIScannerEvent.Navigate(context.resources.getString(R.string.list_of_groups_route)))
             }
 
+            is QRScannerEvent.OnDeleteDeviceFromServerClicked -> {
+                sendUiEvent(
+                    UIScannerEvent.ShowMessagedDialogWindow(
+                        message = "Are you sure you want to delete device: " +
+                                    "\"${_previewDataFromQRState.value.scannedDataInfo?.name}\" from the server?",
+                        onDeclineAction = {},
+                        onAcceptAction = {
+                            deleteDeviceFromServer(_previewDataFromQRState.value.scannedDataInfo as QRScannableData)
+                        },
+                        dialogTitle = "Delete device",
+                        icon = Icons.Default.Dangerous
+                    )
+                )
+            }
         }
     }
 
+    private fun deleteDeviceFromServer(deviceToDelete: QRScannableData) {
+        viewModelScope.launch {
+            try {
+                deleteDeviceOnServerUseCase =
+                    deleteDeviceOnServerUseCases.createUseCase(
+                        deviceToDelete.getDatabaseTableName().getLabel(context)
+                    )
+
+            } catch (error: ClassNotFoundException) {
+                Log.e(LOG_TAG_NAMES.ERROR_TAG, error.message ?: "Unknown error")
+                val errorMsg = error.message ?: "Unknown error"
+                setPreviewObjectStateInfo(Resource.Error(message = errorMsg, Unknown(errorMsg)))
+            }
+            deleteDeviceOnServerUseCase(deviceToDelete.getDatabaseID()).onEach { result ->
+                workWithResultAfterDelete(result)
+            }.launchIn(this)
+        }
+
+
+    }
 
     private fun onAddScannedGroupClicked(groupName: String) {
         Log.i(LOG_TAG_NAMES.INFO_TAG, "Group name: $groupName")
@@ -226,6 +266,31 @@ class QRCodeScannerViewModel @AssistedInject constructor(
         }
     }
 
+    private fun workWithResultAfterDelete(data: Resource<Unit>) {
+        when (data) {
+            is Resource.Loading -> {
+                _previewDataFromQRState.value = previewDataFromQRState.value.copy(
+                    scannedDataInfo = previewDataFromQRState.value.scannedDataInfo,
+                    isLoading = true
+                )
+            }
+
+            is Resource.Error -> {
+                setErrorStatusAndSendSnackbarEvent(data.message)
+            }
+
+            is Resource.Success -> {
+                _previewDataFromQRState.value = previewDataFromQRState.value.copy(
+                    scannedDataInfo = null,
+                    isLoading = false
+                )
+                sendUiEvent(UIScannerEvent.ShowSnackBar(
+                    "Device has been deleted successfully"
+                ))
+            }
+        }
+    }
+
     private fun setPreviewObjectStateInfo(data: Resource<InventarizedAndQRScannableModel>) {
         when (data) {
             is Resource.Loading -> {
@@ -244,59 +309,58 @@ class QRCodeScannerViewModel @AssistedInject constructor(
     }
 
 
-    private fun setBuildingByCabinet(resourceCabinet: Resource<Cabinet>) {
+    private fun setBuildingByCabinet(
+        resourceCabinet: Resource<Cabinet>,
+        coroutineScope: CoroutineScope
+    ) {
         when (resourceCabinet) {
             is Resource.Error -> {}
             is Resource.Loading -> {}
             is Resource.Success -> {
-                CoroutineScope(Dispatchers.Default).launch {
-                    getPlaceUseCases.getBuildingUseCase(resourceCabinet.data!!.buildingId).onEach {
-                        when (it) {
-                            is Resource.Error -> {}
-                            is Resource.Loading -> {}
-                            is Resource.Success -> {
-                                _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
-                                    user = userAndPlaceBundle.value.user,
-                                    branch = userAndPlaceBundle.value.branch,
-                                    building = it.data!!,
-                                    cabinet = userAndPlaceBundle.value.cabinet,
-                                    organization = userAndPlaceBundle.value.organization,
-                                )
-                                setBranchByBuilding(it)
-                            }
+                getPlaceUseCases.getBuildingUseCase(resourceCabinet.data!!.buildingId).onEach {
+                    when (it) {
+                        is Resource.Error -> {}
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
+                                user = userAndPlaceBundle.value.user,
+                                branch = userAndPlaceBundle.value.branch,
+                                building = it.data!!,
+                                cabinet = userAndPlaceBundle.value.cabinet,
+                                organization = userAndPlaceBundle.value.organization,
+                            )
+                            setBranchByBuilding(it, coroutineScope)
                         }
-                    }.launchIn(this)
-                }
+                    }
+                }.launchIn(coroutineScope)
+
             }
         }
     }
 
     private fun setBranchByBuilding(
-        resourceBuilding: Resource<Building>
+        resourceBuilding: Resource<Building>,
+        coroutineScope: CoroutineScope
     ) {
         when (resourceBuilding) {
             is Resource.Error -> {}
             is Resource.Loading -> {}
             is Resource.Success -> {
-                CoroutineScope(Dispatchers.Default).launch {
-                    getPlaceUseCases.getBranchUseCase(resourceBuilding.data!!.branchId).onEach {
-                        when (it) {
-                            is Resource.Error -> {}
-                            is Resource.Loading -> {}
-                            is Resource.Success -> {
-                                _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
-                                    user = userAndPlaceBundle.value.user,
-                                    branch = it.data!!,
-                                    building = userAndPlaceBundle.value.building,
-                                    cabinet = userAndPlaceBundle.value.cabinet,
-                                    organization = userAndPlaceBundle.value.organization,
-                                )
-                            }
+                getPlaceUseCases.getBranchUseCase(resourceBuilding.data!!.branchId).onEach {
+                    when (it) {
+                        is Resource.Error -> {}
+                        is Resource.Loading -> {}
+                        is Resource.Success -> {
+                            _userAndPlaceBundle.value = userAndPlaceBundle.value.copy(
+                                user = userAndPlaceBundle.value.user,
+                                branch = it.data!!,
+                                building = userAndPlaceBundle.value.building,
+                                cabinet = userAndPlaceBundle.value.cabinet,
+                                organization = userAndPlaceBundle.value.organization,
+                            )
                         }
-
-
-                    }.launchIn(this)
-                }
+                    }
+                }.launchIn(coroutineScope)
             }
         }
     }
@@ -336,16 +400,16 @@ class QRCodeScannerViewModel @AssistedInject constructor(
     private fun setPlaceByDeviceAndUser(data: InventarizedAndQRScannableModel?) {
         data?.let {
             CoroutineScope(Dispatchers.Default).launch {
-                getPlaceUseCases.getOrganizationUseCase(_userAndPlaceBundle.value.user.organizationId).onEach {
-                    setOrganization(it)
-                }.launchIn(this)
-
-                getPlaceUseCases.getCabinetUseCase(data.cabinetId).onEach {
-                    setCabinet(it)
-                    setBuildingByCabinet(it)
-                }.launchIn(this)
+                getPlaceUseCases.getOrganizationUseCase(_userAndPlaceBundle.value.user.organizationId)
+                    .onEach {
+                        setOrganization(it)
+                    }.launchIn(this).invokeOnCompletion {
+                        getPlaceUseCases.getCabinetUseCase(data.cabinetId).onEach {
+                            setCabinet(it)
+                            setBuildingByCabinet(it, this)
+                        }.launchIn(this)
+                    }
             }
-
         }
     }
 

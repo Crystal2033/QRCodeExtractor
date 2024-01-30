@@ -23,7 +23,7 @@ import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presenta
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.vm_view_communication.ScannedObjectsListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.vm_view_communication.UIScannedObjectsListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.UseCaseGetObjectFromServerFactory
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.GetObjectFromServerUseCaseFactory
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -32,7 +32,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -41,7 +40,7 @@ import kotlinx.coroutines.launch
 class ScannedObjectsListViewModel @AssistedInject constructor(
     @Assisted private val scannedGroup: ScannedGroup,
     @Assisted private val userAndPlaceBundle: UserAndPlaceBundle,
-    private val useCaseGetObjectFactory: UseCaseGetObjectFromServerFactory,
+    private val useCaseGetObjectFactory: GetObjectFromServerUseCaseFactory,
     @ApplicationContext private val context: Context,
     private val getPlaceUseCases: GetPlaceUseCases
     //TODO: Add delete use case?
@@ -122,10 +121,12 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                     "Clicked on ${event.scannedObject.javaClass.simpleName} with id " +
                             "${event.scannedObject.getDatabaseID()}"
                 )
-                CoroutineScope(Dispatchers.Default).launch {
-                    Log.i(LOG_TAG_NAMES.INFO_TAG, "Before set")
-                    setPlaceByDeviceAndUser(_chosenDeviceState.value, this)
-                }
+//                CoroutineScope(Dispatchers.Default).launch {
+//                    Log.i(LOG_TAG_NAMES.INFO_TAG, "Before set")
+//                    setPlaceByDeviceAndUser(_chosenDeviceState.value, this)
+//                }
+
+                setPlaceByDeviceAndUser(_chosenDeviceState.value)
 
             }
 
@@ -172,7 +173,10 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
             }
 
             is Resource.Success -> {
-                Log.i(LOG_TAG_NAMES.INFO_TAG, "SUCCESS ID: $id with name: ${objectGetResult.data?.name}")
+                Log.i(
+                    LOG_TAG_NAMES.INFO_TAG,
+                    "SUCCESS ID: $id with name: ${objectGetResult.data?.name}"
+                )
                 _objectsListState.value.listOfObjects.add(
                     objectGetResult.data ?: Unknown("Not found")
                 )
@@ -247,13 +251,13 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                                 organization = userAndPlaceBundleState.value.organization,
                             )
                             Log.i(LOG_TAG_NAMES.INFO_TAG, "Branch set")
-                            sendUiEvent(
-                                UIScannedObjectsListEvent.Navigate(
-                                    context.resources.getString(
-                                        R.string.modify_concrete_object
-                                    )
-                                )
-                            )
+//                            sendUiEvent(
+//                                UIScannedObjectsListEvent.Navigate(
+//                                    context.resources.getString(
+//                                        R.string.modify_concrete_object
+//                                    )
+//                                )
+//                            )
 
                         }
                     }
@@ -297,19 +301,28 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
     }
 
     private fun setPlaceByDeviceAndUser(
-        data: InventarizedAndQRScannableModel?,
-        coroutineScope: CoroutineScope
+        data: InventarizedAndQRScannableModel?
     ) {
         data?.let {
-            getPlaceUseCases.getOrganizationUseCase(_userAndPlaceBundle.value.user.organizationId)
-                .onEach {
-                    setOrganization(it)
-                }.launchIn(coroutineScope)
+            CoroutineScope(Dispatchers.Default).launch {
+                getPlaceUseCases.getOrganizationUseCase(_userAndPlaceBundle.value.user.organizationId)
+                    .onEach {
+                        setOrganization(it)
+                    }.launchIn(this).invokeOnCompletion {
+                        getPlaceUseCases.getCabinetUseCase(data.cabinetId).onEach {
+                            setCabinet(it)
+                            setBuildingByCabinet(it, this)
+                        }.launchIn(this)
+                    }
+            }
+            sendUiEvent(
+                UIScannedObjectsListEvent.Navigate(
+                    context.resources.getString(
+                        R.string.modify_concrete_object
+                    )
+                )
+            )
 
-            getPlaceUseCases.getCabinetUseCase(data.cabinetId).onEach {
-                setCabinet(it)
-                setBuildingByCabinet(it, coroutineScope)
-            }.launchIn(coroutineScope)
         }
     }
 
