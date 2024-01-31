@@ -2,6 +2,8 @@ package com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.
 
 import android.content.Context
 import android.util.Log
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FolderDelete
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -13,7 +15,7 @@ import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.UserWithScannedGroups
-import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.use_case.DeleteObjectItemInScannedGroupUseCase
+import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.use_case.DeleteScannedGroupUseCase
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.use_case.GetListOfUserScannedGroupsUseCase
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.state.UserScannedGroupsState
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.vm_view_communication.ScannedGroupsListEvent
@@ -32,17 +34,18 @@ import kotlinx.coroutines.launch
 
 class ScannedDataGroupsViewModel @AssistedInject constructor(
     private val getListOfUserScannedGroupsUseCase: GetListOfUserScannedGroupsUseCase,
-    private val deleteObjectItemInScannedGroupUseCase: DeleteObjectItemInScannedGroupUseCase,
+    private val deleteScannedGroupUseCase: DeleteScannedGroupUseCase,
     @Assisted private val user: User?,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     //states
     private val _scannedGroupsForUser = mutableStateOf(UserScannedGroupsState())
-    val scannedGroupsForUser : State<UserScannedGroupsState> = _scannedGroupsForUser
+    val scannedGroupsForUser: State<UserScannedGroupsState> = _scannedGroupsForUser
 
     private val _chosenGroup = mutableStateOf(ScannedGroup())
     val chosenGroup: State<ScannedGroup> = _chosenGroup
+
     //states
 
     init {
@@ -81,25 +84,53 @@ class ScannedDataGroupsViewModel @AssistedInject constructor(
                 _chosenGroup.value = findGroupById(event.groupId)!!
                 sendUiEvent(UIScannedGroupsListEvent.Navigate(context.resources.getString(R.string.list_of_scanned_objects)))
             }
+
+            is ScannedGroupsListEvent.OnDeleteGroupClicked -> {
+                sendUiEvent(
+                    UIScannedGroupsListEvent.ShowMessagedDialogWindow(
+                        message = "Are you sure you want to delete \"${event.scannedGroup.groupName}\" group?",
+                        onDeclineAction = {},
+                        onAcceptAction = {
+                            Log.i(LOG_TAG_NAMES.INFO_TAG, "Removing group!")
+                            removeScannedGroupWithObjects(event.scannedGroup)
+                        },
+                        dialogTitle = "Delete the scanned group",
+                        icon = Icons.Filled.FolderDelete
+                    )
+                )
+            }
         }
     }
 
-    private fun findGroupById(groupId: Long) : ScannedGroup?{
+    private fun findGroupById(groupId: Long): ScannedGroup? {
         return _scannedGroupsForUser.value.userScannedGroups?.getScannedGroupById(groupId)
     }
 
-    private fun refresh(){
-        user?.let {
-            existingUser ->
+    private fun removeScannedGroupWithObjects(scannedGroupToDelete: ScannedGroup) {
+        viewModelScope.launch {
+            deleteScannedGroupUseCase(scannedGroupToDelete).onEach {
+                when (it) {
+                    is Resource.Error -> {}
+                    is Resource.Loading -> {}
+                    is Resource.Success -> {
+                        refresh()
+                    }
+                }
+            }.launchIn(this)
+        }
+    }
+
+    private fun refresh() {
+        user?.let { existingUser ->
             viewModelScope.launch {
-                getListOfUserScannedGroupsUseCase(existingUser.id).onEach { result ->
+                getListOfUserScannedGroupsUseCase(existingUser.idLocalDB).onEach { result ->
                     setGroupsListInState(result)
                 }.launchIn(this)
             }
         }
     }
 
-    private fun setGroupsListInState(data: Resource<UserWithScannedGroups>){
+    private fun setGroupsListInState(data: Resource<UserWithScannedGroups>) {
         when (data) {
             is Resource.Loading -> {
                 setDataWithStatus(data, true)

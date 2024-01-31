@@ -11,11 +11,12 @@ data class UserDTO(
 ) {
     fun toUser(): User {
         return User(
-            id = id,
+            idRemoteDB = id,
             firstName = firstName,
             secondName = secondName,
             login = login,
-            organizationId = organizationId
+            organizationId = organizationId,
+            idLocalDB = 0L
         )
     }
 

@@ -1,10 +1,8 @@
 package com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model
 
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
-
 data class ScannedGroup(
-    val id: Long? = null,
+    val id: Long = 0L,
     val groupName: String? = null,
-    val listOfScannedObjects: MutableList<Pair<ScannedTableNameAndId, Long>> = mutableListOf()
+    val listOfScannedObjects: MutableList<ScannedObjectWithIdInLocalDB> = mutableListOf()
 ) {
 }

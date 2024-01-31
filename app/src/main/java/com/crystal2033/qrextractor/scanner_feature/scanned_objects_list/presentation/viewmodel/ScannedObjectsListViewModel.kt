@@ -32,13 +32,11 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import okhttp3.internal.wait
 
 class ScannedObjectsListViewModel @AssistedInject constructor(
     @Assisted private val scannedGroup: State<ScannedGroup>,
@@ -48,7 +46,6 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
     private val deleteObjectItemInScannedGroupUseCase: DeleteObjectItemInScannedGroupUseCase,
     @ApplicationContext private val context: Context,
     private val getPlaceUseCases: GetPlaceUseCases
-    //TODO: Add delete use case?
 ) : ViewModel() {
 
     private val _eventFlow = Channel<UIScannedObjectsListEvent>()
@@ -68,23 +65,18 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
     val userAndPlaceBundleState: State<UserAndPlaceBundle> = _userAndPlaceBundle
 
 
-    //states
-
-//    init {
-//        Log.i(LOG_TAG_NAMES.INFO_TAG, "load data from the server")
-//        refresh()
-//    }
-
-    private fun refresh() {
+    private suspend fun refresh() {
         _objectsListState.value = objectsListState.value.copy(
             listOfObjectsWithCabinetName = arrayListOf(),
             isLoading = objectsListState.value.isLoading
         )
-        viewModelScope.launch {
-            setObjectsListInState(Resource.Loading(arrayListOf()))
-            loadDataFromRemoteServer(this)
-            setObjectsListInState(Resource.Success(_objectsListState.value.listOfObjectsWithCabinetName))
-        }
+
+        setObjectsListInState(Resource.Loading(arrayListOf()))
+        Log.i("test", "before update")
+        loadDataFromRemoteServer()
+        Log.i("test", "after update")
+        setObjectsListInState(Resource.Success(_objectsListState.value.listOfObjectsWithCabinetName))
+
     }
 
     fun getChosenGroupName(): String {
@@ -130,11 +122,22 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                     "Clicked on ${event.scannedObject.javaClass.simpleName} with id " +
                             "${event.scannedObject.getDatabaseID()}"
                 )
-                setPlaceByDeviceAndUser(_chosenDeviceState.value)
+                viewModelScope.launch {
+                    setPlaceByDeviceAndUser(_chosenDeviceState.value)
+                    sendUiEvent(
+                        UIScannedObjectsListEvent.Navigate(
+                            context.resources.getString(
+                                R.string.modify_concrete_object
+                            )
+                        )
+                    )
+                }
             }
 
             is ScannedObjectsListEvent.Refresh -> {
-                refresh()
+                viewModelScope.launch {
+                    refresh()
+                }
             }
 
             is ScannedObjectsListEvent.OnPlaceUpdate -> {
@@ -143,7 +146,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
 
             is ScannedObjectsListEvent.DeleteObjectFromScannedGroup -> {
                 viewModelScope.launch {
-                    deleteObjectItemInScannedGroupUseCase(scannedGroup.value.id!!, event.objectId)
+                    deleteObjectItemInScannedGroupUseCase(scannedGroup.value.id, event.objectId)
                         .onEach {
                             when (it) {
                                 is Resource.Error -> {
@@ -154,9 +157,18 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                                 is Resource.Success -> {
                                     Log.i(LOG_TAG_NAMES.INFO_TAG, "Delete has been successful")
                                     scannedGroup.value.listOfScannedObjects.removeIf { scannedObject ->
-                                        scannedObject.second == event.objectId
+                                        scannedObject.idInLocalDB == event.objectId
                                     }
-                                    refresh()
+
+                                    objectsListState.value.listOfObjectsWithCabinetName.removeIf { checkingObject ->
+                                        checkingObject.objectIdInLocalDB == event.objectId
+                                    }
+                                    val savedArray =
+                                        objectsListState.value.listOfObjectsWithCabinetName.toMutableList()
+
+                                    setObjectsListStateInfo(arrayListOf(), false)
+
+                                    setObjectsListStateInfo(savedArray, false)
                                 }
                             }
                         }.launchIn(this)
@@ -166,26 +178,27 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
     }
 
 
-    private suspend fun loadDataFromRemoteServer(coroutineScope: CoroutineScope) {
-        for (scannedObject in scannedGroup.value.listOfScannedObjects) {
-            Log.i(LOG_TAG_NAMES.INFO_TAG, "ID=${scannedObject.first.id}")
-            getObjectInfoUseCase =
-                useCaseGetObjectFactory.createUseCase(scannedObject.first.tableName)
+    private suspend fun loadDataFromRemoteServer() {
+        viewModelScope.launch {
+            for (scannedObject in scannedGroup.value.listOfScannedObjects) {
+                Log.i(LOG_TAG_NAMES.INFO_TAG, "ID=${scannedObject.scannedObjectInfo.id}")
+                getObjectInfoUseCase =
+                    useCaseGetObjectFactory.createUseCase(scannedObject.scannedObjectInfo.tableName)
 
-            getObjectInfoUseCase(scannedObject.first.id).onEach { resultData ->
-                addResultInList(
-                    resultData,
-                    scannedObject.first.id,
-                    scannedObject.first.tableName,
-                    scannedObject.second,
-                    coroutineScope
-                )
-            }.launchIn(coroutineScope).join()
-        }
-
+                getObjectInfoUseCase(scannedObject.scannedObjectInfo.id).onEach { resultData ->
+                    addResultInList(
+                        resultData,
+                        scannedObject.scannedObjectInfo.id,
+                        scannedObject.scannedObjectInfo.tableName,
+                        scannedObject.idInLocalDB,
+                        this
+                    )
+                }.launchIn(this)
+            }
+        }.join()
     }
 
-    private suspend fun addResultInList(
+    private fun addResultInList(
         objectGetResult: Resource<InventarizedAndQRScannableModel>,
         id: Long,
         tableName: String,
@@ -206,10 +219,12 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                         objectIdInLocalDB = objectIDInLocalDB
                     )
                 )
-                _objectsListState.value = objectsListState.value.copy(
-                    listOfObjectsWithCabinetName = objectsListState.value.listOfObjectsWithCabinetName,
-                    isLoading = false
-                )
+                val savedArray =
+                    objectsListState.value.listOfObjectsWithCabinetName.toMutableList()
+
+                setObjectsListStateInfo(arrayListOf(), false)
+
+                setObjectsListStateInfo(savedArray, false)
             }
 
             is Resource.Loading -> {
@@ -231,7 +246,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun insertCabinetNameAndAddPairInList(
+    private fun insertCabinetNameAndAddPairInList(
         cabinetId: Long,
         device: InventarizedAndQRScannableModel?,
         objectIDInLocalDB: Long,
@@ -249,14 +264,9 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                             objectIdInLocalDB = objectIDInLocalDB
                         )
                     )
-//                    _objectsListState.value = objectsListState.value.copy(
-//                        listOfObjectsWithCabinetName = objectsListState.value.listOfObjectsWithCabinetName.toMutableList(),
-//                        isLoading = false
-//                    )
-//                    Log.i(LOG_TAG_NAMES.INFO_TAG, "State: ${objectsListState.value} with updated list: ${objectsListState.value.listOfObjectsWithCabinetName} with size: ${objectsListState.value.listOfObjectsWithCabinetName.size}")
                 }
             }
-        }.launchIn(coroutineScope).join()
+        }.launchIn(coroutineScope)
 
     }
 
@@ -271,7 +281,6 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
             }
 
             is Resource.Success -> {
-                Log.i(LOG_TAG_NAMES.INFO_TAG, "Got values: ${data.data?.size}")
                 setDataWithStatus(data, false)
             }
         }
@@ -327,14 +336,6 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                                 organization = userAndPlaceBundleState.value.organization,
                             )
                             Log.i(LOG_TAG_NAMES.INFO_TAG, "Branch set")
-//                            sendUiEvent(
-//                                UIScannedObjectsListEvent.Navigate(
-//                                    context.resources.getString(
-//                                        R.string.modify_concrete_object
-//                                    )
-//                                )
-//                            )
-
                         }
                     }
                 }.launchIn(coroutineScope)
@@ -376,11 +377,11 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
         }
     }
 
-    private fun setPlaceByDeviceAndUser(
+    private suspend fun setPlaceByDeviceAndUser(
         data: InventarizedAndQRScannableModel?
     ) {
         data?.let {
-            CoroutineScope(Dispatchers.Default).launch {
+            viewModelScope.launch {
                 getPlaceUseCases.getOrganizationUseCase(_userAndPlaceBundle.value.user.organizationId)
                     .onEach {
                         setOrganization(it)
@@ -390,15 +391,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                             setBuildingByCabinet(it, this)
                         }.launchIn(this)
                     }
-            }
-            sendUiEvent(
-                UIScannedObjectsListEvent.Navigate(
-                    context.resources.getString(
-                        R.string.modify_concrete_object
-                    )
-                )
-            )
-
+            }.join()
         }
     }
 
@@ -407,8 +400,15 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
         result: Resource<MutableList<InventarizedObjectInfoAndIDInLocalDB>>,
         isLoading: Boolean
     ) {
+        setObjectsListStateInfo(result.data ?: arrayListOf(), isLoading)
+    }
+
+    private fun setObjectsListStateInfo(
+        listOfObjects: MutableList<InventarizedObjectInfoAndIDInLocalDB>,
+        isLoading: Boolean
+    ) {
         _objectsListState.value = objectsListState.value.copy(
-            listOfObjectsWithCabinetName = result.data ?: arrayListOf(),
+            listOfObjectsWithCabinetName = listOfObjects,
             isLoading = isLoading
         )
     }

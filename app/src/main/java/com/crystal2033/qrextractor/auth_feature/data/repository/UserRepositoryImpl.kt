@@ -64,10 +64,11 @@ class UserRepositoryImpl(
     ) {
         val userFromRoomDB = userDao.getUserByLogin(userLoginDTO.login)
         if (userFromRoomDB != null) {
+            user.idLocalDB = userFromRoomDB.userId
             userDao.updateUser(user.toUserEntity())
             Log.i(LOG_TAG_NAMES.INFO_TAG, "User has updated in ROOM database.")
         } else {
-            userDao.saveUser(user.toUserEntity())
+            user.idLocalDB = userDao.saveUser(user.toUserEntity())
             Log.i(LOG_TAG_NAMES.INFO_TAG, "User has been added in ROOM database.")
         }
     }

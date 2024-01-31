@@ -22,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.viewmodel.ScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.vm_view_communication.ScannedGroupsListEvent
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.vm_view_communication.UIScannedGroupsListEvent
+import com.crystal2033.qrextractor.scanner_feature.scanner.StaticConverters
+import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.dialog_window.DialogMessage
+import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.state.DialogWindowInfoState
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -37,8 +40,12 @@ fun ScannedGroupsView(
     val scannedGroups by remember {
         mutableStateOf(viewModel.scannedGroupsForUser)
     }
-//    val groupedByClassesScannedObjects =
-//        viewModel.listOfAddedScannables.groupBy { it.javaClass.kotlin }
+
+    val isNeedToShowMessageDialog = remember {
+        mutableStateOf(false)
+    }
+    val dialogWindowInfo by remember { mutableStateOf(DialogWindowInfoState()) }
+
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -53,13 +60,26 @@ fun ScannedGroupsView(
                 is UIScannedGroupsListEvent.Navigate -> {
                     onNavigate(event)
                 }
+
+                is UIScannedGroupsListEvent.ShowMessagedDialogWindow -> {
+                    StaticConverters.fromEventDialogWindowIntoDialogInfoStateForScannedGroup(
+                        event,
+                        dialogWindowInfo
+                    )
+                    isNeedToShowMessageDialog.value = true
+                }
             }
         }
     }
 
     Scaffold {
         Box() {
-
+            if (isNeedToShowMessageDialog.value) {
+                DialogMessage(
+                    dialogWindowInfoState = dialogWindowInfo,
+                    isNeedToShowDialog = isNeedToShowMessageDialog
+                )
+            }
             LazyVerticalGrid(
                 columns = GridCells.Adaptive(128.dp),
                 horizontalArrangement = Arrangement.spacedBy(24.dp),
@@ -68,7 +88,12 @@ fun ScannedGroupsView(
                 scannedGroups.value.userScannedGroups?.scannedGroups?.let { listOfGroups ->
                     items(listOfGroups) { group ->
                         ShowGroup(
-                            scannedGroup = group
+                            scannedGroup = group,
+                            onDeleteGroupIntention = {
+                                viewModel.onEvent(ScannedGroupsListEvent.OnDeleteGroupClicked(
+                                    it
+                                ))
+                            }
                         ) {
                             viewModel.onEvent(ScannedGroupsListEvent.OnGroupClickedEvent(group.id!!))
                             onUpdateScannedListViewModelState()

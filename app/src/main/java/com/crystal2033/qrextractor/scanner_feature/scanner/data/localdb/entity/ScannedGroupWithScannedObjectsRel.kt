@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
+import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedObjectWithIdInLocalDB
 
 data class ScannedGroupWithScannedObjectsRel(
     @Embedded val scannedGroup: ScannedGroupEntity,
@@ -18,8 +19,8 @@ data class ScannedGroupWithScannedObjectsRel(
         return ScannedGroup(
             id = scannedGroup.scannedGroupId,
             groupName = scannedGroup.groupName,
-            listOfScannedObjects = scannedObjects.map { scannedObjectEntity ->
-                Pair(
+            listOfScannedObjects =  scannedObjects.map { scannedObjectEntity ->
+                ScannedObjectWithIdInLocalDB(
                     scannedObjectEntity.toScannedTableNameAndId(),
                     scannedObjectEntity.scannedObjectId
                 )

@@ -139,7 +139,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
                 sendUiEvent(
                     UIScannerEvent.ShowMessagedDialogWindow(
                         message = "Are you sure you want to delete device: " +
-                                    "\"${_previewDataFromQRState.value.scannedDataInfo?.name}\" from the server?",
+                                "\"${_previewDataFromQRState.value.scannedDataInfo?.name}\" from the server?",
                         onDeclineAction = {},
                         onAcceptAction = {
                             deleteDeviceFromServer(_previewDataFromQRState.value.scannedDataInfo as QRScannableData)
@@ -211,7 +211,10 @@ class QRCodeScannerViewModel @AssistedInject constructor(
             return
         }
 
-        if (_listOfAddedScannables.find { it == scannableObject } != null) {
+        if (_listOfAddedScannables.find {
+                it.getDatabaseTableName() == scannableObject.getDatabaseTableName() &&
+                        it.getDatabaseID() == scannableObject.getDatabaseID()
+            } != null) {
             viewModelScope.launch {
                 sendUiEvent(
                     UIScannerEvent.ShowMessagedDialogWindow(
@@ -284,9 +287,11 @@ class QRCodeScannerViewModel @AssistedInject constructor(
                     scannedDataInfo = null,
                     isLoading = false
                 )
-                sendUiEvent(UIScannerEvent.ShowSnackBar(
-                    "Device has been deleted successfully"
-                ))
+                sendUiEvent(
+                    UIScannerEvent.ShowSnackBar(
+                        "Device has been deleted successfully"
+                    )
+                )
             }
         }
     }

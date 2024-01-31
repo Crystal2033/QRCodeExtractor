@@ -10,17 +10,19 @@ data class UserEntity(
     val firstName: String,
     val secondName: String,
     val organizationId: Long,
+    val idRemoteDB: Long,
 
     @PrimaryKey(autoGenerate = true)
     var userId: Long = 0
 ) {
     fun toUser(): User {
         return User(
-            id = userId,
+            idRemoteDB = idRemoteDB,
             firstName = firstName,
             secondName = secondName,
             login = login,
-            organizationId = organizationId
+            organizationId = organizationId,
+            idLocalDB = userId
         )
     }
 }

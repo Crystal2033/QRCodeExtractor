@@ -14,7 +14,7 @@ import com.crystal2033.qrextractor.core.localdb.entity.UserEntity
         ScannedGroupObjectCrossRef::class,
         ScannedObjectEntity::class
     ],
-    version = 3
+    version = 4
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract val scannedObjectDao: ScannedObjectDao
