@@ -1,26 +1,21 @@
 package com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation
 
 import androidx.compose.runtime.Composable
-import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.list_items_view.StartObjectInfo
+import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.state.InventarizedObjectInfoAndIDInLocalDB
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 
 @Composable
 fun ShowListItemByType(
-    listItem: InventarizedAndQRScannableModel,
-    onObjectClicked: () -> Unit
+    objectInfoWithLocalDB: InventarizedObjectInfoAndIDInLocalDB,
+    onObjectClicked: () -> Unit,
+    onDeleteScannedObjectClicked: (Long) -> Unit
 ) {
     StartObjectInfo(
-        scannedObject = listItem,
-        onObjectClicked = onObjectClicked
+        scannedObjectWithCabinetName = objectInfoWithLocalDB,
+        onObjectClicked = if (objectInfoWithLocalDB.objectInfo is Unknown) {
+            {}
+        } else onObjectClicked,
+        onDeleteScannedObjectClicked = onDeleteScannedObjectClicked
     )
-
-//    when (listItem) {
-//        is Keyboard -> {
-//            StartObjectInfo(
-//                image = listItem.image,
-//                text = listItem.model,
-//                onObjectClicked = onObjectClicked
-//            )
-//        }
-//    }
 }

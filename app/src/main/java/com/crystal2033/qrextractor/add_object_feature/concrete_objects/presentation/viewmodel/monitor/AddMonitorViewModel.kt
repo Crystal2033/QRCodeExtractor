@@ -105,13 +105,16 @@ class AddMonitorViewModel @AssistedInject constructor(
     }
 
     override fun setNewImage(image: Bitmap?) {
-        _monitorState.value = Monitor(
-            id = _monitorState.value.id,
-            image = image,
-            inventoryNumber = _monitorState.value.inventoryNumber,
-            name = _monitorState.value.name,
-            cabinetId = _monitorState.value.cabinetId
-        )
+        image?.let {
+            val rescaledImage = scaleImage(it)
+            _monitorState.value = Monitor(
+                id = _monitorState.value.id,
+                image = rescaledImage,
+                inventoryNumber = _monitorState.value.inventoryNumber,
+                name = _monitorState.value.name,
+                cabinetId = _monitorState.value.cabinetId
+            )
+        }
     }
 
     override fun setNewName(name: String) {

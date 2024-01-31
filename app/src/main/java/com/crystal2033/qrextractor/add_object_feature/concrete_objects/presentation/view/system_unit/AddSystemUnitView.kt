@@ -21,6 +21,7 @@ import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.U
 @Composable
 fun AddSystemUnitView(
     viewModel: AddSystemUnitViewModel,
+    isCameraOn: MutableState<Boolean>,
     userAndPlaceBundle: UserAndPlaceBundle,
     isAllFieldsInsertedState: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
@@ -34,7 +35,7 @@ fun AddSystemUnitView(
     }
 
     val isNeedToShowCamera = remember {
-        mutableStateOf(false)
+        isCameraOn
     }
 
     isAllFieldsInsertedState.value = viewModel.isAllNeededFieldsInsertedCorrectly()

@@ -303,6 +303,10 @@ fun CreateViewByAddType(
         mutableStateOf(false)
     }
 
+    val isCameraOn = remember {
+        mutableStateOf(false)
+    }
+
     lateinit var viewModel: BaseAddObjectViewModel
 
     Scaffold {
@@ -330,6 +334,7 @@ fun CreateViewByAddType(
                             },
                             snackbarHostState = snackbarHostState,
                             onChangePlaceClicked = onChangePlaceClicked,
+                            isCameraOn = isCameraOn
                         )
 
                     }
@@ -349,6 +354,7 @@ fun CreateViewByAddType(
                             },
                             snackbarHostState = snackbarHostState,
                             onChangePlaceClicked = onChangePlaceClicked,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -367,6 +373,7 @@ fun CreateViewByAddType(
                             },
                             snackbarHostState = snackbarHostState,
                             onChangePlaceClicked = onChangePlaceClicked,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -386,6 +393,7 @@ fun CreateViewByAddType(
                             },
                             snackbarHostState = snackbarHostState,
                             onChangePlaceClicked = onChangePlaceClicked,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -404,6 +412,7 @@ fun CreateViewByAddType(
                             },
                             snackbarHostState = snackbarHostState,
                             onChangePlaceClicked = onChangePlaceClicked,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -422,6 +431,7 @@ fun CreateViewByAddType(
                             },
                             snackbarHostState = snackbarHostState,
                             onChangePlaceClicked = onChangePlaceClicked,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -432,27 +442,33 @@ fun CreateViewByAddType(
 
                 }
                 Spacer(modifier = Modifier.height(40.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                if (!isCameraOn.value) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
 
-                ) {
-                    Button(enabled = isAddButtonEnabled.value,
-                        onClick = {
-                            viewModel.onEvent(AddNewObjectEvent.OnCabinetChanged(userWithPlaceBundle.cabinet.id))
-                            viewModel.addObjectInDatabaseClicked(
-                                onAddObjectClicked = onAddObjectClicked
-                            )
+                    ) {
+                        Button(enabled = isAddButtonEnabled.value,
+                            onClick = {
+                                viewModel.onEvent(
+                                    AddNewObjectEvent.OnCabinetChanged(
+                                        userWithPlaceBundle.cabinet.id
+                                    )
+                                )
+                                viewModel.addObjectInDatabaseClicked(
+                                    onAddObjectClicked = onAddObjectClicked
+                                )
+                            }) {
+                            Text(text = "Add")
+                        }
+                        Spacer(modifier = Modifier.width(30.dp))
+                        Button(onClick = {
+                            navController.navigate(context.getString(R.string.menu_add_route))
                         }) {
-                        Text(text = "Add")
-                    }
-                    Spacer(modifier = Modifier.width(30.dp))
-                    Button(onClick = {
-                        navController.navigate(context.getString(R.string.menu_add_route))
-                    }) {
-                        Text(text = "Cancel")
+                            Text(text = "Cancel")
+                        }
                     }
                 }
             }

@@ -12,7 +12,6 @@ data class ScannedGroupWithScannedObjectsRel(
         entityColumn = "scannedObjectId",
         associateBy = Junction(ScannedGroupObjectCrossRef::class)
     )
-
     val scannedObjects: List<ScannedObjectEntity>
 ) {
     fun toScannedGroupWithObjects(): ScannedGroup {
@@ -20,8 +19,11 @@ data class ScannedGroupWithScannedObjectsRel(
             id = scannedGroup.scannedGroupId,
             groupName = scannedGroup.groupName,
             listOfScannedObjects = scannedObjects.map { scannedObjectEntity ->
-                scannedObjectEntity.toScannedTableNameAndId()
-            }
+                Pair(
+                    scannedObjectEntity.toScannedTableNameAndId(),
+                    scannedObjectEntity.scannedObjectId
+                )
+            }.toMutableList()
         )
     }
 }

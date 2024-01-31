@@ -21,6 +21,7 @@ import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.U
 @Composable
 fun AddChairView(
     viewModel: AddChairViewModel,
+    isCameraOn: MutableState<Boolean>,
     userAndPlaceBundle: UserAndPlaceBundle,
     isAllFieldsInsertedState: MutableState<Boolean>,
     onNavigate: (UIAddNewObjectEvent.Navigate) -> Unit,
@@ -34,7 +35,7 @@ fun AddChairView(
     }
 
     val isNeedToShowCamera = remember {
-        mutableStateOf(false)
+        isCameraOn
     }
 
     isAllFieldsInsertedState.value = viewModel.isAllNeededFieldsInsertedCorrectly()

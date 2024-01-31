@@ -13,5 +13,4 @@ interface ScannedGroupCreatorRepository {
         groupName: String
     ): Flow<Resource<Unit>>
 
-
 }

@@ -1,7 +1,6 @@
 package com.crystal2033.qrextractor.nav_graphs.scanner
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.SnackbarHostState
@@ -19,7 +18,6 @@ import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.viewmodel.PlaceChoiceViewModel
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.viewmodel.PlaceViewModelCreator.Companion.sharedPlaceChoiceViewModel
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.vm_view_communication.PlaceChoiceEvent
-import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.presentation.NotLoginLinkView
 import com.crystal2033.qrextractor.core.remote_server.data.model.Branch
@@ -76,11 +74,26 @@ fun NavGraphBuilder.scannerGraph(
         }
 
         composable(context.resources.getString(R.string.list_of_groups_route)) {
-            val user = userState.value
-            val viewModel = it.sharedScannedDataGroupsViewModel<ScannedDataGroupsViewModel>(
-                navController = navController,
-                user = user
-            )
+            val userAndPlaceBundle = remember {
+                mutableStateOf(
+                    UserAndPlaceBundle(
+                        user = userState.value!!,
+                    )
+                )
+            }
+
+            val viewModelFromGroups =
+                it.sharedScannedDataGroupsViewModel<ScannedDataGroupsViewModel>(
+                    navController = navController,
+                    user = userAndPlaceBundle.value.user
+                )
+
+            val viewModelScannedObjects =
+                it.sharedScannedObjectsListInGroupViewModel<ScannedObjectsListViewModel>(
+                    scannedGroup = viewModelFromGroups.chosenGroup,
+                    navController = navController,
+                    userAndPlaceBundle = userAndPlaceBundle.value
+                )
             Column(
                 modifier = Modifier.padding(
                     0.dp,
@@ -90,7 +103,10 @@ fun NavGraphBuilder.scannerGraph(
                 )
             ) {
                 ScannedGroupsView(
-                    viewModel = viewModel,
+                    viewModel = viewModelFromGroups,
+                    onUpdateScannedListViewModelState = {
+                        viewModelScannedObjects.onEvent(ScannedObjectsListEvent.Refresh)
+                    },
                     onNavigate = { navigationEvent ->
                         navController.navigate(navigationEvent.route)
                     },
@@ -118,7 +134,7 @@ fun NavGraphBuilder.scannerGraph(
 
             val viewModel =
                 it.sharedScannedObjectsListInGroupViewModel<ScannedObjectsListViewModel>(
-                    scannedGroup = viewModelFromGroups.chosenGroup.value,
+                    scannedGroup = viewModelFromGroups.chosenGroup,
                     navController = navController,
                     userAndPlaceBundle = userAndPlaceBundle.value
                 )
@@ -138,11 +154,6 @@ fun NavGraphBuilder.scannerGraph(
                     snackbarHostState = snackbarHostState
                 )
             }
-
-            Log.i(
-                LOG_TAG_NAMES.INFO_TAG,
-                "WE ARE FROM SCANNED OBJECTS size= ${viewModel.objectsListState.value.listOfObjects.size}"
-            )
         }
         composable(context.resources.getString(R.string.place_choice_update)) {
             if (userState.value == null) {
@@ -175,7 +186,7 @@ fun NavGraphBuilder.scannerGraph(
 
                 val scannedListViewModel =
                     it.sharedScannedObjectsListInGroupViewModel<ScannedObjectsListViewModel>(
-                        scannedGroup = viewModelFromGroups.chosenGroup.value,
+                        scannedGroup = viewModelFromGroups.chosenGroup,
                         navController = navController,
                         userAndPlaceBundle = userAndPlaceBundle.value
                     )
@@ -245,7 +256,7 @@ fun NavGraphBuilder.scannerGraph(
 
             val scannedListViewModel =
                 it.sharedScannedObjectsListInGroupViewModel<ScannedObjectsListViewModel>(
-                    scannedGroup = viewModelFromGroups.chosenGroup.value,
+                    scannedGroup = viewModelFromGroups.chosenGroup,
                     navController = navController,
                     userAndPlaceBundle = userAndPlaceBundle.value
                 )

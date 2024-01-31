@@ -53,11 +53,11 @@ fun ShowGroup(
 @Composable
 @Preview
 fun PreviewCard() {
-    val scannedTableNameAndId: List<ScannedTableNameAndId> =
-        listOf(ScannedTableNameAndId("person", 1))
-    val scannedGroup = ScannedGroup(1, "S", scannedTableNameAndId)
-    ShowGroup(scannedGroup) {
-        Log.i(LOG_TAG_NAMES.INFO_TAG, "Group id: ${scannedGroup.id}")
-    }
+//    val scannedTableNameAndId: List<ScannedTableNameAndId> =
+//        listOf(ScannedTableNameAndId("person", 1))
+//    val scannedGroup = ScannedGroup(1, "S", scannedTableNameAndId)
+//    ShowGroup(scannedGroup) {
+//        Log.i(LOG_TAG_NAMES.INFO_TAG, "Group id: ${scannedGroup.id}")
+//    }
 
 }

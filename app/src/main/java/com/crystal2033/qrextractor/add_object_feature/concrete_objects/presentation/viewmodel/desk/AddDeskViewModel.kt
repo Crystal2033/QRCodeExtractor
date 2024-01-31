@@ -105,13 +105,16 @@ class AddDeskViewModel @AssistedInject constructor(
     }
 
     override fun setNewImage(image: Bitmap?) {
-        _deskState.value = Desk(
-            id = _deskState.value.id,
-            image = image,
-            inventoryNumber = _deskState.value.inventoryNumber,
-            name = _deskState.value.name,
-            cabinetId = _deskState.value.cabinetId
-        )
+        image?.let {
+            val rescaledImage = scaleImage(it)
+            _deskState.value = Desk(
+                id = _deskState.value.id,
+                image = rescaledImage,
+                inventoryNumber = _deskState.value.inventoryNumber,
+                name = _deskState.value.name,
+                cabinetId = _deskState.value.cabinetId
+            )
+        }
     }
 
     override fun setNewName(name: String) {

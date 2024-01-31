@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.collectLatest
 @Composable
 fun ScannedGroupsView(
     viewModel: ScannedDataGroupsViewModel,
+    onUpdateScannedListViewModelState: () -> Unit,
     onNavigate: (UIScannedGroupsListEvent.Navigate) -> Unit,
     onPopBackStack: () -> Unit,
     snackbarHostState: SnackbarHostState
@@ -70,6 +71,7 @@ fun ScannedGroupsView(
                             scannedGroup = group
                         ) {
                             viewModel.onEvent(ScannedGroupsListEvent.OnGroupClickedEvent(group.id!!))
+                            onUpdateScannedListViewModelState()
                         }
                     }
                 }

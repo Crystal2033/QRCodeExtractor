@@ -1,14 +1,16 @@
 package com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.list_items_view
 
-import android.graphics.drawable.Icon
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -19,50 +21,84 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.crystal2033.qrextractor.R
-import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
+import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.state.InventarizedObjectInfoAndIDInLocalDB
 
 @Composable
 fun StartObjectInfo(
-    scannedObject: InventarizedAndQRScannableModel,
+    scannedObjectWithCabinetName: InventarizedObjectInfoAndIDInLocalDB,
     modifier: Modifier = Modifier,
-    onObjectClicked: () -> Unit
+    onObjectClicked: () -> Unit,
+    onDeleteScannedObjectClicked: (Long) -> Unit
 ) {
+    val context = LocalContext.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
                 onObjectClicked()
-            },
+            }
+            .border(1.dp, Color.DarkGray),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        scannedObject.image?.let { image ->
+        scannedObjectWithCabinetName.objectInfo.image?.let { image ->
             Image(
                 bitmap = image.asImageBitmap(),
                 contentDescription = "Image of object",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(50.dp)
+                    .size(80.dp)
                     .clip(RectangleShape)
-                    .align(Alignment.CenterVertically),
-
-                )
+                    .align(Alignment.CenterVertically)
+                    .padding(10.dp),
+            )
+        }
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(10.dp),
+            verticalArrangement = Arrangement.SpaceAround,
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "Name: ${scannedObjectWithCabinetName.objectInfo.name}",
+                color = Color.LightGray,
+                fontSize = 15.sp
+            )
+            Text(
+                text = "Cabinet: ${scannedObjectWithCabinetName.cabinetName}",
+                color = Color.LightGray,
+                fontSize = 15.sp
+            )
         }
 
-        Spacer(modifier = Modifier.width(20.dp))
         Text(
-            text = scannedObject.name,
+            text = "ID: ${scannedObjectWithCabinetName.objectInfo.id}  LID: ${scannedObjectWithCabinetName.objectIdInLocalDB}",
             color = Color.LightGray,
-            modifier = Modifier.align(Alignment.CenterVertically),
-            fontSize = 15.sp
+            fontSize = 17.sp
         )
+        IconButton(
+            onClick = {
+                onDeleteScannedObjectClicked(scannedObjectWithCabinetName.objectIdInLocalDB)
+            },
+            modifier = Modifier
+                .size(50.dp)
+                .padding(10.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = "Delete scanned object",
+                tint = Color.Red
+            )
+        }
     }
+
+
 }
 
 

@@ -9,5 +9,7 @@ sealed class ScannedObjectsListEvent {
 
     data object Refresh : ScannedObjectsListEvent()
 
+    data class DeleteObjectFromScannedGroup(val objectId: Long) : ScannedObjectsListEvent()
+
     data class OnPlaceUpdate(val userAndPlaceBundle: UserAndPlaceBundle) : ScannedObjectsListEvent()
 }

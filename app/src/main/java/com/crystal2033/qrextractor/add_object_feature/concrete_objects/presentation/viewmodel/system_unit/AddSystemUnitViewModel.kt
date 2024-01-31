@@ -105,13 +105,16 @@ class AddSystemUnitViewModel @AssistedInject constructor(
     }
 
     override fun setNewImage(image: Bitmap?) {
-        _systemUnitState.value = SystemUnit(
-            id = _systemUnitState.value.id,
-            image = image,
-            inventoryNumber = _systemUnitState.value.inventoryNumber,
-            name = _systemUnitState.value.name,
-            cabinetId = _systemUnitState.value.cabinetId
-        )
+        image?.let {
+            val rescaledImage = scaleImage(it)
+            _systemUnitState.value = SystemUnit(
+                id = _systemUnitState.value.id,
+                image = rescaledImage,
+                inventoryNumber = _systemUnitState.value.inventoryNumber,
+                name = _systemUnitState.value.name,
+                cabinetId = _systemUnitState.value.cabinetId
+            )
+        }
     }
 
     override fun setNewName(name: String) {

@@ -13,6 +13,7 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
+import com.crystal2033.qrextractor.core.camera_for_photos.ImageConstants
 import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
@@ -26,6 +27,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
+
 
 class AddChairViewModel @AssistedInject constructor(
     @Assisted private val userAndPlaceBundle: UserAndPlaceBundle,
@@ -105,13 +108,26 @@ class AddChairViewModel @AssistedInject constructor(
     }
 
     override fun setNewImage(image: Bitmap?) {
-        _chairState.value = Chair(
-            id = _chairState.value.id,
-            image = image,
-            inventoryNumber = _chairState.value.inventoryNumber,
-            name = _chairState.value.name,
-            cabinetId = _chairState.value.cabinetId
-        )
+        image?.let {
+            val rescaledImage = scaleImage(it)
+            _chairState.value = Chair(
+                id = _chairState.value.id,
+                image = rescaledImage,
+                inventoryNumber = _chairState.value.inventoryNumber,
+                name = _chairState.value.name,
+                cabinetId = _chairState.value.cabinetId
+            )
+        }
+
+
+
+//        val out = ByteArrayOutputStream()
+//        image?.compress(Bitmap.CompressFormat.PNG, 0, out)
+//        val decoded = BitmapFactory.decodeStream(ByteArrayInputStream(out.toByteArray()))
+//
+//        Log.e("Original   dimensions", image?.width.toString() + " " + image?.height)
+//        Log.e("Compressed dimensions", decoded.width.toString() + " " + decoded.height)
+
     }
 
     override fun setNewName(name: String) {

@@ -105,13 +105,16 @@ class AddKeyboardViewModel @AssistedInject constructor(
     }
 
     override fun setNewImage(image: Bitmap?) {
-        _keyboardState.value = Keyboard(
-            id = _keyboardState.value.id,
-            image = image,
-            inventoryNumber = _keyboardState.value.inventoryNumber,
-            name = _keyboardState.value.name,
-            cabinetId = _keyboardState.value.cabinetId
-        )
+        image?.let {
+            val rescaledImage = scaleImage(it)
+            _keyboardState.value = Keyboard(
+                id = _keyboardState.value.id,
+                image = rescaledImage,
+                inventoryNumber = _keyboardState.value.inventoryNumber,
+                name = _keyboardState.value.name,
+                cabinetId = _keyboardState.value.cabinetId
+            )
+        }
     }
 
     override fun setNewName(name: String) {

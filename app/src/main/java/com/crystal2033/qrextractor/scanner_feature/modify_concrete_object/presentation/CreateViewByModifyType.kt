@@ -73,6 +73,10 @@ fun CreateViewByModifyType(
         scannedObjectsListViewModel.userAndPlaceBundleState
     }
 
+    val isCameraOn = remember {
+        mutableStateOf(false)
+    }
+
     lateinit var viewModel: BaseAddObjectViewModel
 
     Scaffold {
@@ -100,7 +104,8 @@ fun CreateViewByModifyType(
                             },
                             snackbarHostState = snackbarHostState,
                             onChangePlaceClicked = onChangePlaceClicked,
-                            isForUpdate = true
+                            isForUpdate = true,
+                            isCameraOn = isCameraOn
                         )
 
                     }
@@ -122,7 +127,8 @@ fun CreateViewByModifyType(
                             onChangePlaceClicked = {
                                 onChangePlaceClicked()
                             },
-                            isForUpdate = true
+                            isForUpdate = true,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -143,7 +149,8 @@ fun CreateViewByModifyType(
                             onChangePlaceClicked = {
                                 onChangePlaceClicked()
                             },
-                            isForUpdate = true
+                            isForUpdate = true,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -165,7 +172,8 @@ fun CreateViewByModifyType(
                             onChangePlaceClicked = {
                                 onChangePlaceClicked()
                             },
-                            isForUpdate = true
+                            isForUpdate = true,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -186,7 +194,8 @@ fun CreateViewByModifyType(
                             onChangePlaceClicked = {
                                 onChangePlaceClicked()
                             },
-                            isForUpdate = true
+                            isForUpdate = true,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -207,7 +216,8 @@ fun CreateViewByModifyType(
                             onChangePlaceClicked = {
                                 onChangePlaceClicked()
                             },
-                            isForUpdate = true
+                            isForUpdate = true,
+                            isCameraOn = isCameraOn
                         )
                     }
 
@@ -218,31 +228,38 @@ fun CreateViewByModifyType(
 
                 }
                 Spacer(modifier = Modifier.height(40.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
+                if (!isCameraOn.value) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
 
-                ) {
-                    Button(enabled = isAddButtonEnabled.value,
-                        onClick = {
-                            viewModel.onEvent(AddNewObjectEvent.OnCabinetChanged(userAndPlaceBundle.cabinet.id))
-                            viewModel.addObjectInDatabaseClicked(
-                                afterUpdateAction = {
-                                    scannedObjectsListViewModel.onEvent(ScannedObjectsListEvent.Refresh)
-                                }
-                            )
+                    ) {
+                        Button(enabled = isAddButtonEnabled.value,
+                            onClick = {
+                                viewModel.onEvent(
+                                    AddNewObjectEvent.OnCabinetChanged(
+                                        userAndPlaceBundle.cabinet.id
+                                    )
+                                )
+                                viewModel.addObjectInDatabaseClicked(
+                                    afterUpdateAction = {
+                                        scannedObjectsListViewModel.onEvent(ScannedObjectsListEvent.Refresh)
+                                    }
+                                )
+                            }) {
+                            Text(text = "Accept")
+                        }
+                        Spacer(modifier = Modifier.width(30.dp))
+                        Button(onClick = {
+                            navController.navigate(context.getString(R.string.list_of_scanned_objects))
                         }) {
-                        Text(text = "Accept")
-                    }
-                    Spacer(modifier = Modifier.width(30.dp))
-                    Button(onClick = {
-                        navController.navigate(context.getString(R.string.list_of_scanned_objects))
-                    }) {
-                        Text(text = "Cancel")
+                            Text(text = "Cancel")
+                        }
                     }
                 }
+
             }
 
 

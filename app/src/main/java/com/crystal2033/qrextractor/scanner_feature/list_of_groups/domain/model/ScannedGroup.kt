@@ -5,6 +5,6 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedT
 data class ScannedGroup(
     val id: Long? = null,
     val groupName: String? = null,
-    val listOfScannedObjects: List<ScannedTableNameAndId> = emptyList()
+    val listOfScannedObjects: MutableList<Pair<ScannedTableNameAndId, Long>> = mutableListOf()
 ) {
 }

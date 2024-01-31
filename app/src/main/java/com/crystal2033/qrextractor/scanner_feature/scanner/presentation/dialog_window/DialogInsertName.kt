@@ -63,7 +63,7 @@ fun DialogInsertName(
                 onClick = {
                     isNeedToShowDialog.value = false
                     onAcceptButtonClicked(text)
-                }
+                },
             ) {
                 Text("Accept")
             }

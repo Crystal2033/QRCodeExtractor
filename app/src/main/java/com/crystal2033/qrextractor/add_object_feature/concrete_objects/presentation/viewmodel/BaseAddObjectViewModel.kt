@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
@@ -17,6 +15,7 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.util.QRCodeGenerator
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
+import com.crystal2033.qrextractor.core.camera_for_photos.ImageConstants
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedModel
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
@@ -26,6 +25,7 @@ import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScanna
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 abstract class BaseAddObjectViewModel(
     private val context: Context,
@@ -35,6 +35,7 @@ abstract class BaseAddObjectViewModel(
 ) : ViewModel() {
     private val _eventFlow = Channel<UIAddNewObjectEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
+
     private fun createQRCode(qrScannableData: QRScannableData): ImageBitmap {
         val convertedJsonFromString = converter.toJsonFromQRScannableData(qrScannableData)
         val bitmap = QRCodeGenerator.encodeAsBitmap(convertedJsonFromString, 250, 250)
@@ -46,7 +47,8 @@ abstract class BaseAddObjectViewModel(
 
     abstract fun addObjectInDatabaseClicked(
         onAddObjectClicked: (QRCodeStickerInfo) -> Unit = {},
-        afterUpdateAction: () -> Unit = {})
+        afterUpdateAction: () -> Unit = {}
+    )
 
 
     protected fun sendUiEvent(event: UIAddNewObjectEvent) {
@@ -90,6 +92,15 @@ abstract class BaseAddObjectViewModel(
                 setNewCabinetId(event.cabinetId)
             }
         }
+    }
+
+    protected fun scaleImage(image: Bitmap): Bitmap {
+        val aspectRatio: Double = image.width.toDouble() / image.height.toDouble()
+        val width = ImageConstants.RESIZED_WIDTH
+        val height = (width / aspectRatio).roundToInt()
+        return Bitmap.createScaledBitmap(
+            image, width, height, false
+        )
     }
 
     protected abstract fun setNewImage(image: Bitmap?)

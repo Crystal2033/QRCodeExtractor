@@ -2,6 +2,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanner.presentation.viewmod
 
 import android.app.Activity
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -57,7 +58,7 @@ sealed class ScannerViewModels {
 
         @Composable
         inline fun <reified T : ViewModel> NavBackStackEntry.sharedScannedObjectsListInGroupViewModel(
-            scannedGroup: ScannedGroup,
+            scannedGroup: State<ScannedGroup>,
             navController: NavController,
             userAndPlaceBundle: UserAndPlaceBundle
         ): T {

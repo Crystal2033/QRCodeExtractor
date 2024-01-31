@@ -105,13 +105,16 @@ class AddProjectorViewModel @AssistedInject constructor(
     }
 
     override fun setNewImage(image: Bitmap?) {
-        _projectorState.value = Projector(
-            id = _projectorState.value.id,
-            image = image,
-            inventoryNumber = _projectorState.value.inventoryNumber,
-            name = _projectorState.value.name,
-            cabinetId = _projectorState.value.cabinetId
-        )
+        image?.let {
+            val rescaledImage = scaleImage(it)
+            _projectorState.value = Projector(
+                id = _projectorState.value.id,
+                image = rescaledImage,
+                inventoryNumber = _projectorState.value.inventoryNumber,
+                name = _projectorState.value.name,
+                cabinetId = _projectorState.value.cabinetId
+            )
+        }
     }
 
     override fun setNewName(name: String) {

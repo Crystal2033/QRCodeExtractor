@@ -13,6 +13,7 @@ import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.UserWithScannedGroups
+import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.use_case.DeleteObjectItemInScannedGroupUseCase
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.use_case.GetListOfUserScannedGroupsUseCase
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.state.UserScannedGroupsState
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.vm_view_communication.ScannedGroupsListEvent
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 
 class ScannedDataGroupsViewModel @AssistedInject constructor(
     private val getListOfUserScannedGroupsUseCase: GetListOfUserScannedGroupsUseCase,
+    private val deleteObjectItemInScannedGroupUseCase: DeleteObjectItemInScannedGroupUseCase,
     @Assisted private val user: User?,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
@@ -44,7 +46,7 @@ class ScannedDataGroupsViewModel @AssistedInject constructor(
     //states
 
     init {
-        Log.i(LOG_TAG_NAMES.INFO_TAG, "RESRESH")
+        Log.i(LOG_TAG_NAMES.INFO_TAG, "REFRESH")
         refresh()
     }
 
@@ -69,9 +71,6 @@ class ScannedDataGroupsViewModel @AssistedInject constructor(
             }
         }
     }
-
-
-
 
     private val _eventFlow = Channel<UIScannedGroupsListEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()

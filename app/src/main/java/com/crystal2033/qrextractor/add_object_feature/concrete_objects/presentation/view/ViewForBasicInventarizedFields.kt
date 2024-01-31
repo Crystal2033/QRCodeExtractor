@@ -63,7 +63,6 @@ fun BaseViewForInventarizedDevice(
 
 
     if (!isNeedToShowCamera.value) {
-
         deviceState.deviceState.value.image?.let { bitmap ->
             Image(
                 bitmap = bitmap.asImageBitmap(),

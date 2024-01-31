@@ -7,6 +7,8 @@ import com.crystal2033.qrextractor.core.localdb.UserDao
 import com.crystal2033.qrextractor.core.model.User
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.UserWithScannedGroups
+import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.repository.DeleteObjectItemInScannedGroupRepository
+import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.repository.DeleteScannedGroupRepository
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.repository.UserWithScannedGroupsRepository
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedGroupEntity
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.localdb.entity.ScannedGroupObjectCrossRef
@@ -23,7 +25,8 @@ class ScannedGroupRepositoryImpl(
     private val scannedGroupDao: ScannedGroupDao,
     private val userDao: UserDao,
     private val context: Context
-) : ScannedGroupCreatorRepository, UserWithScannedGroupsRepository {
+) : ScannedGroupCreatorRepository, UserWithScannedGroupsRepository,
+    DeleteScannedGroupRepository, DeleteObjectItemInScannedGroupRepository {
 
     override fun insertScannedGroupInDb(
         scannedObjectList: List<QRScannableData>,
@@ -67,6 +70,22 @@ class ScannedGroupRepositoryImpl(
             } ?: emit(Resource.Error("User with ID = $userId not found.}"))
 
         }
+
+    override fun deleteScannedGroup(scannedGroup: ScannedGroupEntity): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        scannedGroupDao.deleteScannedGroup(scannedGroup)
+        emit(Resource.Success(Unit))
+    }
+
+    override fun deleteObjectItemInScannedGroup(
+        scannedGroupId: Long,
+        scannedObjectId: Long
+    ): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        scannedObjectDao.deleteScannedObjectFromDB(scannedObjectId)
+        scannedGroupDao.deleteObjectFromScannedGroup(scannedGroupId, scannedObjectId)
+        emit(Resource.Success(Unit))
+    }
 
 
 }
