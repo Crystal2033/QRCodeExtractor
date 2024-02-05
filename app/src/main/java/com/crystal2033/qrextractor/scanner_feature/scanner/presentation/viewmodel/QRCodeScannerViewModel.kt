@@ -26,7 +26,7 @@ import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetPlaceUs
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.ScannedTableNameAndId
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.DeviceInfoInQRCodeRepresenter
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.concrete_use_case.InsertScannedGroupInDBUseCase
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.factory.DeleteObjectOnServerUseCaseFactory
@@ -249,7 +249,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
         }
     }
 
-    private fun insertScannedDataInStateIfPossible(scannedObject: ScannedTableNameAndId?) {
+    private fun insertScannedDataInStateIfPossible(scannedObject: DeviceInfoInQRCodeRepresenter?) {
         scanJob = viewModelScope.launch {
             scannedObject?.let { scannedObj ->
                 try {

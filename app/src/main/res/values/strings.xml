@@ -5,7 +5,8 @@
     <!--  Nodes in navigation subgraph  -->
     <string name="home_route">home</string>
 
-    <string name="history_route">history</string>
+    <string name="inventory_route">inventory</string>
+    <string name="inventory_list_check_route">inventory_check_list</string>
 
     <string name="scanner_route">scanner</string>
     <string name="list_of_groups_route">list_of_groups</string>
@@ -26,7 +27,7 @@
 
     <!--  Heads of navigation subgraph-->
     <string name="home_head_graph_route">home_graph</string>
-    <string name="history_head_graph_route">history_graph</string>
+    <string name="inventory_head_graph_route">inventory_graph</string>
     <string name="scanner_head_graph_route">scanner_graph</string>
     <string name="profile_head_graph_route">profile_graph</string>
     <string name="add_data_head_graph_route">add_data_graph</string>

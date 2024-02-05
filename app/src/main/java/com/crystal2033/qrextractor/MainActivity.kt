@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -28,14 +27,11 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.crystal2033.qrextractor.auth_feature.presentation.viewmodel.UserHolderViewModel
-import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.addQRCodeGraph
 import com.crystal2033.qrextractor.nav_graphs.documents.profileGraph
-import com.crystal2033.qrextractor.nav_graphs.history.historyGraph
+import com.crystal2033.qrextractor.nav_graphs.history.inventoryGraph
 import com.crystal2033.qrextractor.nav_graphs.home.homeGraph
 import com.crystal2033.qrextractor.nav_graphs.scanner.scannerGraph
 import com.crystal2033.qrextractor.ui.NavBottomBar
@@ -125,7 +121,7 @@ fun MyNavGraph(
 
         scannerGraph(navController, context, snackbarHostState, userViewModelHolder.userState)
 
-        historyGraph(navController, context, snackbarHostState)
+        inventoryGraph(navController, context, snackbarHostState, userViewModelHolder.userState)
 
         profileGraph(navController, context, onLoginUser = {
             userViewModelHolder.setUser(it)

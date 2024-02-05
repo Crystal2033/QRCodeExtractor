@@ -21,7 +21,6 @@ import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedMod
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
-import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -36,8 +35,11 @@ abstract class BaseAddObjectViewModel(
     private val _eventFlow = Channel<UIAddNewObjectEvent>()
     val eventFlow = _eventFlow.receiveAsFlow()
 
-    private fun createQRCode(qrScannableData: QRScannableData): ImageBitmap {
-        val convertedJsonFromString = converter.toJsonFromQRScannableData(qrScannableData)
+    private fun createQRCode(qrScannableData: InventarizedAndQRScannableModel): ImageBitmap {
+        val convertedJsonFromString = converter.toJsonFromQRScannableData(
+            qrScannableData,
+            userAndPlaceBundle.user.organizationId
+        )
         val bitmap = QRCodeGenerator.encodeAsBitmap(convertedJsonFromString, 250, 250)
         return bitmap.asImageBitmap()
     }

@@ -19,7 +19,7 @@ data class ScannedGroupWithScannedObjectsRel(
         return ScannedGroup(
             id = scannedGroup.scannedGroupId,
             groupName = scannedGroup.groupName,
-            listOfScannedObjects =  scannedObjects.map { scannedObjectEntity ->
+            listOfScannedObjects = scannedObjects.map { scannedObjectEntity ->
                 ScannedObjectWithIdInLocalDB(
                     scannedObjectEntity.toScannedTableNameAndId(),
                     scannedObjectEntity.scannedObjectId

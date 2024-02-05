@@ -32,10 +32,10 @@ data class BottomNavigationItem(
 fun initBottomItems(context: Context): List<BottomNavigationItem> {
     return listOf(
         BottomNavigationItem(
-            title = "History",
-            mainRouteInGraph = context.resources.getString(R.string.history_head_graph_route),
-            selectedIcon = ImageVector.vectorResource(R.drawable.filled_work_history_35),
-            unselectedIcon = ImageVector.vectorResource(R.drawable.outline_work_history_35)
+            title = "Inventory",
+            mainRouteInGraph = context.resources.getString(R.string.inventory_head_graph_route),
+            selectedIcon = ImageVector.vectorResource(R.drawable.checklist_35),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.checklist_35)
         ),
         BottomNavigationItem(
             title = "Add data",
