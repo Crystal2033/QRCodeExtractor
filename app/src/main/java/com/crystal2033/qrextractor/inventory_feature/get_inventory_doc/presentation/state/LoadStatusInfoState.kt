@@ -4,5 +4,5 @@ import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.Load
 
 data class LoadStatusInfoState(
     val loadStatus: LoadStatus = LoadStatus.NO_FILE,
-    val message: String = "",
+    val message: String = "File was not added"
 )

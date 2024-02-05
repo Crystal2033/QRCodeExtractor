@@ -1,9 +1,14 @@
 package com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.inventarization
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import org.apache.poi.EncryptedDocumentException
 import org.apache.poi.ss.usermodel.*
 import org.crystal2033.inventarization.exception.FileNotValidException
-import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.math.BigDecimal
 import java.util.*
 
@@ -34,26 +39,23 @@ class InventarizedINV_1FileParser(
         private const val BEGIN_TABLE_VALUE = "номерпопорядку"
     }
 
-    private lateinit var savedWorkSheet: Sheet
-
-    fun init(file: File) {
-        try {
-            val workbook = WorkbookFactory.create(file)
+    @Throws(
+        FileNotValidException::class, IOException::class, EncryptedDocumentException::class
+    )
+    fun init(inputStream: InputStream): Job {
+        return CoroutineScope(Dispatchers.IO).launch {
+            val workbook = WorkbookFactory.create(inputStream)
             val workSheet = workbook.getSheetAt(0)
-            savedWorkSheet = workSheet
             initTableColumnsPositions(workSheet)
             setListOfObjects(workSheet)
-            println()
-        } catch (e: IOException) {
-            println("Error with opening file ${file.name}: ${e.message}")
-        } catch (e: FileNotValidException) {
-            println("Error with file ${file.name}: ${e.message}")
         }
     }
 
-    fun flushFactInventarizedDataInExcel() {
+    fun flushFactInventarizedDataInExcel(inputStream: InputStream) {
+        val workbook = WorkbookFactory.create(inputStream)
+        val workSheet = workbook.getSheetAt(0)
         for (invObject in listOfObjects) {
-            invObject.writeFactDataInExcel(savedWorkSheet)
+            invObject.writeFactDataInExcel(workSheet)
         }
     }
 
@@ -179,6 +181,12 @@ class InventarizedINV_1FileParser(
         val cellForAccountantPrice =
             getCellFromRowByNeededColumn(row, InventarizedColumnNames.ACCOUNTANT_PRICE)!!
 
+        val cellForFactQuantity =
+            getCellFromRowByNeededColumn(row, InventarizedColumnNames.FACT_QUANTITY)
+
+        val cellForFactPrice =
+            getCellFromRowByNeededColumn(row, InventarizedColumnNames.FACT_PRICE)
+
 
         listOfObjects.add(
             ObjectInInventarizedFile(
@@ -203,11 +211,20 @@ class InventarizedINV_1FileParser(
                 factoryNumber = if (cellForFactoryNumber.cellType == CellType.NUMERIC) cellForFactoryNumber.numericCellValue.toString() else cellForFactoryNumber.stringCellValue,
                 passportNumber = if (cellForPassportNumber.cellType == CellType.NUMERIC) cellForPassportNumber.numericCellValue.toString() else cellForPassportNumber.stringCellValue,
                 factQuantityAndPosInExcel = FieldAndExcelPosition(
-                    0,
+                    cellForFactQuantity?.let {
+                        if (cellForFactQuantity.cellType == CellType.NUMERIC)
+                            cellForFactQuantity.numericCellValue.toInt()
+                        else cellForFactQuantity.stringCellValue.toInt()
+                    }
+                        ?: 0,
                     listOfDocumentColumns[InventarizedColumnNames.FACT_QUANTITY.columnNumber - 1].excelCellInfo
                 ),
                 factPriceAndPosInExcel = FieldAndExcelPosition(
-                    BigDecimal.ZERO,
+                    cellForFactPrice?.let {
+                        if (cellForFactPrice.cellType == CellType.NUMERIC)
+                            BigDecimal(cellForFactPrice.numericCellValue)
+                        else BigDecimal(cellForFactPrice.stringCellValue)
+                    } ?: BigDecimal.ZERO,
                     listOfDocumentColumns[InventarizedColumnNames.FACT_PRICE.columnNumber - 1].excelCellInfo
                 ),
                 accountantQuantity = if (cellForAccountantQuantity.cellType == CellType.NUMERIC) cellForAccountantQuantity.numericCellValue.toInt() else cellForAccountantQuantity.stringCellValue.toInt(),

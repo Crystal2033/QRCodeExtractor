@@ -80,11 +80,17 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 dependencies {
     implementation("androidx.documentfile:documentfile:1.0.1")
-
-    implementation("org.jetbrains.kotlinx:dataframe:0.12.0"){
-        exclude(group = "commons-logging", module = "commons-logging")
-    }
+//
+//    implementation("org.jetbrains.kotlinx:dataframe:0.12.0"){
+//        exclude(group = "commons-logging", module = "commons-logging")
+//    }
 //    implementation("org.slf4j:jcl-over-slf4j:2.0.9")
+
+    implementation("org.apache.poi:poi:5.2.3")
+    implementation("org.apache.poi:poi-ooxml:5.2.3")
+
+//    runtimeOnly("org.apache.logging.log4j:log4j-api-kotlin:1.4.0")
+//    implementation("org.apache.logging.log4j:log4j-core:2.20.0")
 
 
     val hilt_version = "2.48.1"

@@ -4,4 +4,6 @@ import android.net.Uri
 
 sealed class FileLoaderEvent {
     data class SetFilePath(val uri: Uri) : FileLoaderEvent()
+
+    data object StartInventoryCheck : FileLoaderEvent()
 }

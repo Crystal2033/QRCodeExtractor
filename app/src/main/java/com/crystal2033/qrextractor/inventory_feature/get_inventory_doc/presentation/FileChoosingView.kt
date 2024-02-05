@@ -1,6 +1,5 @@
 package com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.presentation
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.LoadStatus
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.presentation.viewmodel.InventoryFileLoaderViewModel
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.presentation.vm_view_communication.FileLoaderEvent
@@ -46,12 +45,7 @@ fun FileChoosingView(
     val context = LocalContext.current
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { result ->
-
             viewModel.onEvent(FileLoaderEvent.SetFilePath(result!!))
-//            val item = context.contentResolver.openInputStream(result!!)
-//            val bytes = item?.readBytes()
-//            println(bytes)
-//            item?.close()
         }
 
     val loadStatusInfo = remember {
@@ -78,16 +72,19 @@ fun FileChoosingView(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "File status: ")
+                Text(text = "File status: ", fontWeight = FontWeight.Medium)
                 Text(
-                    text = loadStatusInfo.value.message,
+                    text = loadStatusInfo.value.loadStatus.name.lowercase(),
                     color = setColorByStatusType(loadStatusInfo.value.loadStatus)
                 )
             }
+            Text(
+                text = loadStatusInfo.value.message
+            )
 
             Spacer(modifier = Modifier.height(10.dp))
             Button(onClick = {
-                //TODO:
+                viewModel.onEvent(FileLoaderEvent.StartInventoryCheck)
             }, enabled = loadStatusInfo.value.loadStatus == LoadStatus.SUCCESS) {
                 Text(text = "Start inventory")
             }
@@ -103,6 +100,7 @@ fun setColorByStatusType(loadStatus: LoadStatus): Color {
         LoadStatus.ERROR_PARSING_FILE -> Color.Red
         LoadStatus.LOADING -> Color.Yellow
         LoadStatus.NO_FILE -> Color.Blue
+        LoadStatus.UNKNOWN_ERROR -> Color.Red
     }
 
 }
