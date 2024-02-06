@@ -1,11 +1,13 @@
 package com.crystal2033.qrextractor.inventory_feature.inventory_check_list.presentation.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
@@ -22,6 +24,7 @@ import com.google.gson.JsonSyntaxException
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -35,7 +38,8 @@ import kotlinx.coroutines.launch
 class InventoryCheckViewModel @AssistedInject constructor(
     private val converter: Converters,
     private val useCaseGetQRCodeFactory: GetObjectFromServerUseCaseFactory,
-    @Assisted private val inventoryFile: InventarizedINV_1FileParser //TODO: Add interface
+    @Assisted private val inventoryFile: InventarizedINV_1FileParser, //TODO: Add interface
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
 
     private val _eventFlow = Channel<UIInventoryCheckEvent>()
@@ -73,6 +77,18 @@ class InventoryCheckViewModel @AssistedInject constructor(
         when (event) {
             is InventoryCheckEvent.OnScanQRCode -> {
                 onScanQRCode(event.scannedString)
+            }
+
+            InventoryCheckEvent.EndInventoryCheck -> {
+                val ostream = context.contentResolver.openOutputStream(inventoryFile.getUri())
+                ostream?.let { inventoryFile.flushFactInventarizedDataInExcel(it) } ?: sendUiEvent(
+                    UIInventoryCheckEvent.ShowSnackBar(
+                    "Error with opening output stream"
+                    )
+                )
+                sendUiEvent(UIInventoryCheckEvent.Navigate(
+                    context.resources.getString(R.string.inventory_head_graph_route)
+                ))
             }
         }
     }

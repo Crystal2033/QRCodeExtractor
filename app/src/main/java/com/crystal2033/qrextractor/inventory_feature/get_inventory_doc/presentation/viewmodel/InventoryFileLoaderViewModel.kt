@@ -67,7 +67,7 @@ class InventoryFileLoaderViewModel @Inject constructor(
                 context.contentResolver.openInputStream(uri).use { file ->
                     setNewFileLoadStatusInfo(LoadStatus.LOADING, "Loading file...")
 
-                    inventoryFile.init(file!!).join()
+                    inventoryFile.init(file!!, uri).join()
 
                     setNewFileLoadStatusInfo(
                         LoadStatus.SUCCESS,

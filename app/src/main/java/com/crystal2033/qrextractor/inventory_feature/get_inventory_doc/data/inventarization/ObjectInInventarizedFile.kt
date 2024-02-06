@@ -1,6 +1,8 @@
 package com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.inventarization
 
 import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.ss.usermodel.Workbook
+import java.io.OutputStream
 import java.math.BigDecimal
 import java.util.Date
 
@@ -44,9 +46,9 @@ data class ObjectInInventarizedFile(
             pricePerOne.multiply(BigDecimal(factQuantityAndPosInExcel.fieldValue))
     }
 
-    fun writeFactDataInExcel(workSheet: Sheet) {
+    fun writeFactDataInExcel(workbook: Workbook, workSheet: Sheet, outputStream: OutputStream) {
         val factQuantityExcelPost = factQuantityAndPosInExcel.excelPos
-        val factPriceExcelPost = factQuantityAndPosInExcel.excelPos
+        val factPriceExcelPost = factPriceAndPosInExcel.excelPos
         workSheet.getRow(factQuantityExcelPost.row).getCell(factQuantityExcelPost.column)
             .setCellValue(factQuantityAndPosInExcel.fieldValue.toDouble())
         workSheet.getRow(factPriceExcelPost.row).getCell(factPriceExcelPost.column)

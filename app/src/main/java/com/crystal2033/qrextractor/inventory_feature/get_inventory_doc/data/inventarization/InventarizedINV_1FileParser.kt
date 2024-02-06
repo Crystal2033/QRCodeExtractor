@@ -1,5 +1,6 @@
 package com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.inventarization
 
+import android.net.Uri
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -9,6 +10,7 @@ import org.apache.poi.ss.usermodel.*
 import org.crystal2033.inventarization.exception.FileNotValidException
 import java.io.IOException
 import java.io.InputStream
+import java.io.OutputStream
 import java.math.BigDecimal
 import java.util.*
 
@@ -39,24 +41,35 @@ class InventarizedINV_1FileParser(
         private const val BEGIN_TABLE_VALUE = "номерпопорядку"
     }
 
+    private lateinit var savedSheet: Sheet
+    private lateinit var savedWorkbook: Workbook
+    private lateinit var uri: Uri
+
     @Throws(
         FileNotValidException::class, IOException::class, EncryptedDocumentException::class
     )
-    fun init(inputStream: InputStream): Job {
+    fun init(inputStream: InputStream, uri: Uri): Job {
+        this.uri = uri
         return CoroutineScope(Dispatchers.IO).launch {
             val workbook = WorkbookFactory.create(inputStream)
             val workSheet = workbook.getSheetAt(0)
+            savedSheet = workSheet
+            savedWorkbook = workbook
             initTableColumnsPositions(workSheet)
             setListOfObjects(workSheet)
         }
     }
 
-    fun flushFactInventarizedDataInExcel(inputStream: InputStream) {
-        val workbook = WorkbookFactory.create(inputStream)
-        val workSheet = workbook.getSheetAt(0)
+    fun flushFactInventarizedDataInExcel(outputStream: OutputStream) {
         for (invObject in listOfObjects) {
-            invObject.writeFactDataInExcel(workSheet)
+            invObject.writeFactDataInExcel(savedWorkbook, savedSheet, outputStream)
         }
+        savedWorkbook.write(outputStream)
+        savedWorkbook.close()
+    }
+
+    fun getUri(): Uri {
+        return uri
     }
 
     //<Ищем стрелочку цифру рядом со стрелкой, чтобы потом определить позиции колонок>
@@ -158,7 +171,7 @@ class InventarizedINV_1FileParser(
         return row.getCell(listOfDocumentColumns[inventarizedColumnName.columnNumber - 1].excelCellInfo.column)
     }
 
-    private fun insertNewInventarizedObjectInListByRow(row: Row) {
+    private fun insertNewInventarizedObjectInListByRow(row: Row, rowIndex: Int) {
         val cellForOrdNumber = getCellFromRowByNeededColumn(
             row,
             InventarizedColumnNames.ORD_NUMBER
@@ -217,7 +230,11 @@ class InventarizedINV_1FileParser(
                         else if (cellForFactQuantity.stringCellValue.isEmpty()) 0 else cellForFactQuantity.stringCellValue.toInt()
                     }
                         ?: 0,
-                    listOfDocumentColumns[InventarizedColumnNames.FACT_QUANTITY.columnNumber - 1].excelCellInfo
+                    ExcelCellInfo(
+                        rowIndex,
+                        listOfDocumentColumns[InventarizedColumnNames.FACT_QUANTITY.columnNumber - 1].excelCellInfo.column
+                    )
+
                 ),
                 factPriceAndPosInExcel = FieldAndExcelPosition(
                     cellForFactPrice?.let {
@@ -227,7 +244,10 @@ class InventarizedINV_1FileParser(
                             cellForFactPrice.stringCellValue
                         )
                     } ?: BigDecimal.ZERO,
-                    listOfDocumentColumns[InventarizedColumnNames.FACT_PRICE.columnNumber - 1].excelCellInfo
+                    ExcelCellInfo(
+                        rowIndex,
+                        listOfDocumentColumns[InventarizedColumnNames.FACT_PRICE.columnNumber - 1].excelCellInfo.column
+                    )
                 ),
                 accountantQuantity =
                 if (cellForAccountantQuantity.cellType == CellType.NUMERIC)
@@ -263,7 +283,7 @@ class InventarizedINV_1FileParser(
             if (!"(\\d)+(\\.)?(\\d)*".toRegex().matches(cellValue.toString())) {
                 break
             }
-            insertNewInventarizedObjectInListByRow(row)
+            insertNewInventarizedObjectInListByRow(row, currentRow)
             currentRow++
         }
     }

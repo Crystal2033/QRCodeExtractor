@@ -44,7 +44,7 @@ fun FileChoosingView(
 
     val context = LocalContext.current
     val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { result ->
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.OpenDocument()) { result ->
             viewModel.onEvent(FileLoaderEvent.SetFilePath(result!!))
         }
 
@@ -60,7 +60,7 @@ fun FileChoosingView(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Button(onClick = {
-                launcher.launch("*/*")
+                launcher.launch(arrayOf("*/*"))
             }) {
                 Text(
                     text = "Choose excel file.",
