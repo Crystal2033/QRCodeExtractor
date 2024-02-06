@@ -2,13 +2,13 @@ package com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.inv
 
 import org.apache.poi.ss.usermodel.Sheet
 import java.math.BigDecimal
-import java.util.*
+import java.util.Date
 
 //data class FieldAndExcelPosition<T>(var fieldValue: T, val excelPos: ExcelCellInfo) {
 //
 //}
 
-class ObjectInInventarizedFile(
+data class ObjectInInventarizedFile(
     var ordNumber: Long = 0L,
     var objectName: String = "",
     var docRentName: String = "",
@@ -36,6 +36,12 @@ class ObjectInInventarizedFile(
         if (accountantQuantity != 0) {
             pricePerOne = accountantPrice / accountantQuantity.toBigDecimal()
         }
+    }
+
+    fun incrementFactQuantity() {
+        factQuantityAndPosInExcel.fieldValue++
+        factPriceAndPosInExcel.fieldValue =
+            pricePerOne.multiply(BigDecimal(factQuantityAndPosInExcel.fieldValue))
     }
 
     fun writeFactDataInExcel(workSheet: Sheet) {

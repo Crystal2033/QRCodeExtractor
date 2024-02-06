@@ -214,7 +214,7 @@ class InventarizedINV_1FileParser(
                     cellForFactQuantity?.let {
                         if (cellForFactQuantity.cellType == CellType.NUMERIC)
                             cellForFactQuantity.numericCellValue.toInt()
-                        else cellForFactQuantity.stringCellValue.toInt()
+                        else if (cellForFactQuantity.stringCellValue.isEmpty()) 0 else cellForFactQuantity.stringCellValue.toInt()
                     }
                         ?: 0,
                     listOfDocumentColumns[InventarizedColumnNames.FACT_QUANTITY.columnNumber - 1].excelCellInfo
@@ -223,13 +223,19 @@ class InventarizedINV_1FileParser(
                     cellForFactPrice?.let {
                         if (cellForFactPrice.cellType == CellType.NUMERIC)
                             BigDecimal(cellForFactPrice.numericCellValue)
-                        else BigDecimal(cellForFactPrice.stringCellValue)
+                        else if (cellForFactPrice.stringCellValue.isEmpty()) BigDecimal.ZERO else BigDecimal(
+                            cellForFactPrice.stringCellValue
+                        )
                     } ?: BigDecimal.ZERO,
                     listOfDocumentColumns[InventarizedColumnNames.FACT_PRICE.columnNumber - 1].excelCellInfo
                 ),
-                accountantQuantity = if (cellForAccountantQuantity.cellType == CellType.NUMERIC) cellForAccountantQuantity.numericCellValue.toInt() else cellForAccountantQuantity.stringCellValue.toInt(),
+                accountantQuantity =
+                if (cellForAccountantQuantity.cellType == CellType.NUMERIC)
+                    cellForAccountantQuantity.numericCellValue.toInt()
+                else if (cellForAccountantQuantity.stringCellValue.isEmpty()) 0 else cellForAccountantQuantity.stringCellValue.toInt(),
                 accountantPrice = BigDecimal(
-                    if (cellForAccountantPrice.cellType == CellType.NUMERIC) cellForAccountantPrice.numericCellValue.toString() else cellForAccountantPrice.stringCellValue
+                    if (cellForAccountantPrice.cellType == CellType.NUMERIC) cellForAccountantPrice.numericCellValue.toString()
+                    else if (cellForAccountantPrice.stringCellValue.isEmpty()) "0" else cellForAccountantPrice.stringCellValue
                 ),
             )
         )
@@ -254,7 +260,7 @@ class InventarizedINV_1FileParser(
             val row = rowIterator.next()
             val cellValue = getCellFromRowByNeededColumn(row, InventarizedColumnNames.ORD_NUMBER)
                 ?: break
-            if (!"(\\d)*(\\.)?(\\d)*".toRegex().matches(cellValue.toString())) {
+            if (!"(\\d)+(\\.)?(\\d)*".toRegex().matches(cellValue.toString())) {
                 break
             }
             insertNewInventarizedObjectInListByRow(row)

@@ -2,4 +2,6 @@ package com.crystal2033.qrextractor.inventory_feature.inventory_check_list.prese
 
 sealed class UIInventoryCheckEvent {
     data class Navigate(val route: String) : UIInventoryCheckEvent()
+
+    data class ShowSnackBar(val message: String) : UIInventoryCheckEvent()
 }

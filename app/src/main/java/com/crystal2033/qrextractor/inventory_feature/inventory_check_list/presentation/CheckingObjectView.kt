@@ -53,15 +53,25 @@ fun CheckingObjectView(checkingObject: ObjectInInventarizedFile) {
         ) {
             ColumnWithFieldNameAndValue("Price per one", checkingObject.pricePerOne.toString())
             Spacer(modifier = Modifier.height(8.dp))
-            ColumnWithFieldNameAndValue("Full price", checkingObject.accountantPrice.toString())
+            ColumnWithFieldNameAndValue(
+                "Full accountant price",
+                checkingObject.accountantPrice.toString()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            ColumnWithFieldNameAndValue(
+                "Current price",
+                checkingObject.factPriceAndPosInExcel.fieldValue.toString()
+            )
         }
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Scanned (${checkingObject.factQuantityAndPosInExcel.fieldValue}/${checkingObject.accountantQuantity})",
-                fontSize = 12.sp)
+            Text(
+                text = "Scanned (${checkingObject.factQuantityAndPosInExcel.fieldValue}/${checkingObject.accountantQuantity})",
+                fontSize = 12.sp
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Icon(
                 imageVector =

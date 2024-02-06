@@ -97,7 +97,8 @@ fun NavGraphBuilder.inventoryGraph(
                     viewModel = inventoryCheckViewModel,
                     onNavigate = { navEvent ->
                         navController.navigate(navEvent.route)
-                    }
+                    },
+                    snackbarHostState = snackbarHostState
                 )
             }
         }
