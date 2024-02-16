@@ -26,11 +26,9 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.OutputStream
@@ -55,47 +53,39 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
                 onValueChanged(event.oldQRCodeStickerInfo, event.newStickerSize)
             }
 
-
             is DocumentQRCodeStickersEvent.CreateDocumentByDirUriAndFileName -> {
                 Log.i(
                     LOG_TAG_NAMES.INFO_TAG,
                     "Creating file: ${event.dirUri.path}/${event.fileName}"
                 )
                 viewModelScope.launch {
-
-                    withContext(Dispatchers.IO) {
-
-                        //creation of pdf file
+                    //creation of pdf file
+                    try {
+                        val contentResolver = context.contentResolver
                         try {
-                            val contentResolver = context.contentResolver
-                            try {
-                                val pickedDir = DocumentFile.fromTreeUri(context, event.dirUri)
-//                                val tmpFile =
-//                                    pickedDir?.createFile("application/pdf", event.fileName)
-                                var tmpFile = pickedDir?.findFile(event.fileName)
-                                tmpFile?.delete()
-                                tmpFile =
-                                    pickedDir?.createFile("application/pdf", event.fileName)
-                                val out: OutputStream? =
-                                    contentResolver.openOutputStream(tmpFile!!.uri)
+                            val pickedDir = DocumentFile.fromTreeUri(context, event.dirUri)
+                            var tmpFile = pickedDir?.findFile(event.fileName)
+                            tmpFile?.delete()
+                            tmpFile =
+                                pickedDir?.createFile("application/pdf", event.fileName)
+                            val out: OutputStream? =
+                                contentResolver.openOutputStream(tmpFile!!.uri)
 
-                                createPdfFile(2490, 3740, out!!)
-                                out.flush()
-                                out.close()
+                            createPdfFile(2490, 3740, out!!)
+                            out.flush()
+                            out.close()
 
-                            } catch (e: FileNotFoundException) {
-                                e.printStackTrace()
-                            } catch (e: IOException) {
-                                e.printStackTrace()
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
+                        } catch (e: FileNotFoundException) {
+                            e.printStackTrace()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
                         } catch (e: Exception) {
-                            Log.e(LOG_TAG_NAMES.ERROR_TAG, e.message ?: "")
+                            e.printStackTrace()
                         }
-                        //creation of pdf file
-
+                    } catch (e: Exception) {
+                        Log.e(LOG_TAG_NAMES.ERROR_TAG, e.message ?: "")
                     }
+                    //creation of pdf file
                     sendUiEvent(UIDocumentQRCodeStickersEvent.OnFileCreatedSuccessfully(event.dirUri.path + event.fileName))
                 }
                 Log.i(

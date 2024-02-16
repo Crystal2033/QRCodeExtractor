@@ -100,25 +100,3 @@ fun StartObjectInfo(
 
 
 }
-
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Preview
-//@Composable
-//fun StartObjectInfoPreview() {
-//    val bitmap = BitmapFactory.decodeFile("D:\\Картинки\\blue-space.jpg")
-//    val keyboard = Keyboard(
-//        id = 1,
-//        image = bitmap.asImageBitmap(),
-//        model = "Corsair M80-411B-20",
-//        startUseDate = LocalDate.now(),
-//        workSpace = WorkSpace(5)
-//    )
-//    StartObjectInfo(
-//        image = keyboard.image,
-//        text = keyboard.model,
-//        onObjectClicked = {
-//            Log.i(LOG_TAG_NAMES.INFO_TAG, "Clicked on scanned object ${keyboard.javaClass.simpleName} ${keyboard.id}")
-//        }
-//    )
-//}

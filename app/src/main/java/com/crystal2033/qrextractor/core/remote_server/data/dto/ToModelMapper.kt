@@ -6,7 +6,3 @@ import java.io.ByteArrayOutputStream
 interface ToModelMapper<M> {
     fun toModel(): M
 }
-
-fun Bitmap.convertToByteArray(): ByteArray = ByteArrayOutputStream().apply {
-    compress(Bitmap.CompressFormat.JPEG, 100, this)
-}.toByteArray()
