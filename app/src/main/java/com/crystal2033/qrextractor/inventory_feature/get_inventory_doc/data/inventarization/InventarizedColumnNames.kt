@@ -16,6 +16,5 @@ enum class InventarizedColumnNames(val columnNumber : Int) {
     FACT_PRICE(11), // фактическая стоимость
     ACCOUNTANT_QUANTITY(12), // количество по данным бух. учета
     ACCOUNTANT_PRICE(13); // стоимость по данным бух. учета
-
     //возвращает номер колонки по документу (не номер колонки в таблице)
 }

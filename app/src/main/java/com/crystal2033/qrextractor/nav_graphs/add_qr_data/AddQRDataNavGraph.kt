@@ -282,8 +282,6 @@ fun NavGraphBuilder.addQRCodeGraph(
 
         }
     }
-
-
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

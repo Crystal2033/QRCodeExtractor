@@ -2,6 +2,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communicatio
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
+//From ViewModel to View
 sealed class UIScannerEvent {
 
     data object PopBackStack: UIScannerEvent() //Navigate back to prev screen

@@ -30,7 +30,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.crystal2033.qrextractor.auth_feature.presentation.viewmodel.UserHolderViewModel
 import com.crystal2033.qrextractor.nav_graphs.add_qr_data.addQRCodeGraph
-import com.crystal2033.qrextractor.nav_graphs.documents.profileGraph
+import com.crystal2033.qrextractor.nav_graphs.profile.profileGraph
 import com.crystal2033.qrextractor.nav_graphs.history.inventoryGraph
 import com.crystal2033.qrextractor.nav_graphs.home.homeGraph
 import com.crystal2033.qrextractor.nav_graphs.scanner.scannerGraph
@@ -127,8 +127,6 @@ fun MyNavGraph(
             userViewModelHolder.setUser(it)
 
         }, userViewModelHolder.userState, snackbarHostState)
-
-
     }
 }
 

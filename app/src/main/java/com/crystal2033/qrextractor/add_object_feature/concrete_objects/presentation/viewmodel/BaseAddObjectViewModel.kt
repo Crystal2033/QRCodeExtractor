@@ -43,9 +43,7 @@ abstract class BaseAddObjectViewModel(
         val bitmap = QRCodeGenerator.encodeAsBitmap(convertedJsonFromString, 250, 250)
         return bitmap.asImageBitmap()
     }
-//
-//    private val _userAndPlaceBundle = mutableStateOf(userAndPlaceBundle)
-//    val userAndPlaceBundleState: State<UserAndPlaceBundle> = _userAndPlaceBundle
+
 
     abstract fun addObjectInDatabaseClicked(
         onAddObjectClicked: (QRCodeStickerInfo) -> Unit = {},

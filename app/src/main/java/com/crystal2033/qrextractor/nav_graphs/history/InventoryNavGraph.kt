@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.model.User
+import com.crystal2033.qrextractor.core.presentation.NotLoginLinkView
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.presentation.FileChoosingView
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.presentation.viewmodel.InventoryFileLoaderViewModel
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.presentation.viewmodel.InventoryViewModelsInitializer.Companion.sharedInventoryFileChoosingViewModel
@@ -32,47 +33,47 @@ fun NavGraphBuilder.inventoryGraph(
         route = context.resources.getString(R.string.inventory_head_graph_route)
     ) {
         composable(context.resources.getString(R.string.inventory_route)) {
-//            userState.value?.let { user ->
-//                val viewModel =
-//                    it.sharedInventoryFileChoosingViewModel<InventoryFileLoaderViewModel>(
-//                        navController = navController
-//                    )
-//                Column(
-//                    modifier = Modifier.padding(
-//                        0.dp,
-//                        0.dp,
-//                        0.dp,
-//                        NavBottomBarConstants.HEIGHT_BOTTOM_BAR
-//                    )
-//                ) {
-//                    FileChoosingView(
-//                        viewModel = viewModel,
-//                        onNavigate = {
-//                            navController.navigate(it.route)
-//                        }
-//                    )
-//                }
-//            } ?: NotLoginLinkView(navController)
+            userState.value?.let { user ->
+                val viewModel =
+                    it.sharedInventoryFileChoosingViewModel<InventoryFileLoaderViewModel>(
+                        navController = navController
+                    )
+                Column(
+                    modifier = Modifier.padding(
+                        0.dp,
+                        0.dp,
+                        0.dp,
+                        NavBottomBarConstants.HEIGHT_BOTTOM_BAR
+                    )
+                ) {
+                    FileChoosingView(
+                        viewModel = viewModel,
+                        onNavigate = {
+                            navController.navigate(it.route)
+                        }
+                    )
+                }
+            } ?: NotLoginLinkView(navController)
 
-            val viewModel =
-                it.sharedInventoryFileChoosingViewModel<InventoryFileLoaderViewModel>(
-                    navController = navController
-                )
-            Column(
-                modifier = Modifier.padding(
-                    0.dp,
-                    0.dp,
-                    0.dp,
-                    NavBottomBarConstants.HEIGHT_BOTTOM_BAR
-                )
-            ) {
-                FileChoosingView(
-                    viewModel = viewModel,
-                    onNavigate = { event ->
-                        navController.navigate(event.route)
-                    }
-                )
-            }
+//            val viewModel =
+//                it.sharedInventoryFileChoosingViewModel<InventoryFileLoaderViewModel>(
+//                    navController = navController
+//                )
+//            Column(
+//                modifier = Modifier.padding(
+//                    0.dp,
+//                    0.dp,
+//                    0.dp,
+//                    NavBottomBarConstants.HEIGHT_BOTTOM_BAR
+//                )
+//            ) {
+//                FileChoosingView(
+//                    viewModel = viewModel,
+//                    onNavigate = { event ->
+//                        navController.navigate(event.route)
+//                    }
+//                )
+//            }
 
         }
         composable(context.resources.getString(R.string.inventory_list_check_route)) {

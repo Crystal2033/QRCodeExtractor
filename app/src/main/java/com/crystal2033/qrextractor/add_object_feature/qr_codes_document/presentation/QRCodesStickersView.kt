@@ -47,8 +47,6 @@ fun QRCodeStickersView(
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) {
             dirUri.value = it
-            val nameOfFile = "TestFile.pdf"
-            viewModel.onEvent(DocumentQRCodeStickersEvent.CreateDocumentByDirUriAndFileName(dirUri.value!!, nameOfFile))
             isChosenDirectory.value = true
         }
 

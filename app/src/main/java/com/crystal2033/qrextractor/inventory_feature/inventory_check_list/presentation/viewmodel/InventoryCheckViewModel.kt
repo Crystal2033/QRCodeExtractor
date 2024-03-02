@@ -98,7 +98,7 @@ class InventoryCheckViewModel @AssistedInject constructor(
             return
         }
         setDeduplicateStringAndDelayForClear(scanResult)
-        //prevScanString = scanResult
+
         try {
             val scannedObject = converter.fromJsonToScannedTableNameAndId(scanResult)
             scannedObject?.let {
@@ -106,7 +106,7 @@ class InventoryCheckViewModel @AssistedInject constructor(
                     sendUiEvent(UIInventoryCheckEvent.ShowSnackBar("Inventory number ${it.invNumber} already checked."))
                     return
                 }
-                //scanJob?.cancel()
+
                 setCheckedInventoryIfExists(scannedObject)
             }
         } catch (e: JsonSyntaxException) {
@@ -192,6 +192,8 @@ class InventoryCheckViewModel @AssistedInject constructor(
     private fun incrementFactQuantity(checkingObjectFromList: ObjectInInventarizedFile) {
         val savedList = _objectsInfoState.value.listOfObjects.toMutableList()
         checkingObjectFromList.incrementFactQuantity()
+        savedList.remove(checkingObjectFromList)
+        savedList.add(checkingObjectFromList)
         setDataInState(arrayListOf(), objectsInfoState.value.isLoading)
         setDataInState(savedList, false) //not loading already
     }
@@ -203,6 +205,11 @@ class InventoryCheckViewModel @AssistedInject constructor(
         if (checkingObjectFromList != null) {
             incrementFactQuantity(checkingObjectFromList)
             alreadyUsedInvNumbers.add(checkingObjectFromList.invNumber)
+            sendUiEvent(
+                UIInventoryCheckEvent.ShowSnackBar(
+                    "Success: ${checkingObjectFromList.invNumber}"
+                )
+            )
         } else {
             actionOnNull()
         }

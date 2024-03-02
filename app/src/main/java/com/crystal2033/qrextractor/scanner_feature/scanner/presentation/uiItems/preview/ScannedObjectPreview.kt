@@ -10,11 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,12 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.getGoodNameByDatabaseObjectType
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 
@@ -39,13 +32,15 @@ fun ScannedObjectPreview(
     organizationName: String,
     buildingAddress: String,
     branchName: String,
-    onDeleteDevice: (InventarizedAndQRScannableModel) -> Unit
+    onDeleteDevice: (InventarizedAndQRScannableModel) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
         color = Color(0xff1c1b1f)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
         ) {
             Text(
                 text = getGoodNameByDatabaseObjectType(device.getDatabaseTableName()),

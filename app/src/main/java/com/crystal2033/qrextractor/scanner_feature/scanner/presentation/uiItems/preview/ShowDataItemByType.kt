@@ -30,16 +30,17 @@ fun ShowDataItemByType(
     onDeleteDevice: (InventarizedAndQRScannableModel) -> Unit
 ) {
     Box(
-        modifier = Modifier
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.White,
-                        Color.Black
-                    )
-                )
-            )
-            .fillMaxSize()
+        modifier = modifier
+//        modifier = Modifier
+//            .background(
+//                brush = Brush.verticalGradient(
+//                    colors = listOf(
+//                        Color.White,
+//                        Color.Black
+//                    )
+//                )
+//            )
+//            .fillMaxSize()
     ) {
         qrScannable?.let { existingScannable ->
             when (existingScannable) {
@@ -54,7 +55,8 @@ fun ShowDataItemByType(
                         branchName = userAndPlaceBundle.branch.name,
                         buildingAddress = userAndPlaceBundle.building.address,
                         cabinetName = userAndPlaceBundle.cabinet.name,
-                        onDeleteDevice = onDeleteDevice
+                        onDeleteDevice = onDeleteDevice,
+                        //modifier = modifier
                     )
 
                     Button(

@@ -28,8 +28,6 @@ data class ObjectInInventarizedFile(
         BigDecimal.ZERO,
         ExcelCellInfo()
     ),
-    //var factQuantity: Int = 0,
-    //var factPrice: BigDecimal = BigDecimal.ZERO,
     var accountantQuantity: Int = 0,
     var accountantPrice: BigDecimal = BigDecimal.ZERO,
     var pricePerOne: BigDecimal = BigDecimal.ZERO
@@ -46,7 +44,7 @@ data class ObjectInInventarizedFile(
             pricePerOne.multiply(BigDecimal(factQuantityAndPosInExcel.fieldValue))
     }
 
-    fun writeFactDataInExcel(workbook: Workbook, workSheet: Sheet, outputStream: OutputStream) {
+    fun writeFactDataInExcel(workSheet: Sheet, outputStream: OutputStream) {
         val factQuantityExcelPost = factQuantityAndPosInExcel.excelPos
         val factPriceExcelPost = factPriceAndPosInExcel.excelPos
         workSheet.getRow(factQuantityExcelPost.row).getCell(factQuantityExcelPost.column)

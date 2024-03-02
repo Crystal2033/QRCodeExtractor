@@ -1,4 +1,4 @@
-package com.crystal2033.qrextractor.nav_graphs.documents
+package com.crystal2033.qrextractor.nav_graphs.profile
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column

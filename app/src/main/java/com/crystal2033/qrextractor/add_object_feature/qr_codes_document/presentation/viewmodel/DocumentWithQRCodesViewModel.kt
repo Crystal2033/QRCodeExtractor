@@ -74,6 +74,8 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
                             createPdfFile(2490, 3740, out!!)
                             out.flush()
                             out.close()
+                            //creation of pdf file
+                            sendUiEvent(UIDocumentQRCodeStickersEvent.OnFileCreatedSuccessfully(event.dirUri.path + event.fileName))
 
                         } catch (e: FileNotFoundException) {
                             e.printStackTrace()
@@ -85,8 +87,7 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
                     } catch (e: Exception) {
                         Log.e(LOG_TAG_NAMES.ERROR_TAG, e.message ?: "")
                     }
-                    //creation of pdf file
-                    sendUiEvent(UIDocumentQRCodeStickersEvent.OnFileCreatedSuccessfully(event.dirUri.path + event.fileName))
+
                 }
                 Log.i(
                     LOG_TAG_NAMES.INFO_TAG,

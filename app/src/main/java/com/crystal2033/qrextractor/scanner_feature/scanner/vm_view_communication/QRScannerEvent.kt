@@ -3,6 +3,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanner.vm_view_communicatio
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
 
+//From View to ViewModel
 sealed class QRScannerEvent {
     data class OnAddObjectInList(
         val scannableObject: InventarizedAndQRScannableModel,

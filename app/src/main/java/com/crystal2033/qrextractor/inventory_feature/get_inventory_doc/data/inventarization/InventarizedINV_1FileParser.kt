@@ -62,7 +62,7 @@ class InventarizedINV_1FileParser(
 
     fun flushFactInventarizedDataInExcel(outputStream: OutputStream) {
         for (invObject in listOfObjects) {
-            invObject.writeFactDataInExcel(savedWorkbook, savedSheet, outputStream)
+            invObject.writeFactDataInExcel(savedSheet, outputStream)
         }
         savedWorkbook.write(outputStream)
         savedWorkbook.close()
@@ -152,9 +152,6 @@ class InventarizedINV_1FileParser(
             }
 
             lastCheckedColumn++
-//            if (checkingCell != null) {
-//
-//            }
 
         }
         if (currDocColumn != valueOfTableColumnsInDocument) {
@@ -216,8 +213,6 @@ class InventarizedINV_1FileParser(
                     row,
                     InventarizedColumnNames.DOC_RENT_NAME
                 )!!.stringCellValue,
-//                docRentDate = getCellFromRowByNeededColumn(row, InventarizedColumnNames.DOC_RENT_DATE).dateCellValue
-//                    ?: Date(), //errors
                 releaseYear = if (cellForReleaseYear.cellType == CellType.NUMERIC) cellForReleaseYear.numericCellValue.toInt()
                 else if (cellForReleaseYear.stringCellValue.isEmpty()) 0 else cellForReleaseYear.stringCellValue.toInt(),
                 invNumber = if (cellForInvNumber.cellType == CellType.NUMERIC) cellForInvNumber.numericCellValue.toString() else cellForInvNumber.stringCellValue,
@@ -263,12 +258,6 @@ class InventarizedINV_1FileParser(
     }
 
     private fun setListOfObjects(workSheet: Sheet) {
-//        println("-------------------------------------")
-//        for(columnInfo in listOfDocumentColumns){
-//            println(workSheet.getRow(columnInfo.excelCellInfo.row).getCell(columnInfo.excelCellInfo.column))
-//        }
-//        println("-------------------------------------")
-
         val rowIterator = workSheet.rowIterator()
         var currentRow = 0
         while (rowIterator.hasNext() && currentRow != listOfDocumentColumns[0].excelCellInfo.row + 1) {///доходим до начала таблицы
@@ -276,7 +265,6 @@ class InventarizedINV_1FileParser(
             currentRow++
         }
         while (rowIterator.hasNext()) { //Ходим по строкам
-            //println(rowIterator.next().getCell(0).toString())
             val row = rowIterator.next()
             val cellValue = getCellFromRowByNeededColumn(row, InventarizedColumnNames.ORD_NUMBER)
                 ?: break

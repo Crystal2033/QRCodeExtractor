@@ -39,10 +39,10 @@ fun FieldNameAndValue(fieldName: String, fieldValue: String) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = fieldName, color = Color.Gray, fontSize = 7.sp,
+            text = fieldName, color = Color.Gray, fontSize = 8.sp,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(3.dp))
-        Text(text = fieldValue, color = Color.White, fontSize = 10.sp)
+        Text(text = fieldValue, color = Color.White, fontSize = 12.sp)
     }
 }

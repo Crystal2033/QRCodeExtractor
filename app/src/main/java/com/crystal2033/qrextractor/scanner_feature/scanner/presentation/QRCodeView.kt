@@ -40,6 +40,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -164,6 +165,7 @@ fun QRCodeView(
                 )
             }
 
+
             IconButton(
                 modifier = Modifier
                     .align(Alignment.TopCenter)
@@ -235,7 +237,8 @@ fun QRCodeView(
                 if (hasCameraPermission) {
                     AndroidView(
                         modifier = Modifier
-                            .size(400.dp)
+                            .scale(0.8f)
+                            .weight(1f)
                             .align(Alignment.CenterHorizontally),
                         factory = { context ->
                             val previewView = PreviewView(context)
@@ -279,6 +282,7 @@ fun QRCodeView(
                     scannedObject.value.scannedDataInfo?.let { scannedData ->
                         ShowDataItemByType(
                             qrScannable = scannedData,
+                            modifier = Modifier.weight(0.8f),
                             userAndPlaceBundle = viewModel.userAndPlaceBundle.value,
                             onAddObjectIntoListClicked = {
                                 viewModel.onEvent(
