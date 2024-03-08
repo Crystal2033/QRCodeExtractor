@@ -1,6 +1,7 @@
 package com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -29,16 +30,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
+import com.crystal2033.qrextractor.core.remote_server.data.model.Chair
+import com.crystal2033.qrextractor.core.remote_server.data.model.Desk
+import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
+import com.crystal2033.qrextractor.core.remote_server.data.model.Keyboard
+import com.crystal2033.qrextractor.core.remote_server.data.model.Monitor
+import com.crystal2033.qrextractor.core.remote_server.data.model.Projector
+import com.crystal2033.qrextractor.core.remote_server.data.model.SystemUnit
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.state.InventarizedObjectInfoAndIDInLocalDB
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.state.ObjectsListState
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.viewmodel.ScannedObjectsListViewModel
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.vm_view_communication.ScannedObjectsListEvent
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.vm_view_communication.UIScannedObjectsListEvent
+import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.Unknown
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -53,6 +66,7 @@ fun ScannedObjectsListView(
         viewModel.objectsListState
     }
 
+    val context = LocalContext.current
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -63,7 +77,7 @@ fun ScannedObjectsListView(
                 is UIScannedObjectsListEvent.ShowSnackBar -> {
                     snackbarHostState.showSnackbar(
                         message = event.message,
-                        actionLabel = "Okay",
+                        actionLabel = GetStringNotInComposable(context, R.string.okay),
                         duration = SnackbarDuration.Long
                     )
                 }
@@ -85,11 +99,11 @@ fun ScannedObjectsListView(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = listOfObjectsState.value.listOfObjectsWithCabinetName.size.toString())
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    listOfObjectsState.value.listOfObjectsWithCabinetName.groupBy { it.objectInfo.javaClass.kotlin }
-                        .forEach { (objectClass, correspondingObjects) ->
+                    listOfObjectsState.value.listOfObjectsWithCabinetName.groupBy { groupByTranslatedNames(it.objectInfo, context)}
+                        .forEach { (objectClassName, correspondingObjects) ->
                             stickyHeader {
                                 ShowHeaderClassName(
-                                    className = objectClass.simpleName ?: "Unknown class"
+                                    className = objectClassName
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
                             }
@@ -125,6 +139,18 @@ fun ScannedObjectsListView(
 
 }
 
+fun groupByTranslatedNames(inventarizedObj : InventarizedAndQRScannableModel, context : Context) : String{
+    return when(inventarizedObj){
+        is Keyboard -> GetStringNotInComposable(context, R.string.keyboard_translate)
+        is Monitor -> GetStringNotInComposable(context, R.string.monitor_translate)
+        is Projector -> GetStringNotInComposable(context, R.string.projector_translate)
+        is SystemUnit -> GetStringNotInComposable(context, R.string.system_unit_translate)
+        is Desk -> GetStringNotInComposable(context, R.string.desk_translate)
+        is Chair -> GetStringNotInComposable(context, R.string.chair_translate)
+        else -> GetStringNotInComposable(context, R.string.unknown_class_translate)
+    }
+}
+
 @Composable
 fun ShowHeaderClassName(
     className: String,
@@ -144,11 +170,4 @@ fun ShowHeaderClassName(
         )
     }
 
-}
-
-@Composable
-@Preview
-fun ShowHeader() {
-    val className = "keyboard"
-    ShowHeaderClassName(className)
 }

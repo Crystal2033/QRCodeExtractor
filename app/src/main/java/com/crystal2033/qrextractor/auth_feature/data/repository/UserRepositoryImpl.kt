@@ -29,7 +29,6 @@ class UserRepositoryImpl(
             val user = tryToLoginUser(userLoginDTO, context)
             emit(Resource.Success(user))
         } catch (e: RemoteServerRequestException) {
-            Log.e("ERROR", e.message ?: "Unknown error")
             emit(Resource.Error(message = e.message ?: "Unknown error"))
         }
 
@@ -66,10 +65,8 @@ class UserRepositoryImpl(
         if (userFromRoomDB != null) {
             user.idLocalDB = userFromRoomDB.userId
             userDao.updateUser(user.toUserEntity())
-            Log.i(LOG_TAG_NAMES.INFO_TAG, "User has updated in ROOM database.")
         } else {
             user.idLocalDB = userDao.saveUser(user.toUserEntity())
-            Log.i(LOG_TAG_NAMES.INFO_TAG, "User has been added in ROOM database.")
         }
     }
 }

@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.viewmodel.PlaceChoiceViewModel
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.vm_view_communication.PlaceChoiceEvent
 import com.crystal2033.qrextractor.add_object_feature.place_choice.presentation.vm_view_communication.UIPlaceChoiceEvent
@@ -51,7 +53,7 @@ fun PlaceChoiceView(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             DropListView(
-                fieldName = "Branch",
+                fieldName = stringResource(id = R.string.branch_translate),
                 listOfObjects = viewModel.listOfBranches.map { Pair(it.id, it.name) },
                 onValueChanged = { chosenId ->
                     viewModel.onEvent(PlaceChoiceEvent.OnBranchChanged(chosenId))
@@ -60,7 +62,7 @@ fun PlaceChoiceView(
             )
             Spacer(modifier = Modifier.height(15.dp))
             DropListView(
-                fieldName = "Building",
+                fieldName = stringResource(id = R.string.building_translate),
                 listOfObjects = viewModel.listOfBuildings.map {
                     Pair(
                         it.id,
@@ -75,7 +77,7 @@ fun PlaceChoiceView(
             )
             Spacer(modifier = Modifier.height(15.dp))
             DropListView(
-                fieldName = "Cabinets",
+                fieldName = stringResource(id = R.string.cabinet_translate),
                 listOfObjects = viewModel.listOfCabinets.map {
                     Pair(
                         it.id,
@@ -96,7 +98,7 @@ fun PlaceChoiceView(
                 enabled = viewModel.isPlaceChosen(),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text(text = "Next")
+                Text(text = stringResource(id = R.string.next_translate))
             }
         }
     }

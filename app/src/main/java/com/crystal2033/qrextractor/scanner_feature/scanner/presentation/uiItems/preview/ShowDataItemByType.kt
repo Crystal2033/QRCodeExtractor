@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -31,16 +32,6 @@ fun ShowDataItemByType(
 ) {
     Box(
         modifier = modifier
-//        modifier = Modifier
-//            .background(
-//                brush = Brush.verticalGradient(
-//                    colors = listOf(
-//                        Color.White,
-//                        Color.Black
-//                    )
-//                )
-//            )
-//            .fillMaxSize()
     ) {
         qrScannable?.let { existingScannable ->
             when (existingScannable) {
@@ -63,7 +54,7 @@ fun ShowDataItemByType(
                         modifier = Modifier.align(Alignment.TopStart),
                         onClick = onAddObjectIntoListClicked
                     ) {
-                        Text(text = "Add in list", fontWeight = FontWeight.Bold, fontSize = 10.sp)
+                        Text(text = stringResource(id = R.string.add_in_list_translate), fontWeight = FontWeight.Bold, fontSize = 10.sp)
                     }
 
                     IconButton(onClick = {

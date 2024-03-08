@@ -1,5 +1,6 @@
 package com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,9 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.general.model.QRCodeStickerInfo
 import com.crystal2033.qrextractor.add_object_feature.qr_codes_document.presentation.vm_view_communication.DocumentQRCodeStickersEvent
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 
 @Composable
 fun QRCodeStickerView(
@@ -68,22 +73,14 @@ fun QRCodeStickerView(
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            text = "QR-code size"
+            text = stringResource(id = R.string.qr_code_size_translate)
         )
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            modifier = Modifier.size(100.dp)
-//        ) {
+
         LazyRow() {
             items(sizes) { qrSize ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(8.dp)
-//                        .selectable(
-//                            selected = isSelectedItem(qrSize),
-//                            onClick = { onChangeState(qrSize) },
-//                            role = Role.RadioButton
-//                        )
 
                 ) {
                     RadioButton(
@@ -91,12 +88,20 @@ fun QRCodeStickerView(
                         onClick = { onChangeState(qrSize) }
                     )
                     Text(
-                        text = qrSize.sizeDpString,
+                        text = getStickerSizeText(qrSize, LocalContext.current),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
 
             }
         }
+    }
+}
+
+fun getStickerSizeText(stickerSize : QRCodeStickerInfo.StickerSize, context: Context) : String {
+    return when(stickerSize){
+        QRCodeStickerInfo.StickerSize.SMALL -> GetStringNotInComposable(context, R.string.small_translate)
+        QRCodeStickerInfo.StickerSize.NORMAL -> GetStringNotInComposable(context, R.string.normal_translate)
+        QRCodeStickerInfo.StickerSize.BIG -> GetStringNotInComposable(context, R.string.big_translate)
     }
 }

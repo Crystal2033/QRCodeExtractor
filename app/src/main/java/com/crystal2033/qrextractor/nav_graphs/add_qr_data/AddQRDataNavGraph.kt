@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
@@ -459,13 +460,13 @@ fun CreateViewByAddType(
                                     onAddObjectClicked = onAddObjectClicked
                                 )
                             }) {
-                            Text(text = "Add")
+                            Text(text = stringResource(id = R.string.accept_translate))
                         }
                         Spacer(modifier = Modifier.width(30.dp))
                         Button(onClick = {
                             navController.navigate(context.getString(R.string.menu_add_route))
                         }) {
-                            Text(text = "Cancel")
+                            Text(text = stringResource(id = R.string.cancel_translate))
                         }
                     }
                 }
@@ -476,24 +477,3 @@ fun CreateViewByAddType(
     }
 
 }
-
-
-//fun createConcreteAddViewModelFactory(typeOfViewModel: DatabaseObjectTypes): BaseAddViewModelFactory {
-//    return when (typeOfViewModel) {
-//        DatabaseObjectTypes.PERSON -> {
-//            AddPersonViewModelFactory()
-//        }
-//
-//        DatabaseObjectTypes.KEYBOARD -> {
-//            AddPersonViewModelFactory()
-//        }
-//
-//        DatabaseObjectTypes.MONITOR -> {
-//            AddPersonViewModelFactory()
-//        }
-//
-//        DatabaseObjectTypes.UNKNOWN -> {
-//            AddPersonViewModelFactory()
-//        }
-//    }
-//}

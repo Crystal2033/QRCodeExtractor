@@ -41,11 +41,6 @@ fun TextFieldView(
 
 
 ) {
-
-//    val fieldValue = remember {
-//        mutableStateOf("")
-//    }
-
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = verticalAlignment,
@@ -59,7 +54,6 @@ fun TextFieldView(
                 placeholder = { Text(fieldHint) },
                 onValueChange = {
                     if (it.matches(pattern)) {
-                        //fieldValue.value = it
                         onValueChanged(it)
                     }
 

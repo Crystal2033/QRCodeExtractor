@@ -71,13 +71,3 @@ fun DropListView(
 
 
 }
-
-@Composable
-@Preview
-fun PreviewDropListView() {
-//    val coffeeDrinks = listOf("Americano", "Cappuccino", "Espresso", "Latte", "Mocha")
-//    val chosenValue = remember {
-//        mutableStateOf("")
-//    }
-//    DropListView("Coffee", coffeeDrinks, chosenValue)
-}

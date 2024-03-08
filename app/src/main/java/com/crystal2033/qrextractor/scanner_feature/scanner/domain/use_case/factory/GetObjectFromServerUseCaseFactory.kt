@@ -3,6 +3,7 @@ package com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.fact
 import android.content.Context
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.use_case.DataGetterUseCases
 
 class GetObjectFromServerUseCaseFactory(
@@ -35,7 +36,7 @@ class GetObjectFromServerUseCaseFactory(
                 getObjectInfoUseCases.getKeyboardUseCase
             }
             else -> {
-                throw ClassNotFoundException("Returning class for use case has not found.")
+                throw ClassNotFoundException(GetStringNotInComposable(context, R.string.return_class_not_found_translate))
             }
         }
     }

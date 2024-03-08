@@ -44,6 +44,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -51,6 +52,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.crystal2033.qrextractor.R
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.scanner_feature.scanner.StaticConverters
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.dialog_window.DialogInsertName
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.dialog_window.DialogMessage
@@ -118,7 +120,7 @@ fun QRCodeView(
             is UIScannerEvent.ShowSnackBar -> {
                 snackbarHostState.showSnackbar(
                     message = event.message,
-                    actionLabel = "Okay",
+                    actionLabel = GetStringNotInComposable(context, R.string.okay),
                     duration = SnackbarDuration.Long
                 )
             }
@@ -159,9 +161,9 @@ fun QRCodeView(
                     onAcceptButtonClicked = { groupName ->
                         viewModel.onEvent(QRScannerEvent.OnAddNameForScannedGroup(groupName))
                     },
-                    title = "Scanned objects group name",
-                    helpMessage = "Please set scanned group name for added objects. ",
-                    placeholderInTextField = "Group name",
+                    title = stringResource(id = R.string.scanned_group_name),
+                    helpMessage = stringResource(id = R.string.scanned_group_name_ask_translate),
+                    placeholderInTextField = stringResource(id = R.string.group_name_translate),
                 )
             }
 

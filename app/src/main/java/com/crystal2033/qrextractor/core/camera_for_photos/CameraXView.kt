@@ -23,6 +23,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -43,6 +44,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -96,7 +98,7 @@ fun CameraXView(
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
-        modifier = Modifier.size(450.dp),
+        modifier = Modifier.size(750.dp),
         backgroundColor =
         if (darkTheme) Color(context.resources.getColor(R.color.dark_gray, context.theme))
         else Color(context.resources.getColor(R.color.white, context.theme)),
@@ -106,14 +108,16 @@ fun CameraXView(
     ) { padding ->
         Box(
             modifier = Modifier
-                .padding(padding)
+                .fillMaxSize()
         ) {
             if (!needToAcceptOrDeclinePhoto.value) {
                 CameraPreview(
                     controller = controller,
                     modifier = Modifier
-                        .size(400.dp)
+                        .matchParentSize()
+                        .scale(0.7f)
                         .align(Alignment.Center)
+                        .fillMaxSize()
                 )
                 IconButton(
                     onClick =
@@ -121,7 +125,7 @@ fun CameraXView(
                         onCloseButtonClicked()
                     },
                     modifier = Modifier
-                        .offset(16.dp, 16.dp)
+                        .offset((-16).dp, 16.dp)
                         .align(Alignment.TopEnd)
                 ) {
 
@@ -200,7 +204,8 @@ fun CameraXView(
                     },
                     onDeclinePhoto = {
                         needToAcceptOrDeclinePhoto.value = false
-                    })
+                    },
+                    modifier = Modifier.align(Alignment.Center))
             }
         }
 

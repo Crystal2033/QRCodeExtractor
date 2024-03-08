@@ -27,7 +27,7 @@ fun ShowId(id: Long, modifier: Modifier = Modifier) {
             modifier = Modifier.size(18.dp)
         )
         Spacer(modifier = Modifier.width(10.dp))
-        Text(text = "id: ", color = Color.LightGray)
+        Text(text = "ID: ", color = Color.LightGray)
         Text(text = id.toString(), color = Color.LightGray)
     }
 }

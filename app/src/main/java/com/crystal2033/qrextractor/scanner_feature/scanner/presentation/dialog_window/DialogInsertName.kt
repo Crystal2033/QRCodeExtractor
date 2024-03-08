@@ -12,6 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import com.crystal2033.qrextractor.R
 
 
 //TODO: what if group name already exist. Need to check the group name in database using viewmodel
@@ -22,7 +24,7 @@ fun DialogInsertName(
     title: String,
     helpMessage: String,
     placeholderInTextField: String,
-    ifBlankErrorMessage: String = "This field can not be blank"
+    ifBlankErrorMessage: String = stringResource(id = R.string.field_cant_blank_translate)
 ) {
     var text by rememberSaveable { mutableStateOf("") }
     AlertDialog(
@@ -65,7 +67,7 @@ fun DialogInsertName(
                     onAcceptButtonClicked(text)
                 },
             ) {
-                Text("Accept")
+                Text(stringResource(id = R.string.accept_translate))
             }
         },
         dismissButton = {
@@ -74,7 +76,7 @@ fun DialogInsertName(
                     isNeedToShowDialog.value = false
                 }
             ) {
-                Text("Cancel")
+                Text(stringResource(id = R.string.cancel_translate))
             }
         }
     )

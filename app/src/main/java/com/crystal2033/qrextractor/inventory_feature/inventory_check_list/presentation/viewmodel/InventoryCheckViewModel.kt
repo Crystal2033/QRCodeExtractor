@@ -11,6 +11,7 @@ import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.inventarization.InventarizedINV_1FileParser
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.inventarization.ObjectInInventarizedFile
@@ -63,7 +64,6 @@ class InventoryCheckViewModel @AssistedInject constructor(
 
     init {
         inventoryFile.listOfObjects.forEach(_objectsInfoState.value.listOfObjects::add)
-        Log.i("INIT", "INITTTTT")
     }
 
     private val alreadyUsedInvNumbers = hashSetOf<String>()
@@ -103,7 +103,9 @@ class InventoryCheckViewModel @AssistedInject constructor(
             val scannedObject = converter.fromJsonToScannedTableNameAndId(scanResult)
             scannedObject?.let {
                 if (isAlreadyCheckedInventoryNumber(it.invNumber)) {
-                    sendUiEvent(UIInventoryCheckEvent.ShowSnackBar("Inventory number ${it.invNumber} already checked."))
+                    sendUiEvent(UIInventoryCheckEvent.ShowSnackBar(
+                        GetStringNotInComposable(context, R.string.inventory_number_translate) + " ${it.invNumber} " +
+                     GetStringNotInComposable(context, R.string.already_checked_translate)))
                     return
                 }
 
@@ -118,8 +120,7 @@ class InventoryCheckViewModel @AssistedInject constructor(
     private fun showQRCodeFormatError(e: JsonSyntaxException) {
         Log.e(LOG_TAG_NAMES.ERROR_TAG, e.message ?: "Unknown")
         viewModelScope.launch {
-            sendUiEvent(UIInventoryCheckEvent.ShowSnackBar("QR-code`s content is not compatible with this application."))
-            //setPreviewObjectStateInfo(Resource.Error(message = "QR-code`s content is not compatible with this application."))
+            sendUiEvent(UIInventoryCheckEvent.ShowSnackBar(GetStringNotInComposable(context, R.string.not_compatible_qr_translate)))
         }
     }
 
@@ -151,8 +152,8 @@ class InventoryCheckViewModel @AssistedInject constructor(
             getDataFromQRCodeUseCase =
                 useCaseGetQRCodeFactory.createUseCase(scannedObject.tableName)
         } catch (error: ClassNotFoundException) {
-            Log.e(LOG_TAG_NAMES.ERROR_TAG, error.message ?: "Unknown error")
-            val errorMsg = error.message ?: "Unknown error"
+            Log.e(LOG_TAG_NAMES.ERROR_TAG, error.message ?: GetStringNotInComposable(context, R.string.unknown_error_translate))
+            val errorMsg = error.message ?: GetStringNotInComposable(context, R.string.unknown_error_translate)
             sendUiEvent(UIInventoryCheckEvent.ShowSnackBar(errorMsg))
         }
 
@@ -162,7 +163,7 @@ class InventoryCheckViewModel @AssistedInject constructor(
                     setDataInState(objectsInfoState.value.listOfObjects, false)
                     sendUiEvent(
                         UIInventoryCheckEvent.ShowSnackBar(
-                            result.message ?: "Error from server"
+                            result.message ?: GetStringNotInComposable(context, R.string.unknown_error_translate)
                         )
                     )
                 }
@@ -207,7 +208,7 @@ class InventoryCheckViewModel @AssistedInject constructor(
             alreadyUsedInvNumbers.add(checkingObjectFromList.invNumber)
             sendUiEvent(
                 UIInventoryCheckEvent.ShowSnackBar(
-                    "Success: ${checkingObjectFromList.invNumber}"
+                    GetStringNotInComposable(context, R.string.success_translate) + ": ${checkingObjectFromList.invNumber}"
                 )
             )
         } else {
@@ -234,7 +235,8 @@ class InventoryCheckViewModel @AssistedInject constructor(
                         tryToIncrementQuantityOrAction(checkingObjectFromList) {
                             sendUiEvent(
                                 UIInventoryCheckEvent.ShowSnackBar(
-                                    "Object with inventory number: ${scannedObject.invNumber} not found."
+                                    GetStringNotInComposable(context, R.string.inventory_number_obj_translate) + ": ${scannedObject.invNumber}" +
+                                            GetStringNotInComposable(context, R.string.not_found_translate)
                                 )
                             )
                         }

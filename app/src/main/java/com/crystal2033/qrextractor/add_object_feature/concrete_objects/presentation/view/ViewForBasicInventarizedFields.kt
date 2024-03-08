@@ -18,9 +18,12 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.view.state.BaseDeviceState
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.BaseAddObjectViewModel
 import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentation.viewmodel.vm_view_communication.AddNewObjectEvent
@@ -28,6 +31,7 @@ import com.crystal2033.qrextractor.add_object_feature.concrete_objects.presentat
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.getGoodNameByDatabaseObjectType
 import com.crystal2033.qrextractor.core.camera_for_photos.CameraXView
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.ui.text_elements.TextFieldView
 import kotlinx.coroutines.flow.collectLatest
 
@@ -43,6 +47,8 @@ fun BaseViewForInventarizedDevice(
     onChangePlaceClicked: () -> Unit = {}
 ) {
     val spaceBetween = 15.dp
+    val context = LocalContext.current
+
     LaunchedEffect(key1 = true) {
         viewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -53,7 +59,7 @@ fun BaseViewForInventarizedDevice(
                 is UIAddNewObjectEvent.ShowSnackBar -> {
                     snackbarHostState.showSnackbar(
                         message = event.message,
-                        actionLabel = "Okay",
+                        actionLabel = GetStringNotInComposable(context, R.string.okay),
                         duration = SnackbarDuration.Long
                     )
                 }
@@ -75,21 +81,21 @@ fun BaseViewForInventarizedDevice(
         Button(onClick = {
             isNeedToShowCamera.value = true
         }) {
-            Text(text = "Add picture")
+            Text(text = stringResource(id = R.string.add_picture_translate))
         }
         Spacer(modifier = Modifier.height(3 * spaceBetween))
         Row(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = getGoodNameByDatabaseObjectType(deviceState.deviceState.value.getDatabaseTableName()),
+                text = getGoodNameByDatabaseObjectType(deviceState.deviceState.value.getDatabaseTableName(), context),
                 color = Color.LightGray,
                 fontSize = 18.sp
             )
         }
         Spacer(modifier = Modifier.height(spaceBetween))
         TextFieldView(
-            fieldHint = "Name",
+            fieldHint = stringResource(id = R.string.name_translate),
             currentText = deviceState.deviceState.value.name,
             onValueChanged = {
                 viewModel.onEvent(AddNewObjectEvent.OnNameChanged(it))
@@ -98,18 +104,17 @@ fun BaseViewForInventarizedDevice(
         )
         Spacer(modifier = Modifier.height(spaceBetween))
         TextFieldView(
-            fieldHint = "Inventory number",
+            fieldHint = stringResource(id = R.string.inventory_number_translate),
             currentText = deviceState.deviceState.value.inventoryNumber,
             onValueChanged = {
                 viewModel.onEvent(AddNewObjectEvent.OnInventoryNumberChanged(it))
-                //TODO: CHECK UNIQUE. Can make this call inside BaseAddObjectViewModel
             },
             isEnabled = !isForUpdate,
             horizontalArrangement = Arrangement.Center
         )
         Spacer(modifier = Modifier.height(spaceBetween))
 
-        Text(text = "Change place",
+        Text(text = stringResource(id = R.string.change_place_translate),
             fontSize = 20.sp,
             color = Color.Cyan,
             modifier = Modifier.clickable {
@@ -118,21 +123,21 @@ fun BaseViewForInventarizedDevice(
         Spacer(modifier = Modifier.height(spaceBetween))
 
         TextFieldView(
-            fieldHint = "Branch",
+            fieldHint = stringResource(id = R.string.branch_translate),
             currentText = userAndPlaceBundle?.branch?.name ?: "",
             isEnabled = false,
             horizontalArrangement = Arrangement.Center
         )
         Spacer(modifier = Modifier.height(spaceBetween))
         TextFieldView(
-            fieldHint = "Building address",
+            fieldHint = stringResource(id = R.string.building_address_translate),
             currentText = userAndPlaceBundle?.building?.address ?: "",
             isEnabled = false,
             horizontalArrangement = Arrangement.Center
         )
         Spacer(modifier = Modifier.height(spaceBetween))
         TextFieldView(
-            fieldHint = "Cabinet",
+            fieldHint = stringResource(id = R.string.cabinet_translate),
             currentText = userAndPlaceBundle?.cabinet?.name ?: "",
             isEnabled = false,
             horizontalArrangement = Arrangement.Center
@@ -147,6 +152,6 @@ fun BaseViewForInventarizedDevice(
                 isNeedToShowCamera.value = false
             })
     }
-
-
 }
+
+

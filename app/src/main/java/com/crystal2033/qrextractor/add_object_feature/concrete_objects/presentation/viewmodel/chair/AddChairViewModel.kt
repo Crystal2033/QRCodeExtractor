@@ -84,7 +84,6 @@ class AddChairViewModel @AssistedInject constructor(
 
         viewModelScope.launch {
             chairForUpdate?.let {
-                Log.i(LOG_TAG_NAMES.INFO_TAG, "UPDATE API")
                 updateChairUseCase(chairDTO).onEach { statusWithState ->
                     makeActionWithResourceResult(
                         statusWithState = statusWithState,
@@ -118,16 +117,6 @@ class AddChairViewModel @AssistedInject constructor(
                 cabinetId = _chairState.value.cabinetId
             )
         }
-
-
-
-//        val out = ByteArrayOutputStream()
-//        image?.compress(Bitmap.CompressFormat.PNG, 0, out)
-//        val decoded = BitmapFactory.decodeStream(ByteArrayInputStream(out.toByteArray()))
-//
-//        Log.e("Original   dimensions", image?.width.toString() + " " + image?.height)
-//        Log.e("Compressed dimensions", decoded.width.toString() + " " + decoded.height)
-
     }
 
     override fun setNewName(name: String) {

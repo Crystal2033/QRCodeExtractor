@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,7 +50,6 @@ fun ShowGroup(
                     }
                 },
                 onLongClick = {
-                    Log.i(LOG_TAG_NAMES.INFO_TAG, "LOOONG CLOCKED")
                     isShowActionsWithGroup.value = true
                 }
             )
@@ -84,7 +84,7 @@ fun ShowGroup(
             )
             Text(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = scannedGroup.groupName ?: "Unknown name",
+                text = scannedGroup.groupName ?: stringResource(id = R.string.unknown_name_translate),
                 textAlign = TextAlign.Center,
                 color = Color.LightGray
             )

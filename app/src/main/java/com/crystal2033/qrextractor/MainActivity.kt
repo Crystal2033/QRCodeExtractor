@@ -131,31 +131,6 @@ fun MyNavGraph(
 }
 
 @Composable
-fun TextWindow(string: String) {
-//    val result = remember { mutableStateOf<Uri?>(null) }
-//    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) {
-//        result.value = it
-//    }
-//
-//    Button(onClick = { launcher.launch(result.value.toString()) }) {
-//        Text(text = "Open Document")
-//    }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-
-    ) {
-        Text(
-            text = string,
-            fontSize = 35.sp
-        )
-    }
-}
-
-@Composable
 inline fun <reified T : ViewModel> NavBackStackEntry.sharedUserHolderViewModel(
     navController: NavController
 ): T {
@@ -166,37 +141,5 @@ inline fun <reified T : ViewModel> NavBackStackEntry.sharedUserHolderViewModel(
 
     return viewModel(viewModelStoreOwner = parentEntry)
 }
-
-
-//@Composable
-//inline fun <reified T : ViewModel> NavBackStackEntry.sharedScannedDataGroupsViewModel(
-//    navController: NavController,
-//    user: User
-//): T {
-//    val navGraphRoute = destination.parent?.route ?: return viewModel()
-//    val parentEntry = remember(this) {
-//        navController.getBackStackEntry(navGraphRoute)
-//    }
-//
-//    val factory = EntryPointAccessors.fromActivity(
-//        LocalContext.current as Activity,
-//        ScannedDataViewModelFactoryProvider::class.java
-//    ).scannedDataGroupsViewModelFactory()
-//
-//    return viewModel(
-//        viewModelStoreOwner = parentEntry,
-//        factory = ScannedDataGroupsViewModel.provideFactory(factory, user)
-//    )
-//}
-
-//@Composable
-//fun scannedDataGroupsViewModel(user: User?): ScannedDataGroupsViewModel {
-//    val factory = EntryPointAccessors.fromActivity(
-//        LocalContext.current as Activity,
-//        ScannedDataViewModelFactoryProvider::class.java
-//    ).scannedDataGroupsViewModelFactory()
-//
-//    return viewModel(factory = ScannedDataGroupsViewModel.provideFactory(factory, user))
-//}
 
 

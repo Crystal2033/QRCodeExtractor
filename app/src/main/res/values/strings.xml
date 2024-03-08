@@ -45,8 +45,92 @@
     <!--  Database table names  -->
 
     <!--  Exception messages  -->
-    <string name="server_connection_error">There is a problem with connection to remote server.</string>
-    <string name="response_request_error">There is a problem with http request/response.</string>
+    <string name="server_connection_error">There is a problem with connection to remote server</string>
+    <string name="response_request_error">There is a problem with http request/response</string>
+
+    <!--    Auth feature-->
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="signin">Sign in</string>
+    <!--    Auth feature-->
+
+    <!--    Bottom navigation panel-->
+    <string name="inventory_translate">Inventory</string>
+    <string name="add_data">Add data</string>
+    <string name="home">Home</string>
+    <string name="scanner">Scanner</string>
+    <string name="profile">Profile</string>
+    <!--    Bottom navigation panel-->
+
+    <string name="okay">Okay</string>
+    <string name="add_picture_translate">Add picture</string>
+    <string name="name_translate">Name</string>
+    <string name="inventory_number_translate">Inventory number</string>
+    <string name="change_place_translate">Change place</string>
+    <string name="branch_translate">Branch</string>
+    <string name="building_address_translate">Building address</string>
+    <string name="cabinet_translate">Cabinet</string>
+    <string name="small_translate">Small</string>
+    <string name="normal_translate">Normal</string>
+    <string name="big_translate">Big</string>
+    <string name="qr_code_size_translate">QR-code size</string>
+    <string name="building_translate">Building</string>
+    <string name="next_translate">Next</string>
+    <string name="file_created_translate">File created successfully</string>
+    <string name="qr_code_filename_translate">QR-code filename</string>
+    <string name="set_qr_code_name_translate">Please set file name for created QR-codes</string>
+    <string name="file_name_translate">File name...</string>
+    <string name="create_document_qr_code_translate">Create document with QR-codes</string>
+    <string name="accept_translate">Accept</string>
+    <string name="cancel_translate">Cancel</string>
+
+    <string name="keyboard_translate">Keyboard</string>
+    <string name="monitor_translate">Monitor</string>
+    <string name="unknown_translate">Unknown</string>
+    <string name="desk_translate">Desk</string>
+    <string name="chair_translate">Chair</string>
+    <string name="system_unit_translate">System unit</string>
+    <string name="projector_translate">Projector</string>
+
+    <string name="login_system_translate">Log in to the system.</string>
+    <string name="choose_excel_translate">Choose inventory excel file</string>
+    <string name="file_status_translate">"File status: "</string>
+    <string name="start_inventory_translate">Start inventory</string>
+    <string name="number_translate">Number</string>
+    <string name="price_per_one_translate">Price per one</string>
+    <string name="full_acc_price_translate">Full accountant price</string>
+    <string name="current_price">Current price</string>
+    <string name="scanned_translate">"Scanned "</string>
+    <string name="end_check_translate">End check</string>
+
+    <string name="unknown_name_translate">Unknown name</string>
+    <string name="no_name_translate">No name</string>
+    <string name="not_found_translate">Not found</string>
+    <string name="unknown_error_translate">Unknown error</string>
+    <string name="unknown_class_translate">Unknown class</string>
+    <string name="return_class_not_found_translate">Returning class for use case has not found</string>
+    <string name="field_cant_blank_translate">This field can not be blank</string>
+    <string name="organization_translate">Organization</string>
+    <string name="add_in_list_translate">Add in list</string>
+    <string name="scanned_group_name">Scanned objects group name</string>
+    <string name="scanned_group_name_ask_translate">Please set scanned group name for added objects</string>
+    <string name="group_name_translate">Group name</string>
+
+    <string name="already_checked_translate">already checked</string>
+    <string name="not_compatible_qr_translate">QR-code`s content is not compatible with this application</string>
+    <string name="success_translate">Success</string>
+    <string name="inventory_number_obj_translate">Object with inventory number</string>
+    <string name="file_load_success">File has been loaded successfully</string>
+    <string name="loading_file">Loading file...</string>
+    <string name="ioexception_error">Unknown error with IOException</string>
+    <string name="valid_file_error_translate">File not valid exception</string>
+    <string name="encryption_file_translate">Unknown error with EncryptedDocumentException</string>
+    <string name="error_opening_translate">Error with opening</string>
+    <string name="error_parsing_translate">Error with parsing</string>
+    <string name="loading_translate">Loading</string>
+    <string name="no_file_translate">No file</string>
+    <string name="not_added_file_translate">File not added</string>
+
     <!--  Exception messages  -->
 
 

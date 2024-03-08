@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,7 @@ import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.U
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetPlaceUseCases
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.cabinet.GetCabinetUseCase
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.use_case.DeleteObjectItemInScannedGroupUseCase
@@ -80,12 +82,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
     }
 
     fun getChosenGroupName(): String {
-        return scannedGroup.value.groupName ?: "No name"
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.i(LOG_TAG_NAMES.INFO_TAG, "CLEARED")
+        return scannedGroup.value.groupName ?: GetStringNotInComposable(context, R.string.no_name_translate)
     }
 
     private lateinit var getObjectInfoUseCase: GetDeviceUseCaseInvoker
@@ -211,11 +208,11 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                 _objectsListState.value.listOfObjectsWithCabinetName.add(
                     InventarizedObjectInfoAndIDInLocalDB(
                         objectInfo = Unknown(
-                            "Not found",
+                            GetStringNotInComposable(context, R.string.not_found_translate),
                             id = id,
                             name = tableName
                         ),
-                        cabinetName = "Unknown",
+                        cabinetName = GetStringNotInComposable(context, R.string.unknown_translate),
                         objectIdInLocalDB = objectIDInLocalDB
                     )
                 )
@@ -259,8 +256,8 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
                 is Resource.Success -> {
                     _objectsListState.value.listOfObjectsWithCabinetName.add(
                         InventarizedObjectInfoAndIDInLocalDB(
-                            objectInfo = device ?: Unknown("Not found"),
-                            cabinetName = resultCabinet.data?.name ?: "Unknown",
+                            objectInfo = device ?: Unknown(GetStringNotInComposable(context, R.string.not_found_translate)),
+                            cabinetName = resultCabinet.data?.name ?: GetStringNotInComposable(context, R.string.unknown_translate),
                             objectIdInLocalDB = objectIDInLocalDB
                         )
                     )
@@ -420,7 +417,7 @@ class ScannedObjectsListViewModel @AssistedInject constructor(
         )
         sendUiEvent(
             UIScannedObjectsListEvent.ShowSnackBar(
-                message = errorMessage ?: "Unknown error"
+                message = errorMessage ?: GetStringNotInComposable(context, R.string.unknown_error_translate)
             )
         )
     }

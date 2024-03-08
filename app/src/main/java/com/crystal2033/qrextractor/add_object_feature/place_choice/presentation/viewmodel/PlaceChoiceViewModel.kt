@@ -211,13 +211,9 @@ class PlaceChoiceViewModel @AssistedInject constructor(
             is Resource.Error -> {}
             is Resource.Loading -> {}
             is Resource.Success -> {
-                Log.i(LOG_TAG_NAMES.INFO_TAG, "Added list of possible objects")
                 listOfPossibleObjects.clear()
                 listOfPossibleObjects.addAll(statusWithState.data ?: emptyList())
                 actionAfterInsert()
-                for (currentObj in listOfPossibleObjects) {
-                    Log.i(LOG_TAG_NAMES.INFO_TAG, "Possible object: ${currentObj.toString()}")
-                }
             }
         }
     }

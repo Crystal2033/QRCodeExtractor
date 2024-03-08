@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">QRExtractor</string>
+
+
+    <!--  Nodes in navigation subgraph  -->
+    <string name="home_route">home</string>
+
+    <string name="inventory_route">inventory</string>
+    <string name="inventory_list_check_route">inventory_check_list</string>
+
+    <string name="scanner_route">scanner</string>
+    <string name="list_of_groups_route">list_of_groups</string>
+    <string name="list_of_scanned_objects">list_of_scanned_objects</string>
+    <string name="modify_concrete_object">modify_concrete_object</string>
+    <string name="place_choice_update">branch_and_building_choice_in_update</string>
+
+
+    <string name="profile_route">profile</string>
+    <string name="login_route">login</string>
+
+
+    <string name="place_choice_add">branch_and_building_choice_in_add</string>
+    <string name="menu_add_route">add_menu</string>
+    <string name="add_concrete_class">add_concrete_object</string>
+    <string name="qr_codes_list">qr_codes_list</string>
+
+
+    <!--  Heads of navigation subgraph-->
+    <string name="home_head_graph_route">home_graph</string>
+    <string name="inventory_head_graph_route">inventory_graph</string>
+    <string name="scanner_head_graph_route">scanner_graph</string>
+    <string name="profile_head_graph_route">profile_graph</string>
+    <string name="add_data_head_graph_route">add_data_graph</string>
+    <!--  Heads of navigation subgraph-->
+
+    <!--  Database table names  -->
+    <string name="person_table_name">person</string>
+    <string name="keyboard_table_name">keyboard</string>
+    <string name="monitor_table_name">monitor</string>
+    <string name="desk_table_name">desk</string>
+    <string name="system_unit_table_name">system_unit</string>
+    <string name="projector_table_name">projector</string>
+    <string name="chair_table_name">chair</string>
+    <string name="unknown_table_name">unknown</string>
+    <!--  Database table names  -->
+
+
+
+
+    <!--  Exception messages  -->
+    <string name="server_connection_error">Проблема с подключением к удаленному серверу</string>
+    <string name="response_request_error">Проблема с HTTP запросом/ответом</string>
+    <!--    Auth feature-->
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="signin">Войти</string>
+    <!--    Auth feature-->
+
+    <!--    Bottom navigation panel-->
+    <string name="inventory_translate">Опись</string>
+    <string name="add_data">Добавить</string>
+    <string name="home">Дом</string>
+    <string name="scanner">Сканер</string>
+    <string name="profile">Профиль</string>
+    <!--    Bottom navigation panel-->
+
+    <string name="okay">Хорошо</string>
+    <string name="add_picture_translate">Добавить фото</string>
+    <string name="name_translate">Название</string>
+    <string name="inventory_number_translate">Инвентарный номер</string>
+    <string name="change_place_translate">Сменить место</string>
+    <string name="branch_translate">Филиал</string>
+    <string name="building_address_translate">Адрес здания</string>
+    <string name="organization_translate">Организация</string>
+    <string name="cabinet_translate">Кабинет</string>
+    <string name="small_translate">Маленький</string>
+    <string name="normal_translate">Нормальный</string>
+    <string name="big_translate">Большой</string>
+    <string name="qr_code_size_translate">Размер QR-кода</string>
+    <string name="building_translate">Здание</string>
+    <string name="next_translate">Далее</string>
+    <string name="file_created_translate">Файл успешно создан</string>
+    <string name="qr_code_filename_translate">Файл для QR-кодов</string>
+    <string name="set_qr_code_name_translate">Пожалуйста, задайте имя для файла с QR-кодами</string>
+    <string name="file_name_translate">Имя файла...</string>
+    <string name="create_document_qr_code_translate">Создать документ с QR-кодами</string>
+    <string name="accept_translate">Подтвердить</string>
+    <string name="cancel_translate">Отменить</string>
+
+    <string name="keyboard_translate">Клавиатура</string>
+    <string name="monitor_translate">Монитор</string>
+    <string name="unknown_translate">Неизвестно</string>
+    <string name="desk_translate">Стол</string>
+    <string name="chair_translate">Стул</string>
+    <string name="system_unit_translate">Системный блок</string>
+    <string name="projector_translate">Проектор</string>
+
+    <string name="login_system_translate">Войдите в систему</string>
+    <string name="choose_excel_translate">Выберите excel файл описи</string>
+    <string name="file_status_translate">"Статут загрузки файла: "</string>
+    <string name="start_inventory_translate">Начать инвентаризацию</string>
+    <string name="number_translate">Номер</string>
+    <string name="price_per_one_translate">Цена за единицу</string>
+    <string name="full_acc_price_translate">Полная бух. цена</string>
+    <string name="current_price">Текущая стоимость</string>
+    <string name="scanned_translate">"Проверено "</string>
+    <string name="end_check_translate">Закончить опись</string>
+
+    <string name="unknown_name_translate">Неизвестное имя</string>
+    <string name="no_name_translate">Нет имени</string>
+    <string name="not_found_translate">Не найдено</string>
+    <string name="unknown_error_translate">Неизвестная ошибка</string>
+    <string name="unknown_class_translate">Неизвестный класс</string>
+    <string name="return_class_not_found_translate">Возвращаемый класс намерения не найден</string>
+    <string name="field_cant_blank_translate">Это поле не может быть пустым</string>
+    <string name="add_in_list_translate">Добавить в список</string>
+    <string name="scanned_group_name">Имя каталога отсканированных объектов</string>
+    <string name="scanned_group_name_ask_translate">Ввведите имя каталога для добавленных объектов</string>
+    <string name="group_name_translate">Имя каталога</string>
+
+    <string name="already_checked_translate">уже проверен.</string>
+    <string name="not_compatible_qr_translate">Содержимое QR-кода несовместимо с приложением</string>
+    <string name="success_translate">Успех</string>
+    <string name="inventory_number_obj_translate">Предмет с инвентарным номером</string>
+    <string name="file_load_success">Файл был успешно загружен</string>
+    <string name="loading_file">Загрузка файла...</string>
+    <string name="ioexception_error">Неизвестная ошибка с IOException.</string>
+    <string name="valid_file_error_translate">Файл не найден</string>
+    <string name="encryption_file_translate">Неизвестная ошибка с EncryptedDocumentException</string>
+    <string name="error_opening_translate">Ошибка открытия</string>
+    <string name="error_parsing_translate">Ошибка парсинга</string>
+    <string name="loading_translate">Загрузка</string>
+    <string name="no_file_translate">Нет файла</string>
+    <string name="not_added_file_translate">Файл не добавлен</string>
+</resources>

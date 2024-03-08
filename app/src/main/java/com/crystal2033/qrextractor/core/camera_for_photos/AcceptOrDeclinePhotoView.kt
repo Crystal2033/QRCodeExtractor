@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
@@ -27,13 +28,14 @@ fun AcceptOrDeclinePhotoView(
     photo: Bitmap,
     onAcceptPhoto: (Bitmap) -> Unit,
     onDeclinePhoto: (Bitmap) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    Box {
+    Box(modifier = modifier) {
         Image(
             bitmap = photo.asImageBitmap(),
             contentDescription = "Picture",
             modifier = Modifier
-                .size(400.dp)
+                .scale(1f)
                 .align(Alignment.Center)
         )
 

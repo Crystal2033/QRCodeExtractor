@@ -17,9 +17,4 @@ class UserHolderViewModel : ViewModel() {
     fun setUser(user: User) {
         _user.value = user
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        Log.i(LOG_TAG_NAMES.INFO_TAG, "CLEARED USER HOLDER")
-    }
 }

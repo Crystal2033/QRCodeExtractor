@@ -89,11 +89,6 @@ class DocumentWithQRCodesViewModel @AssistedInject constructor(
                     }
 
                 }
-                Log.i(
-                    LOG_TAG_NAMES.INFO_TAG,
-                    "Done"
-                )
-
             }
         }
     }

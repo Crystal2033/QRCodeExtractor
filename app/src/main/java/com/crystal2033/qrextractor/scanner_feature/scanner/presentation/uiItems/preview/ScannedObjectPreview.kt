@@ -20,8 +20,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.getGoodNameByDatabaseObjectType
 import com.crystal2033.qrextractor.core.remote_server.data.model.InventarizedAndQRScannableModel
 
@@ -35,6 +38,7 @@ fun ScannedObjectPreview(
     onDeleteDevice: (InventarizedAndQRScannableModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Surface(
         color = Color(0xff1c1b1f)
     ) {
@@ -43,7 +47,7 @@ fun ScannedObjectPreview(
             modifier = modifier
         ) {
             Text(
-                text = getGoodNameByDatabaseObjectType(device.getDatabaseTableName()),
+                text = getGoodNameByDatabaseObjectType(device.getDatabaseTableName(), context),
                 color = Color.DarkGray,
                 fontWeight = FontWeight.Bold
             )
@@ -74,12 +78,12 @@ fun ScannedObjectPreview(
 
 
                     FieldNameAndValue(
-                        "Name",
+                        stringResource(id = R.string.name_translate),
                         device.name,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     FieldNameAndValue(
-                        "Inventory number",
+                        stringResource(id = R.string.inventory_number_translate),
                         device.inventoryNumber
                     )
 
@@ -89,19 +93,19 @@ fun ScannedObjectPreview(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         FieldNameAndValue(
-                            "Organization",
+                            stringResource(id = R.string.organization_translate),
                             organizationName
                         )
                         FieldNameAndValue(
-                            "Branch",
+                            stringResource(id = R.string.branch_translate),
                             branchName
                         )
                         FieldNameAndValue(
-                            "Building",
+                            stringResource(id = R.string.building_translate),
                             buildingAddress
                         )
                         FieldNameAndValue(
-                            "Cabinet",
+                            stringResource(id = R.string.cabinet_translate),
                             cabinetName
                         )
                     }

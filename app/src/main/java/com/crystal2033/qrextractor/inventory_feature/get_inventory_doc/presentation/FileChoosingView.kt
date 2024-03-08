@@ -18,8 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.crystal2033.qrextractor.R
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.LoadStatus
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.presentation.viewmodel.InventoryFileLoaderViewModel
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.presentation.vm_view_communication.FileLoaderEvent
@@ -63,7 +66,7 @@ fun FileChoosingView(
                 launcher.launch(arrayOf("*/*"))
             }) {
                 Text(
-                    text = "Choose excel file.",
+                    text = stringResource(id = R.string.choose_excel_translate),
                     modifier = Modifier.align(Alignment.CenterVertically)
                 )
             }
@@ -72,21 +75,21 @@ fun FileChoosingView(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(text = "File status: ", fontWeight = FontWeight.Medium)
+                Text(text = stringResource(id = R.string.file_status_translate), fontWeight = FontWeight.Medium)
                 Text(
-                    text = loadStatusInfo.value.loadStatus.name.lowercase(),
+                    text = loadStatusInfo.value.loadStatus.getLabel(context),
                     color = setColorByStatusType(loadStatusInfo.value.loadStatus)
                 )
             }
             Text(
-                text = loadStatusInfo.value.message
+                text = loadStatusInfo.value.message.ifBlank { GetStringNotInComposable(context, R.string.not_added_file_translate) }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
             Button(onClick = {
                 viewModel.onEvent(FileLoaderEvent.StartInventoryCheck)
             }, enabled = loadStatusInfo.value.loadStatus == LoadStatus.SUCCESS) {
-                Text(text = "Start inventory")
+                Text(text = stringResource(id = R.string.start_inventory_translate))
             }
         }
     }

@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.res.stringResource
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.scanner_feature.scanner.presentation.state.DialogWindowInfoState
 
 @Composable
@@ -34,7 +36,7 @@ fun DialogMessage(
                     dialogWindowInfoState.onAcceptAction()
                 }
             ) {
-                Text("Accept")
+                Text(stringResource(id = R.string.accept_translate))
             }
         },
         dismissButton = {
@@ -44,7 +46,7 @@ fun DialogMessage(
                     dialogWindowInfoState.onDeclineAction()
                 }
             ) {
-                Text("Decline")
+                Text(stringResource(id = R.string.cancel_translate))
             }
         }
     )

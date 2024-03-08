@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.crystal2033.qrextractor.R
@@ -18,7 +19,7 @@ fun NotLoginLinkView(navController: NavController) {
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = "Log in to the system.",
+            text = stringResource(id = R.string.login_system_translate),
             fontSize = 20.sp,
             color = Color.Cyan,
             modifier = Modifier

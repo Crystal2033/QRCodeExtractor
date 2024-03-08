@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
 import com.crystal2033.qrextractor.R
@@ -32,31 +33,31 @@ data class BottomNavigationItem(
 fun initBottomItems(context: Context): List<BottomNavigationItem> {
     return listOf(
         BottomNavigationItem(
-            title = "Inventory",
+            title = stringResource(id = R.string.inventory_translate),
             mainRouteInGraph = context.resources.getString(R.string.inventory_head_graph_route),
             selectedIcon = ImageVector.vectorResource(R.drawable.checklist_35),
             unselectedIcon = ImageVector.vectorResource(R.drawable.checklist_35)
         ),
         BottomNavigationItem(
-            title = "Add data",
+            title = stringResource(id = R.string.add_data),
             mainRouteInGraph = context.resources.getString(R.string.add_data_head_graph_route),
             selectedIcon = ImageVector.vectorResource(R.drawable.filled_add_to_photos_35),
             unselectedIcon = ImageVector.vectorResource(R.drawable.outline_add_to_photos_35)
         ),
         BottomNavigationItem(
-            title = "Home",
+            title = stringResource(id = R.string.home),
             mainRouteInGraph = context.resources.getString(R.string.home_head_graph_route),
             selectedIcon = ImageVector.vectorResource(R.drawable.filled_home_35),
             unselectedIcon = ImageVector.vectorResource(R.drawable.outline_home_35)
         ),
         BottomNavigationItem(
-            title = "Scanner",
+            title = stringResource(id = R.string.scanner),
             mainRouteInGraph = context.resources.getString(R.string.scanner_head_graph_route),
             selectedIcon = ImageVector.vectorResource(R.drawable.filled_qr_code_35),
             unselectedIcon = ImageVector.vectorResource(R.drawable.outline_qr_code_35)
         ),
         BottomNavigationItem(
-            title = "Profile",
+            title = stringResource(id = R.string.profile),
             mainRouteInGraph = context.resources.getString(R.string.profile_head_graph_route),
             selectedIcon = ImageVector.vectorResource(R.drawable.filled_account_circle_35),
             unselectedIcon = ImageVector.vectorResource(R.drawable.outline_account_circle_35)

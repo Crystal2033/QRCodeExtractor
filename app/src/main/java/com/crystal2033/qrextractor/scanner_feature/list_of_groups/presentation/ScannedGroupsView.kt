@@ -18,7 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.crystal2033.qrextractor.R
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.presentation.viewmodel.ScannedDataGroupsViewModel
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.vm_view_communication.ScannedGroupsListEvent
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.vm_view_communication.UIScannedGroupsListEvent
@@ -40,6 +43,7 @@ fun ScannedGroupsView(
     val scannedGroups by remember {
         mutableStateOf(viewModel.scannedGroupsForUser)
     }
+    val context = LocalContext.current
 
     val isNeedToShowMessageDialog = remember {
         mutableStateOf(false)
@@ -52,7 +56,7 @@ fun ScannedGroupsView(
                 is UIScannedGroupsListEvent.ShowSnackBar -> {
                     snackbarHostState.showSnackbar(
                         message = event.message,
-                        actionLabel = "Okay",
+                        actionLabel = GetStringNotInComposable(context, R.string.okay),
                         duration = SnackbarDuration.Long
                     )
                 }

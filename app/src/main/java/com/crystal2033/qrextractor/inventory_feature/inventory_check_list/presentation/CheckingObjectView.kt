@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,26 +41,26 @@ fun CheckingObjectView(checkingObject: ObjectInInventarizedFile) {
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ColumnWithFieldNameAndValue("Number", checkingObject.ordNumber.toString())
+            ColumnWithFieldNameAndValue(stringResource(id = R.string.number_translate), checkingObject.ordNumber.toString())
             Spacer(modifier = Modifier.height(8.dp))
-            ColumnWithFieldNameAndValue("Name", checkingObject.objectName)
+            ColumnWithFieldNameAndValue(stringResource(id = R.string.name_translate), checkingObject.objectName)
             Spacer(modifier = Modifier.height(8.dp))
-            ColumnWithFieldNameAndValue("Inventory number", checkingObject.invNumber)
+            ColumnWithFieldNameAndValue(stringResource(id = R.string.inventory_number_translate), checkingObject.invNumber)
         }
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ColumnWithFieldNameAndValue("Price per one", checkingObject.pricePerOne.toString())
+            ColumnWithFieldNameAndValue(stringResource(id = R.string.price_per_one_translate), checkingObject.pricePerOne.toString())
             Spacer(modifier = Modifier.height(8.dp))
             ColumnWithFieldNameAndValue(
-                "Full accountant price",
+                stringResource(id = R.string.full_acc_price_translate),
                 checkingObject.accountantPrice.toString()
             )
             Spacer(modifier = Modifier.height(8.dp))
             ColumnWithFieldNameAndValue(
-                "Current price",
+                stringResource(id = R.string.current_price),
                 checkingObject.factPriceAndPosInExcel.fieldValue.toString()
             )
         }
@@ -69,7 +70,7 @@ fun CheckingObjectView(checkingObject: ObjectInInventarizedFile) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Scanned (${checkingObject.factQuantityAndPosInExcel.fieldValue}/${checkingObject.accountantQuantity})",
+                text = stringResource(id = R.string.scanned_translate) +"(${checkingObject.factQuantityAndPosInExcel.fieldValue}/${checkingObject.accountantQuantity})",
                 fontSize = 12.sp
             )
             Spacer(modifier = Modifier.height(8.dp))

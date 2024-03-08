@@ -15,8 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.auth_feature.presentation.viewmodel.ProfileViewModel
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UIUserLoginEvent
 import com.crystal2033.qrextractor.auth_feature.presentation.vm_view_communication.UserLoginEvent
@@ -71,7 +73,7 @@ fun LoginView(
                 )
             }
             TextFieldView(
-                fieldHint = "Login",
+                fieldHint = stringResource(id = R.string.login),
                 currentText = userLoginDTO.value.login,
                 onValueChanged = {
                     viewModel.onEvent(UserLoginEvent.OnLoginChanged(it))
@@ -82,7 +84,7 @@ fun LoginView(
             )
             Spacer(modifier = Modifier.height(spaceBetween))
             TextFieldView(
-                fieldHint = "Password",
+                fieldHint = stringResource(id = R.string.password),
                 currentText = userLoginDTO.value.password,
                 onValueChanged = {
                     viewModel.onEvent(UserLoginEvent.OnPasswordChanged(it))
@@ -102,7 +104,7 @@ fun LoginView(
                 enabled = viewModel.isLoginAndPasswordFilled(),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
-                Text(text = "Login")
+                Text(text = stringResource(id = R.string.signin))
             }
         }
     }

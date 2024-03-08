@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -78,7 +79,7 @@ fun MenuView(
                 Column {
                     Spacer(modifier = Modifier.height(15.dp))
                     Text(
-                        text = "Change place",
+                        text = stringResource(id = R.string.change_place_translate),
                         color = Color.Cyan,
                         fontSize = 13.sp,
                         modifier = Modifier
@@ -97,7 +98,7 @@ fun MenuView(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(text = "Branch", fontSize = 13.sp, color = Color.LightGray)
+                            Text(text = stringResource(id = R.string.branch_translate), fontSize = 13.sp, color = Color.LightGray)
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = viewModel.branchName.value, fontSize = 15.sp)
                         }
@@ -105,7 +106,7 @@ fun MenuView(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(text = "Address", fontSize = 13.sp, color = Color.LightGray)
+                            Text(text = stringResource(id = R.string.building_translate), fontSize = 13.sp, color = Color.LightGray)
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = viewModel.buildingAddress.value, fontSize = 15.sp)
                         }
@@ -113,7 +114,7 @@ fun MenuView(
                             verticalArrangement = Arrangement.Center,
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(text = "Cabinet", fontSize = 13.sp, color = Color.LightGray)
+                            Text(text = stringResource(id = R.string.cabinet_translate), fontSize = 13.sp, color = Color.LightGray)
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = viewModel.cabinetName.value, fontSize = 15.sp)
                         }
@@ -153,7 +154,7 @@ fun MenuView(
 
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     menuListWithAvailableTypes.groupBy { type ->
-                        type.getLabel(context).uppercase()[0]
+                        type.getTranslatedLabel(context).uppercase()[0]
                     }
                         .forEach { (firstLetter, objectType) ->
                             stickyHeader {

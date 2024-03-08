@@ -38,11 +38,13 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.inventory_feature.inventory_check_list.presentation.viewmodel.InventoryCheckViewModel
 import com.crystal2033.qrextractor.inventory_feature.inventory_check_list.presentation.vm_view_communication.InventoryCheckEvent
 import com.crystal2033.qrextractor.inventory_feature.inventory_check_list.presentation.vm_view_communication.UIInventoryCheckEvent
@@ -108,7 +110,7 @@ fun InventoryCheckView(
             Button(onClick = {
                 viewModel.onEvent(InventoryCheckEvent.EndInventoryCheck)
             }, modifier = Modifier.align(Alignment.TopEnd)) {
-                Text(text = "End check", fontSize = 10.sp)
+                Text(text = stringResource(id = R.string.end_check_translate), fontSize = 10.sp)
             }
             Column(
                 modifier = Modifier

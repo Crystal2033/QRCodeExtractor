@@ -95,11 +95,9 @@ class ProfileViewModel @AssistedInject constructor(
     private fun makeActionsByStatus(data: Resource<User?>) {
         when (data) {
             is Resource.Loading -> {
-                Log.i(LOG_TAG_NAMES.INFO_TAG, "Loading")
             }
 
             is Resource.Error -> {
-                Log.e(LOG_TAG_NAMES.ERROR_TAG, "Error")
                 sendUiEvent(
                     UIUserLoginEvent.OnAuthError(
                         errorMessage = data.message ?: "Unknown error"

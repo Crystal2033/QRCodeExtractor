@@ -23,8 +23,10 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.scanner_feature.scanned_objects_list.presentation.state.InventarizedObjectInfoAndIDInLocalDB
 
 @Composable
@@ -34,8 +36,6 @@ fun StartObjectInfo(
     onObjectClicked: () -> Unit,
     onDeleteScannedObjectClicked: (Long) -> Unit
 ) {
-    val context = LocalContext.current
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,36 +52,31 @@ fun StartObjectInfo(
                 contentDescription = "Image of object",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(85.dp)
                     .clip(RectangleShape)
                     .align(Alignment.CenterVertically)
                     .padding(10.dp),
             )
         }
+
         Column(
             modifier = Modifier
-                .align(Alignment.CenterVertically)
-                .padding(10.dp),
+                .align(Alignment.CenterVertically),
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "Name: ${scannedObjectWithCabinetName.objectInfo.name}",
+                text = stringResource(id = R.string.name_translate) + ": ${scannedObjectWithCabinetName.objectInfo.name}",
                 color = Color.LightGray,
                 fontSize = 15.sp
             )
             Text(
-                text = "Cabinet: ${scannedObjectWithCabinetName.cabinetName}",
+                text = stringResource(id = R.string.cabinet_translate) + ": ${scannedObjectWithCabinetName.cabinetName}",
                 color = Color.LightGray,
                 fontSize = 15.sp
             )
         }
 
-        Text(
-            text = "ID: ${scannedObjectWithCabinetName.objectInfo.id}  LID: ${scannedObjectWithCabinetName.objectIdInLocalDB}",
-            color = Color.LightGray,
-            fontSize = 17.sp
-        )
         IconButton(
             onClick = {
                 onDeleteScannedObjectClicked(scannedObjectWithCabinetName.objectIdInLocalDB)
@@ -89,6 +84,7 @@ fun StartObjectInfo(
             modifier = Modifier
                 .size(50.dp)
                 .padding(10.dp)
+                .align(Alignment.CenterVertically)
         ) {
             Icon(
                 imageVector = Icons.Filled.Delete,
@@ -97,6 +93,4 @@ fun StartObjectInfo(
             )
         }
     }
-
-
 }

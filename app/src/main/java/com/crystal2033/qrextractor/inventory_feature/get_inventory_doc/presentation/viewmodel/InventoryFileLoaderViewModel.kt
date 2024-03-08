@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.LoadStatus
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.data.inventarization.InventarizedINV_1FileParser
 import com.crystal2033.qrextractor.inventory_feature.get_inventory_doc.presentation.state.LoadStatusInfoState
@@ -65,32 +66,32 @@ class InventoryFileLoaderViewModel @Inject constructor(
 
             try {
                 context.contentResolver.openInputStream(uri).use { file ->
-                    setNewFileLoadStatusInfo(LoadStatus.LOADING, "Loading file...")
+                    setNewFileLoadStatusInfo(LoadStatus.LOADING,  GetStringNotInComposable(context, R.string.loading_file))
 
                     inventoryFile.init(file!!, uri).join()
 
                     setNewFileLoadStatusInfo(
                         LoadStatus.SUCCESS,
-                        "File has been loaded successfully."
+                        GetStringNotInComposable(context, R.string.file_load_success)
                     )
                 }
 
             } catch (e: IOException) {
                 setNewFileLoadStatusInfo(
                     LoadStatus.ERROR_OPENING_FILE,
-                    e.message ?: "Unknown error with IOException"
+                    e.message ?: GetStringNotInComposable(context, R.string.ioexception_error)
                 )
                 Log.i(LOG_TAG_NAMES.ERROR_TAG, "Error with opening file ${uri}: ${e.message}")
             } catch (e: FileNotValidException) {
                 setNewFileLoadStatusInfo(
                     LoadStatus.ERROR_PARSING_FILE,
-                    e.message ?: "Unknown error with FileNotValidException"
+                    e.message ?: GetStringNotInComposable(context, R.string.valid_file_error_translate)
                 )
                 Log.i(LOG_TAG_NAMES.ERROR_TAG, "Error with file ${uri}: ${e.message}")
             } catch (e: EncryptedDocumentException) {
                 setNewFileLoadStatusInfo(
                     LoadStatus.UNKNOWN_ERROR,
-                    e.message ?: "Unknown error with EncryptedDocumentException"
+                    e.message ?: GetStringNotInComposable(context, R.string.encryption_file_translate)
                 )
                 Log.i(LOG_TAG_NAMES.ERROR_TAG, "Error with encryption file ${uri}: ${e.message}")
             }
