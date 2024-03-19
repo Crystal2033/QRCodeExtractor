@@ -64,7 +64,7 @@ fun CameraXView(
     val controller = remember {
         LifecycleCameraController(context).apply {
             setEnabledUseCases(
-                CameraController.IMAGE_CAPTURE or CameraController.VIDEO_CAPTURE
+                CameraController.IMAGE_CAPTURE
             )
         }
     }
