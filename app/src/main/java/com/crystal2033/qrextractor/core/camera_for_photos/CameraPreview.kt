@@ -17,11 +17,7 @@ fun CameraPreview(
     controller: LifecycleCameraController,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
-    val cameraProviderFuture = remember {
-        ProcessCameraProvider.getInstance(context)
-    }
 
     Log.i(LOG_TAG_NAMES.INFO_TAG, "CREATED CAM")
     AndroidView(
