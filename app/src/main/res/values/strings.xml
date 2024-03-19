@@ -131,6 +131,14 @@
     <string name="no_file_translate">No file</string>
     <string name="not_added_file_translate">File not added</string>
 
+    <string name="ask_to_perm_delete">"Are you sure you want to delete device: "</string>
+    <string name="from_server_translate">from the server?</string>
+    <string name="delete_device_translate">Delete device</string>
+    <string name="duplicate_scanner">This object already exists in list. Do you really want to append another one?</string>
+    <string name="duplicate_object_translate">Duplicate object</string>
+    <string name="convertion_error_translate">Error with scannedObject convertion. No id there</string>
+    <string name="device_delete_success_translate">Device has been deleted successfully</string>
+
     <!--  Exception messages  -->
 
 

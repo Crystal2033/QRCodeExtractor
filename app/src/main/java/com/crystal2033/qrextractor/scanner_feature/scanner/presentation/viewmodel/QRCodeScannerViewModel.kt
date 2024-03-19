@@ -23,6 +23,7 @@ import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.U
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.DeleteDeviceUseCaseInvoker
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetDeviceUseCaseInvoker
 import com.crystal2033.qrextractor.core.remote_server.domain.use_case.GetPlaceUseCases
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.scanner.data.Converters
 import com.crystal2033.qrextractor.scanner_feature.scanner.domain.model.QRScannableData
@@ -138,13 +139,13 @@ class QRCodeScannerViewModel @AssistedInject constructor(
             is QRScannerEvent.OnDeleteDeviceFromServerClicked -> {
                 sendUiEvent(
                     UIScannerEvent.ShowMessagedDialogWindow(
-                        message = "Are you sure you want to delete device: " +
-                                "\"${_previewDataFromQRState.value.scannedDataInfo?.name}\" from the server?",
+                        message = GetStringNotInComposable(context, R.string.ask_to_perm_delete) +
+                                "\"${_previewDataFromQRState.value.scannedDataInfo?.name}\" " + GetStringNotInComposable(context, R.string.from_server_translate),
                         onDeclineAction = {},
                         onAcceptAction = {
                             deleteDeviceFromServer(_previewDataFromQRState.value.scannedDataInfo as QRScannableData)
                         },
-                        dialogTitle = "Delete device",
+                        dialogTitle = GetStringNotInComposable(context, R.string.delete_device_translate),
                         icon = Icons.Default.Dangerous
                     )
                 )
@@ -218,12 +219,12 @@ class QRCodeScannerViewModel @AssistedInject constructor(
             viewModelScope.launch {
                 sendUiEvent(
                     UIScannerEvent.ShowMessagedDialogWindow(
-                        message = "This object already exists in list. Do you really want to append another one?",
+                        message = GetStringNotInComposable(context, R.string.duplicate_scanner),
                         onDeclineAction = {},
                         onAcceptAction = {
                             onAddScannableIntoListClicked(scannableObject, true)
                         },
-                        dialogTitle = "Duplicate object",
+                        dialogTitle = GetStringNotInComposable(context, R.string.duplicate_object_translate),
                         icon = Icons.Default.Warning
                     )
                 )
@@ -236,7 +237,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
     private fun showQRCodeFormatError(e: JsonSyntaxException) {
         Log.e(LOG_TAG_NAMES.ERROR_TAG, e.message ?: "Unknown")
         scanJob = viewModelScope.launch {
-            setPreviewObjectStateInfo(Resource.Error(message = "QR-code`s content is not compatible with this application."))
+            setPreviewObjectStateInfo(Resource.Error(message = context.resources.getString(R.string.not_compatible_qr_translate)))
         }
     }
 
@@ -257,7 +258,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
                         useCaseGetQRCodeFactory.createUseCase(scannedObj.tableName)
                 } catch (error: ClassNotFoundException) {
                     Log.e(LOG_TAG_NAMES.ERROR_TAG, error.message ?: "Unknown error")
-                    val errorMsg = error.message ?: "Unknown error"
+                    val errorMsg = error.message ?: GetStringNotInComposable(context, R.string.unknown_error_translate)
                     setPreviewObjectStateInfo(Resource.Error(message = errorMsg, Unknown(errorMsg)))
                     return@launch
                 }
@@ -265,7 +266,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
                 getDataFromQRCodeUseCase(scannedObj.id).onEach { result ->
                     setPreviewObjectStateInfo(result)
                 }.launchIn(this)
-            } ?: Log.e(LOG_TAG_NAMES.ERROR_TAG, "Error with scannedObject convertion. No id there")
+            } ?: Log.e(LOG_TAG_NAMES.ERROR_TAG, context.resources.getString(R.string.convertion_error_translate))
         }
     }
 
@@ -289,7 +290,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
                 )
                 sendUiEvent(
                     UIScannerEvent.ShowSnackBar(
-                        "Device has been deleted successfully"
+                        GetStringNotInComposable(context, R.string.device_delete_success_translate)
                     )
                 )
             }
@@ -450,7 +451,7 @@ class QRCodeScannerViewModel @AssistedInject constructor(
 
         sendUiEvent(
             UIScannerEvent.ShowSnackBar(
-                message = errorMessage ?: "Unknown error"
+                message = errorMessage ?: GetStringNotInComposable(context, R.string.unknown_error_translate)
             )
         )
     }

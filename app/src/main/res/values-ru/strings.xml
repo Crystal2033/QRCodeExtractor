@@ -134,4 +134,12 @@
     <string name="loading_translate">Загрузка</string>
     <string name="no_file_translate">Нет файла</string>
     <string name="not_added_file_translate">Файл не добавлен</string>
+
+    <string name="ask_to_perm_delete">"Вы действительно хотите удалить этот предмет: "</string>
+    <string name="from_server_translate">с сервера?</string>
+    <string name="delete_device_translate">Удаление предмета</string>
+    <string name="duplicate_scanner">Этот объект уже есть в списке. Хотите добавить еще один?</string>
+    <string name="duplicate_object_translate">Дубликация объекта</string>
+    <string name="convertion_error_translate">Ошибка конвертирования сканируемого объекта. Не найден ID</string>
+    <string name="device_delete_success_translate">Предмет был успешно удален</string>
 </resources>
