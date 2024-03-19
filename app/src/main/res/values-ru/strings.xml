@@ -142,4 +142,6 @@
     <string name="duplicate_object_translate">Дубликация объекта</string>
     <string name="convertion_error_translate">Ошибка конвертирования сканируемого объекта. Не найден ID</string>
     <string name="device_delete_success_translate">Предмет был успешно удален</string>
+    <string name="delete_scanned_group_translate">Удаление каталога</string>
+    <string name="ask_for_delete_group_translate">Вы действительно хотите удалить:</string>
 </resources>

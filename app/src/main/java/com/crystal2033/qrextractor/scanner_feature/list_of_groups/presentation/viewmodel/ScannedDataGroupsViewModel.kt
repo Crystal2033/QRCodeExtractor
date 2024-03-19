@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.crystal2033.qrextractor.R
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.User
+import com.crystal2033.qrextractor.core.util.GetStringNotInComposable
 import com.crystal2033.qrextractor.core.util.Resource
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.ScannedGroup
 import com.crystal2033.qrextractor.scanner_feature.list_of_groups.domain.model.UserWithScannedGroups
@@ -88,13 +89,19 @@ class ScannedDataGroupsViewModel @AssistedInject constructor(
             is ScannedGroupsListEvent.OnDeleteGroupClicked -> {
                 sendUiEvent(
                     UIScannedGroupsListEvent.ShowMessagedDialogWindow(
-                        message = "Are you sure you want to delete \"${event.scannedGroup.groupName}\" group?",
+                        message = GetStringNotInComposable(
+                            context,
+                            R.string.ask_for_delete_group_translate
+                        ) + " ${event.scannedGroup.groupName} ?",
                         onDeclineAction = {},
                         onAcceptAction = {
                             Log.i(LOG_TAG_NAMES.INFO_TAG, "Removing group!")
                             removeScannedGroupWithObjects(event.scannedGroup)
                         },
-                        dialogTitle = "Delete the scanned group",
+                        dialogTitle = GetStringNotInComposable(
+                            context,
+                            R.string.delete_scanned_group_translate
+                        ),
                         icon = Icons.Filled.FolderDelete
                     )
                 )
@@ -162,7 +169,10 @@ class ScannedDataGroupsViewModel @AssistedInject constructor(
 
         sendUiEvent(
             UIScannedGroupsListEvent.ShowSnackBar(
-                message = errorMessage ?: "Unknown error"
+                message = errorMessage ?: GetStringNotInComposable(
+                    context,
+                    R.string.unknown_error_translate
+                )
             )
         )
     }

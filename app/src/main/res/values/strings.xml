@@ -138,6 +138,8 @@
     <string name="duplicate_object_translate">Duplicate object</string>
     <string name="convertion_error_translate">Error with scannedObject convertion. No id there</string>
     <string name="device_delete_success_translate">Device has been deleted successfully</string>
+    <string name="delete_scanned_group_translate">Delete the scanned group</string>
+    <string name="ask_for_delete_group_translate">Are you sure you want to delete:</string>
 
     <!--  Exception messages  -->
 
