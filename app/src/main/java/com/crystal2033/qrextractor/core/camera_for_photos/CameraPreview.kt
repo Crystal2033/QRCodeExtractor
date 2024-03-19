@@ -23,11 +23,8 @@ fun CameraPreview(
     AndroidView(
         factory = {
             val previewView = PreviewView(it)
-
             previewView.controller = controller
             previewView.implementationMode = PreviewView.ImplementationMode.PERFORMANCE
-
-
             try {
                 controller.bindToLifecycle(lifecycleOwner)
 

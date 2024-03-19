@@ -18,6 +18,7 @@ import com.crystal2033.qrextractor.add_object_feature.objects_menu.presentation.
 import com.crystal2033.qrextractor.core.LOG_TAG_NAMES
 import com.crystal2033.qrextractor.core.model.DatabaseObjectTypes
 import com.crystal2033.qrextractor.core.remote_server.domain.repository.bundle.UserAndPlaceBundle
+import com.google.zxing.qrcode.encoder.QRCode
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

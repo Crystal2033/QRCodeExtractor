@@ -107,11 +107,6 @@ fun InventoryCheckView(
 
     Scaffold {
         Box(modifier = Modifier.fillMaxSize()) {
-            Button(onClick = {
-                viewModel.onEvent(InventoryCheckEvent.EndInventoryCheck)
-            }, modifier = Modifier.align(Alignment.TopEnd)) {
-                Text(text = stringResource(id = R.string.end_check_translate), fontSize = 10.sp)
-            }
             Column(
                 modifier = Modifier
                     .padding(15.dp)
@@ -119,11 +114,17 @@ fun InventoryCheckView(
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Button(onClick = {
+                    viewModel.onEvent(InventoryCheckEvent.EndInventoryCheck)
+                }) {
+                    Text(text = stringResource(id = R.string.end_check_translate), fontSize = 10.sp)
+                }
+                Spacer(modifier = Modifier.size(10.dp))
                 if (hasCameraPermission) {
                     ScannerCameraView(
                         modifier = Modifier
-                            .scale(0.6f)
-                            .weight(1f)
+                            .weight(4f)
+                            .scale(0.75f)
                             .align(Alignment.CenterHorizontally),
                         onScanAction = { scannedString ->
                             viewModel.onEvent(InventoryCheckEvent.OnScanQRCode(scannedString))
@@ -132,11 +133,11 @@ fun InventoryCheckView(
                         lifecycleOwner = lifecycleOwner
                     )
                 }
-                Spacer(modifier = Modifier.size(40.dp))
+                Spacer(modifier = Modifier.size(10.dp))
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f)
+                        .weight(3f)
                 ) {
                     items(objectsInfoState.value.listOfObjects) { checkingObject ->
                         Divider(color = Color.DarkGray, thickness = 1.dp)

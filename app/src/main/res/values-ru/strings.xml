@@ -75,8 +75,8 @@
     <string name="building_address_translate">Адрес здания</string>
     <string name="organization_translate">Организация</string>
     <string name="cabinet_translate">Кабинет</string>
-    <string name="small_translate">Маленький</string>
-    <string name="normal_translate">Нормальный</string>
+    <string name="small_translate">Мелкий</string>
+    <string name="normal_translate">Средний</string>
     <string name="big_translate">Большой</string>
     <string name="qr_code_size_translate">Размер QR-кода</string>
     <string name="building_translate">Здание</string>
@@ -104,7 +104,7 @@
     <string name="number_translate">Номер</string>
     <string name="price_per_one_translate">Цена за единицу</string>
     <string name="full_acc_price_translate">Полная бух. цена</string>
-    <string name="current_price">Текущая стоимость</string>
+    <string name="current_price">Текущая сумма</string>
     <string name="scanned_translate">"Проверено "</string>
     <string name="end_check_translate">Закончить опись</string>
 
